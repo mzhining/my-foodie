@@ -70,6 +70,9 @@ export default {
             this.available = slots;
             this.show = true;
         }
+    },
+    created() {
+        this.fetchItems();
     }
 }
 
