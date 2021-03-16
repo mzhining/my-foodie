@@ -2,15 +2,28 @@
     <div>
         <h1> Make a reservation for Jollibee at S(828761) </h1>
         <label> Number of pax: </label>
-        <input type="number" placeholder=0 min="0" max="8" v-model.lazy="reservation.pax" required/>
+        <br>
+        <input type="number" placeholder=0 min="1" max="8" v-model.lazy="reservation.pax" required/>
+        <br>
         <br>
         <label> Date: </label>
+        <br>
         <input id="datefield" type="date" v-model.lazy="reservation.date" required/>
         <br>
-        <label> Time: </label>
-        <input type="time" v-model.lazy="reservation.time" min="10:00" max="21:00" required/>
         <br>
-        <button v-on:click="book"> Book </button>
+        <button v-on:click="selectDate"> Show available timeslots </button>
+        <br>
+        <br>
+        <label v-if="show==true"> Time: </label>
+        <br>
+        <ul>
+            <li v-for="slot in available" v-bind:key="slot.id">
+                <p> {{slot.time}} </p>
+                <button v-on:click="book($event)" v-bind:id="slot.id"> Book </button>
+            </li>
+        <ul>
+        <br>
+        <br>
     </div>
 </template>
 
@@ -20,13 +33,46 @@ import database from '../firebase.js'
 export default {
     data() {
         return {
-            reservation: {}
+            reservation: {},
+            available: [],
+            allSlots: [],
+            show: false;
         }
     },
     methods: {
-        book: function() {
-            database.collection('reservations').add(this.reservation);
+        fetchItems: function() {
+            let item = {};
+            database.collection('reservations').get().then((querySnapShot)=>{
+                querySnapShot.forEach(doc=>{
+                    item = doc.data();
+                    this.allSlots.push(item);
+                });
+            });
+        },
+        book: function(event) {
+            let item = {};
+            let doc_id = event.target.getAttribute("id");
+            item = database.collection('reservations').doc(doc_id).get();
+            item.avail = false;
+            item.pax = this.reservation.pax;
+            this.reservation = item;
+            database.collection('reservations').doc(id).update(this.reservation).then(this.$router.push('confirmReservation'));
+            }
+        },
+        selectDate: function() {
+            var selectedDate = this.reservation.date;
+            let slots = [];
+            for (slot in allSlots) {
+                if (slot.date == selectedDate && slot.avail == true) {
+                    slots.push(slot);
+                }
+            }
+            this.available = slots;
+            this.show = true;
         }
+    },
+    created() {
+        this.fetchItems();
     }
 }
 
