@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <img id = "pic" src = "./assets/myfoodie-logo.png">
     <app-header></app-header>
     <p> Hello! Just testing this one :) </p>
     <router-view></router-view>
@@ -31,6 +32,9 @@ export default {
 </script>
 
 <style>
+img {
+  height:60px;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;  
   text-align: center;
