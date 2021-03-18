@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <app-header></app-header>
-    <h1> Hello! Just testing this one :) </h1>
+    <p> Hello! Just testing this one :) </p>
     <router-view></router-view>
     <app-footer></app-footer>
    </div>
@@ -35,6 +35,7 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;  
   text-align: center;
   color: black;
+  font-size:14px;
 }
 
 </style>
