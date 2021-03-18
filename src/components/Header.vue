@@ -30,7 +30,7 @@ header{
     justify-content: center;
     align-items: center;
     background: #90141C;
-    font-size:25px;
+    font-size:15px;
 }
 h1{
     color:ivory

@@ -30,6 +30,6 @@ footer{
 p{
     align-content: center;
     color:ivory;
-    font-size:25px;
+    font-size:15px;
 }
 </style>
