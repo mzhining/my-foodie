@@ -36,7 +36,7 @@ export default {
             reservation: {},
             available: [],
             allSlots: [],
-            show: false;
+            show: false
         }
     },
     methods: {
@@ -57,7 +57,6 @@ export default {
             item.pax = this.reservation.pax;
             this.reservation = item;
             database.collection('reservations').doc(id).update(this.reservation).then(this.$router.push('confirmReservation'));
-            }
         },
         selectDate: function() {
             var selectedDate = this.reservation.date;
