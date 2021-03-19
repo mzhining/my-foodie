@@ -2,7 +2,6 @@
   <div id="app">
     <img id = "pic" src = "./assets/myfoodie-logo.png">
     <app-header></app-header>
-    <p> Hello! Just testing this one :) </p>
     <router-view></router-view>
     <app-footer></app-footer>
    </div>
@@ -25,7 +24,6 @@ export default {
   components:{
     'app-header':Header,
     'app-footer':Footer
-    
   }
 
 }
