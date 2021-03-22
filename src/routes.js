@@ -8,7 +8,6 @@ export default [
     // { path: '/delivery', component: Delivery },
     { path: '/reservation', component: Reservation}
     // { path: '/pickup', component: Pickup }
-
 ]
 
 /* <router-link to="/" exact>Home</router-link>
