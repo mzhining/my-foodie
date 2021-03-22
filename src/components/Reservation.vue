@@ -53,17 +53,17 @@ export default {
             let item = {};
             let doc_id = event.target.getAttribute("id");
             item = database.collection('reservations').doc(doc_id).get();
-            item.avail = false;
+            item.avail--;
             item.pax = this.reservation.pax;
             this.reservation = item;
-            //database.collection('reservations').doc(id).update(this.reservation).then(this.$router.push('confirmReservation'));
+            //database.collection('reservations').doc(doc_id).update(this.reservation).then(this.$router.push('confirmReservation'));
         },
         selectDate: function() {
             var selectedDate = this.reservation.date;
             let slots = [];
             var slot;
             for (slot in this.allSlots) {
-                if (slot.date == selectedDate && slot.avail == true) {
+                if (slot.date == selectedDate && slot.avail > 0) {
                     slots.push(slot);
                 }
             }
