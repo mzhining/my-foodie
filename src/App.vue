@@ -1,28 +1,43 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <img id = "pic" src = "./assets/myfoodie-logo.png">
+    <app-header></app-header>
+    <router-view></router-view>
+    <app-footer></app-footer>
+   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+//Register Locally
+import Header from './components/Header.vue'
+import Footer from './components/Footer.vue'
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
+ data(){
+    return{
+      title:'My Foodie'
+    }
+  },
+   methods:{
+   },
+   //Register Locally
+  components:{
+    'app-header':Header,
+    'app-footer':Footer
   }
+
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+img {
+  height:60px;
 }
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;  
+  text-align: center;
+  color: black;
+  font-size:14px;
+}
+
 </style>
