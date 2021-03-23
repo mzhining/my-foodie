@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import database from "../firebase.js"
+//import database from "../firebase.js"
 
 export default {
     data() {
@@ -23,14 +23,14 @@ export default {
         }
     },
     methods:{
-        fetchItems: function() {
-            database.collection('restaurants').doc('starbucks').get().then(doc =>{
-                //retrieve the data from resturant starbucks
-                this.restaurant=doc.data();
-                this.reservation=doc.data()['reservation'];
-                this.pickup=doc.data()['pickup'];
-            });
-        }
+//        fetchItems: function() {
+//            database.collection('restaurants').doc('starbucks').get().then(doc =>{
+//                //retrieve the data from resturant starbucks
+//                this.restaurant=doc.data();
+//                this.reservation=doc.data()['reservation'];
+//                this.pickup=doc.data()['pickup'];
+//           });
+//        }
     },
     created:function(){
         this.fetchItems();
