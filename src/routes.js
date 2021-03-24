@@ -6,6 +6,7 @@ import CustSignup from './components/CustSignup.vue'
 import RestSignup from './components/RestSignup.vue'
 import SignupSuccess from './components/SignupSuccess.vue'
 import Login from './components/Login.vue'
+import Register from './components/Register.vue'
 
 export default [
     { path: '/', component: Home },
@@ -16,6 +17,7 @@ export default [
     { path: '/signup-rest', component: RestSignup},
     { path: '/signup-success', component: SignupSuccess},
     { path: '/login', component: Login},
+    { path: '/register', component: Register},
 ]
 
 /* <router-link to="/" exact>Home</router-link>

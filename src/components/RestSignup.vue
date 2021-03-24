@@ -1,6 +1,6 @@
 <template>
-    <div id="rest-signup">
-        <h1>Sign up to start taking orders!</h1>
+    <div id="signup-rest">
+        <h1>Sign up now to start taking orders!</h1>
         <form id="restsignup">
             <h2>Account Information</h2>
             <label>First Name: </label>
@@ -100,10 +100,19 @@ export default {
 
 
 <style scoped>
-#rest-signup, button {
+#signup-rest, button {
     font-family: Poppins;
     font-style: normal;
     /* text-align: left; */
     /* padding-left: 300px; */
+}
+
+button {
+    cursor: pointer;
+    background: #FCDDEC;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: none;
 }
 </style>

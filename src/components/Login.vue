@@ -37,4 +37,13 @@ export default {
     font-family: Poppins;
     font-style: normal;
 }
+
+button {
+    cursor: pointer;
+    background: #FCDDEC;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: none;
+}
 </style>
