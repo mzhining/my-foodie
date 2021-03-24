@@ -2,12 +2,16 @@ import Home from './components/Home.vue'
 // import Delivery from './components/Delivery.vue'
 import Reservation from './components/Reservation.vue'
 // import Pickup from './components/Pickup.vue'
+import CustSignup from './components/CustSignup.vue'
+import RestSignup from './components/RestSignup.vue'
 
 export default [
     { path: '/', component: Home },
     // { path: '/delivery', component: Delivery },
-    { path: '/reservation', component: Reservation}
+    { path: '/reservation', component: Reservation},
     // { path: '/pickup', component: Pickup }
+    { path: '/signup-cust', component: CustSignup},
+    { path: '/signup-rest', component: RestSignup}
 ]
 
 /* <router-link to="/" exact>Home</router-link>
