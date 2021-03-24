@@ -1,148 +1,150 @@
 <template>
-  <div>
-        <div id = "rectangle"> 
-            <p id = "slogan"> One Stop Place for Your Stomach! </p>
+    <section>
+        <div class="kotak-mereng">
+            <div class="penyot">
+                <div class="rectangle" />
+                <div class="segitiga" />
+            </div>
+            
+            <div class="kotak-mereng-content">
+                <img id="pic" src="@/assets/breakfast.jpg" alt="Breakfast">
+                <p id="slogan">One Stop Place for Your Stomach!</p>
+            </div>
         </div>
-        <img id = "pic" src = "@/assets/breakfast.jpg" alt = "Breakfast">
-        <hr id = "line">
+        
+        <hr id="line">
 
-        <p id = "new"> What's new? </p>
+        <div class="content">
+            <p id="new"> What's new? </p>
 
-        <div id = "content"> 
-            <img id = "pic_content" src = "@/assets/collins.jpeg" alt = "Collins">
-            <p id = "text_content"> GREAT DEAL : 1-FOR-1 Mains in Collins </p>
+            <div id="content">
+                <div class="card">
+                    <div>
+                    <img src="@/assets/collins.jpeg" alt="Collins" height=15rem>
+                    </div>
+                    <p>GREAT DEAL : 1-FOR-1 Mains in Collins</p>
+                </div>
 
-            <img id = "pic_content2" src = "@/assets/coffeebean.jpeg" alt = "Coffee Bean">
-            <p id = "text_content2"> Check out The Coffee Bean with Home Special </p>
+                <div class="card">
+                    <div>
+                    <img src="@/assets/coffeebean.png" alt="Coffeebean" height=15rem>
+                    </div>
+                    <p>Check out The Coffee Bean with Home Special</p>
+                </div>
+            </div>
         </div>
-  </div>
+    </section>
 </template>
 
 <script>
 export default {
-  
-  data(){
-    return{ 
-        
-        }
-  }
+    name: "Home"
 }
 </script>
 
 <style scoped>
-#rectangle{
-    position: absolute;
-    height: 320px;
-    left: 0px;
-    top: 105px;
-    background: rgba(224, 116, 114, 0.64);
-    width:100%;
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+
+.home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-#slogan{
+.kotak-mereng {
+    position: relative;
+    height: 20rem;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.kotak-mereng-content {
+    max-width: 1300px;
+    position: relative;
+    width: 100%;
+}
+
+.rectangle{
+    height: 5rem;
+    background-color: rgba(224, 116, 114, 0.64);
+}
+
+.segitiga {
+    overflow: hidden;
+    height: 0;
+    border-width: 10rem 100vw 0 0;
+    border-style: solid;
+    border-color: rgba(224, 116, 114, 0.64) transparent transparent rgba(224, 116, 114, 0.64);
+}
+
+.penyot {
     position: absolute;
-    height: 75px;
-    top : 70px;
-    left: 0%;
-    right: 4.8%;
+    overflow: hidden;
+    top: 0;
+    width: 100%;
+    z-index: 0;
+}
 
+#slogan {
     font-family: Carosello;
-    font-style: normal;
-    font-weight: normal;
     font-size: 40px;
-    line-height: 74px;
-    transform: rotate(-4.5deg);
+    color: white;
+    margin: 0;
+    position: absolute;
+    z-index: 69;
+    left: 10%;
+    top: 30%;
+}
 
-    color: #FFFFFF;
-
+img {
+    height: 15rem;
 }
 
 #pic {
+    height: 17rem;
     position: absolute;
-    width: 507px;
-    height: 338px;
-    right: 50px;
-    top: 170px;
-    bottom: 0;
-}
-
-#content {
-    text-align : center;
-    top: 700px;
-}
-
-#text_content {
-    position: absolute;
-    left: 1070px;
-    top: 800px;
-
-    font-family: Inter;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 20px;
-    line-height: 50px;
-
-    text-align: center;
-    letter-spacing: 0.005em;
-
-    color: #000000;
-}
-
-#pic_content {
-    position: absolute;
-    top: 600px;
-    width: 350px;
-    height: 200px;
-}
-
-#pic_content2 {
-    position: absolute;
-    top: 900px;
-    width: 350px;
-    height: 250px;
-}
-
-#text_content2 {
-    position: absolute;
-    left: 1050px;
-    top: 1150px;
-
-    font-family: Inter;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 20px;
-    line-height: 50px;
-
-    text-align: center;
-    letter-spacing: 0.005em;
-
-    color: #000000;
+    z-index: 69;
+    right: 8%;
+    top: 8%;
 }
 
 #line {
-    position: absolute;
-    width: 100%;
-    height: 0px;
-    left: 0px;
-    top: 540px;
-
     border: 3px dashed #90141C;
 }
 
 #new {
-    position: absolute;
-    width: 1062px;
-    height: 124px;
-    left: 83px;
-    top: 550px;
-
     font-family: Nunito;
-    font-style: normal;
     font-weight: bold;
     font-size: 30px;
-    line-height: 65px;
-
-    color: #000000;
+    margin: 0;
+    text-align: left;
+    width: 100%;
 }
 
+.content {
+    width: calc(100% - 8rem);
+    max-width: 1000px;
+    margin: auto;
+    padding: 2rem 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card {
+    padding: 1rem;
+}
+
+.card div {
+    height: 15rem;
+    width: 40rem;
+    border-radius: 1rem;
+}
+
+.card p {
+    font-family: Inter, sans-serif;
+    font-size: 14pt;
+    margin: 1rem 0 0 0;
+}
 </style>
