@@ -30,7 +30,7 @@
             Payment for your orders will be sent to your PayNow phone number.<br><br>
             <label>PayNow Number: </label>
             +65 <input type="tel" v-model="restaurant.paynow" pattern="[0-9]{8}" required /><br><br>            
-            <p><button type="submit" v-on:click.prevent="createRest()">Create my account!</button></p>
+            <p><button type="submit" v-on:click.prevent="createRest()">Create my account</button></p>
         </form>
     </div>
 </template>
@@ -87,8 +87,10 @@ export default {
                 if (toCreate === true) {
                     database.collection('restaurants').doc(this.restaurant.username).set(this.restaurant);
                     alert("Account created successfully!")
-                    // location.reload();
-                    // push to login page
+                }
+            }).then(() => {
+                if (toCreate === true) {
+                    this.$router.push({path: 'signup-success'})
                 }
             })
         }
@@ -98,7 +100,7 @@ export default {
 
 
 <style scoped>
-#rest-signup {
+#rest-signup, button {
     font-family: Poppins;
     font-style: normal;
     /* text-align: left; */

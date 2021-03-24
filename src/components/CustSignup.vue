@@ -34,7 +34,7 @@
             <label>Expiry Date: </label>
             <input type="month" v-model="customer.card.expiry" placeholder="MM/YY" required /><br><br>
             <!-- <p><input type="submit" value="Create my account!" v-on:click.prevent="createCust()" /></p> -->
-            <p><button type="submit" v-on:click.prevent="createCust()">Create my account!</button></p>
+            <p><button type="submit" v-on:click.prevent="createCust()">Create my account</button></p>
         </form>
     </div>
 </template>
@@ -100,8 +100,10 @@ export default {
                 if (toCreate === true) {
                     database.collection('customers').doc(this.customer.username).set(this.customer);
                     alert("Account created successfully!")
-                    // location.reload();
-                    // push to login page
+                }
+            }).then(() => {
+                if (toCreate === true) {
+                    this.$router.push({path: 'signup-success'});
                 }
             })
         }
@@ -111,7 +113,7 @@ export default {
 
 
 <style scoped>
-#cust-signup {
+#cust-signup, button {
     font-family: Poppins;
     font-style: normal;
     /* text-align: left; */
