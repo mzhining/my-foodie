@@ -2,21 +2,19 @@
     <div id="signup-cust">
         <h1>Sign up now to start ordering!</h1>
         <!-- <form id="custsignup" v-on:submit.prevent="createCust()"> -->
-        <form id="custsignup" v-on:submit.prevent="registerCust()">
+        <form id="custsignup" v-on:submit.prevent="createCust();registerCust()">
             <h2>Account Information</h2>
             <label>First Name: </label>
             <input type="text" v-model="customer.first_name" required /><br><br>
             <label>Last Name: </label>
             <input type="text" v-model="customer.last_name" required /><br><br>
-            <label title="Create a unique username to log in">Username: </label>
-            <input type="text" v-model="customer.username" title="Create a unique username to log in" required /><br><br>
+            <label>Email (required for login): </label>
+            <input type="email" v-model="customer.email" required /><br><br>
             <label>Password: </label>
             <input type="password" v-model="customer.password" required /><br><br>
             <label>Confirm Password: </label>
             <input type="password" v-model="cfmPwd" v-on:keyup="checkPassword()" required /><br>
             {{pwdText}}<br>
-            <label>Email Address: </label>
-            <input type="email" v-model="customer.email" required /><br><br>
             <label>Contact Number: </label>
             +65 <input type="tel" v-model="customer.contact" pattern="[0-9]{8}" required /><br><br>
             <label>Address: </label><br>
@@ -43,7 +41,7 @@
 
 
 <script>
-// import database from '../firebase.js'
+import database from '../firebase.js'
 import firebase from 'firebase';
 
 export default {
@@ -53,7 +51,7 @@ export default {
             cfmPwd: "",
             pwdText: "",
             customer: {
-                username: "",
+                // username: "",
                 first_name: "",
                 last_name: "",
                 password: "",
@@ -86,39 +84,45 @@ export default {
                 this.pwdText = ""
             }
         },
-        // createCust() {
-        //     // add customer details to firebase
+        createCust() {
+            // add customer details to firebase
+            if (this.toCreate === true) {
+                database.collection('customers').add(this.customer);
+            }
 
-        //     // check if account exists
-        //     database.collection('customers').get().then(snapshot => {
-        //         snapshot.docs.forEach(doc => {
-        //             if (doc.id === this.customer.username) {
-        //                 alert("Username exists, please try another username.");
-        //                 this.toCreate = false;
-        //             }
-        //         })
-        //     }).then(() => {
-        //         if (this.toCreate === true) {
-        //             database.collection('customers').doc(this.customer.username).set(this.customer);
-        //             alert("Account created successfully!")
-        //         }
-        //     }).then(() => {
-        //         if (this.toCreate === true) {
-        //             this.$router.push({path: 'signup-success'});
-        //         }
-        //     })
-        // },
+            // // check if account exists
+            // database.collection('customers').get().then(snapshot => {
+            //     snapshot.docs.forEach(doc => {
+            //         if (doc.id === this.customer.username) {
+            //             alert("Username exists, please try another username.");
+            //             this.toCreate = false;
+            //         }
+            //     })
+            // }).then(() => {
+            //     if (this.toCreate === true) {
+            //         database.collection('customers').doc(this.customer.username).set(this.customer);
+            //         alert("Account created successfully!")
+            //     }
+            // }).then(() => {
+            //     if (this.toCreate === true) {
+            //         this.$router.push('/signup-success');
+            //     }
+            // })
+        },
         registerCust: function() {
-            firebase.auth().createUserWithEmailAndPassword(this.customer.email, this.customer.password)
-            .then(user => {
-                // alert(`Account for ${user.email} created in Firebase`);
-                alert(`Account created in Firebase for ${user.user.email}`);
-                this.$router.push('/login');
-                // this.$router.go({path: this.$router.path});
-            },
-            err => {
-                alert(err.message);
-            });
+            if (this.toCreate === true) {
+                firebase.auth().createUserWithEmailAndPassword(this.customer.email, this.customer.password)
+                .then(user => {
+                    alert(`Account created for ${user.user.email}`);
+                    this.$router.push('/signup-success').then(()=>location.reload());
+                    // this.$router.go({path: this.$router.path});
+                },
+                err => {
+                    alert(err.message);
+                });
+            } else {
+                alert("Please check that you have filled in all details correctly. Your password must match.")
+            }
         }
     }
 }

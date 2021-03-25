@@ -1,7 +1,7 @@
 <template>
     <div id="signup-success">
-        <h1>Your account is successfully registered!</h1>
-        <p>Welcome! Log in to your new account by clicking the 'Login' button below.</p>
+        <h1>Your account is successfully created!</h1>
+        <p>Log in to your new account by clicking the 'Login' button below.</p>
         <p><button v-on:click.prevent="redirectLogin()">Login</button></p>
     </div>
 </template>

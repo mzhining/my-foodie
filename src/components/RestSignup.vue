@@ -1,7 +1,7 @@
 <template>
     <div id="signup-rest">
         <h1>Sign up now to start taking orders!</h1>
-        <form id="restsignup" v-on:submit.prevent="createRest()">
+        <form id="restsignup" v-on:submit.prevent="createRest();registerRest()">
             <h2>Account Information</h2>
             <label>First Name: </label>
             <input type="text" v-model="restaurant.first_name" required /><br><br>
@@ -9,15 +9,15 @@
             <input type="text" v-model="restaurant.last_name" required /><br><br>
             <label>Restaurant Name: </label>
             <input type="text" v-model="restaurant.restaurant_name" required /><br><br>
-            <label title="Create a unique username to log in">Username: </label>
-            <input type="text" v-model="restaurant.username" title="Create a unique username to log in" required /><br><br>
+            <!-- <label title="Create a unique username to log in">Username: </label> -->
+            <!-- <input type="text" v-model="restaurant.username" title="Create a unique username to log in" required /><br><br> -->
+            <label>Email Address (required for login): </label>
+            <input type="email" v-model="restaurant.email" required /><br><br>
             <label>Password: </label>
             <input type="password" v-model="restaurant.password" required /><br><br>
             <label>Confirm Password: </label>
             <input type="password" v-model="cfmPwd" v-on:keyup="checkPassword()" required /><br>
             {{pwdText}}<br>
-            <label>Email Address (admin): </label>
-            <input type="email" v-model="restaurant.email" required /><br><br>
             <label>Email Address (customer service): </label>
             <input type="email" v-model="restaurant.contact_email" required /><br><br>
             <label>Contact Number: </label>
@@ -39,6 +39,7 @@
 
 <script>
 import database from '../firebase.js'
+import firebase from 'firebase';
 
 export default {
     data() {
@@ -47,7 +48,7 @@ export default {
             cfmPwd: "",
             pwdText: "",
             restaurant: {
-                username: "",
+                // username: "",
                 restaurant_name: "",
                 first_name: "",
                 last_name: "",
@@ -77,26 +78,44 @@ export default {
         },
         createRest() {
             // add restaurant details to firebase
+            if (this.toCreate === true) {
+                database.collection('restaurants').add(this.restaurant);
+            }
 
-            // check if account exists
-            database.collection('restaurants').get().then(snapshot => {
-                snapshot.docs.forEach(doc => {
-                    if (doc.id === this.restaurant.username) {
-                        alert("Username exists, please try another username.");
-                        this.toCreate = false;
-                    }
-                })
-            }).then(() => {
-                if (this.toCreate === true) {
-                    database.collection('restaurants').doc(this.restaurant.username).set(this.restaurant);
-                    alert("Account created successfully!")
-                }
-            }).then(() => {
-                if (this.toCreate === true) {
-                    this.$router.push({path: 'signup-success'})
-                }
-            })
-        }
+            // // check if account exists
+            // database.collection('restaurants').get().then(snapshot => {
+            //     snapshot.docs.forEach(doc => {
+            //         if (doc.id === this.restaurant.username) {
+            //             alert("Username exists, please try another username.");
+            //             this.toCreate = false;
+            //         }
+            //     })
+            // }).then(() => {
+            //     if (this.toCreate === true) {
+            //         database.collection('restaurants').doc(this.restaurant.username).set(this.restaurant);
+            //         alert("Account created successfully!")
+            //     }
+            // }).then(() => {
+            //     if (this.toCreate === true) {
+            //         this.$router.push({path: 'signup-success'})
+            //     }
+            // })
+        },
+        registerRest: function() {
+            if (this.toCreate === true) {
+                firebase.auth().createUserWithEmailAndPassword(this.restaurant.email, this.restaurant.password)
+                .then(user => {
+                    alert(`Account created for ${user.user.email}`);
+                    this.$router.push('/signup-success').then(()=>location.reload());
+                    // this.$router.go({path: this.$router.path});
+                },
+                err => {
+                    alert(err.message);
+                });
+            } else {
+                alert("Please check that you have filled in all details correctly. Your password must match.")
+            }
+        }        
     }
 }
 </script>

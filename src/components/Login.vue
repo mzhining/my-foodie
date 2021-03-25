@@ -5,9 +5,9 @@
             <!-- <label>Username: </label>
             <input type="text" v-model="login.username" /><br><br> -->
             <label>Email: </label>
-            <input type="email" v-model="login.email" /><br><br>
+            <input type="email" v-model="email" /><br><br>
             <label>Password: </label>
-            <input type="password" v-model="login.password" /><br><br>
+            <input type="password" v-model="password" /><br><br>
             <!-- <p><button type="submit" v-on:click.prevent="redirectDashboard()">Login</button></p> -->
             <p><button type="submit" v-on:click.prevent="loginAcc()">Login</button></p>
         </form>
@@ -21,11 +21,9 @@ import firebase from 'firebase';
 export default {
     data() {
         return {
-            login: {
-                // username: "",
-                email: "",
-                password: "",
-            }
+            // username: "",
+            email: "",
+            password: "",
         }
     },
     methods: {
@@ -34,10 +32,10 @@ export default {
         //     // this.$router.push({name: 'Dashboard', params: {username: this.login.username, password: this.login.password}})
         // },
         loginAcc: function() {
-            firebase.auth().signInWithEmailAndPassword(this.login.email, this.login.password)
+            firebase.auth().signInWithEmailAndPassword(this.email, this.password)
             .then(user => {
                 alert(`You are logged in as ${user.user.email}`);
-                this.$router.push('/');
+                this.$router.push('/account');
                 // this.$router.go({path: this.$router.path});
 
             },
