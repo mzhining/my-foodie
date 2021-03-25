@@ -1,7 +1,7 @@
 <template>
     <div id="signup-rest">
         <h1>Sign up now to start taking orders!</h1>
-        <form id="restsignup">
+        <form id="restsignup" v-on:submit.prevent="createRest()">
             <h2>Account Information</h2>
             <label>First Name: </label>
             <input type="text" v-model="restaurant.first_name" required /><br><br>
@@ -30,7 +30,8 @@
             Payment for your orders will be sent to your PayNow phone number.<br><br>
             <label>PayNow Number: </label>
             +65 <input type="tel" v-model="restaurant.paynow" pattern="[0-9]{8}" required /><br><br>            
-            <p><button type="submit" v-on:click.prevent="createRest()">Create my account</button></p>
+            <!-- <p><button type="submit" v-on:click.prevent="createRest()">Create my account</button></p> -->
+            <p><button type="submit">Create my account</button></p>
         </form>
     </div>
 </template>
@@ -42,6 +43,7 @@ import database from '../firebase.js'
 export default {
     data() {
         return {
+            toCreate: true,
             cfmPwd: "",
             pwdText: "",
             restaurant: {
@@ -64,8 +66,10 @@ export default {
             if (this.restaurant.password!="") {
                 if (this.cfmPwd === this.restaurant.password) {
                     this.pwdText = ""
+                    this.toCreate = true;
                 } else {
-                    this.pwdText = "Your password does not match"
+                    this.pwdText = "Your password does not match";
+                    this.toCreate = false;
                 }
             } else {
                 this.pwdText = ""
@@ -73,23 +77,22 @@ export default {
         },
         createRest() {
             // add restaurant details to firebase
-            let toCreate = true;
 
             // check if account exists
             database.collection('restaurants').get().then(snapshot => {
                 snapshot.docs.forEach(doc => {
                     if (doc.id === this.restaurant.username) {
                         alert("Username exists, please try another username.");
-                        toCreate = false;
+                        this.toCreate = false;
                     }
                 })
             }).then(() => {
-                if (toCreate === true) {
+                if (this.toCreate === true) {
                     database.collection('restaurants').doc(this.restaurant.username).set(this.restaurant);
                     alert("Account created successfully!")
                 }
             }).then(() => {
-                if (toCreate === true) {
+                if (this.toCreate === true) {
                     this.$router.push({path: 'signup-success'})
                 }
             })

@@ -1,7 +1,7 @@
 <template>
     <div id="signup-cust">
         <h1>Sign up now to start ordering!</h1>
-        <form id="custsignup">
+        <form id="custsignup" v-on:submit.prevent="createCust()">
             <h2>Account Information</h2>
             <label>First Name: </label>
             <input type="text" v-model="customer.first_name" required /><br><br>
@@ -34,7 +34,8 @@
             <label>Expiry Date: </label>
             <input type="month" v-model="customer.card.expiry" placeholder="MM/YY" required /><br><br>
             <!-- <p><input type="submit" value="Create my account!" v-on:click.prevent="createCust()" /></p> -->
-            <p><button type="submit" v-on:click.prevent="createCust()">Create my account</button></p>
+            <!-- <p><button type="submit" v-on:click.prevent="createCust()">Create my account</button></p> -->
+            <p><button type="submit">Create my account</button></p>
         </form>
     </div>
 </template>
@@ -46,6 +47,7 @@ import database from '../firebase.js'
 export default {
     data() {
         return {
+            toCreate: true,
             cfmPwd: "",
             pwdText: "",
             customer: {
@@ -63,10 +65,6 @@ export default {
                     name: "",
                     number: ""
                 },
-                // cardNum: "",
-                // cardCvv: "",
-                // cardExp: "",
-                // cardName: "",
                 cart: {},
                 favourites: [],
             }
@@ -77,8 +75,10 @@ export default {
             if (this.customer.password!="") {
                 if (this.cfmPwd === this.customer.password) {
                     this.pwdText = ""
+                    this.toCreate = true;
                 } else {
                     this.pwdText = "Your password does not match"
+                    this.toCreate = false;
                 }
             } else {
                 this.pwdText = ""
@@ -86,23 +86,22 @@ export default {
         },
         createCust() {
             // add customer details to firebase
-            let toCreate = true;
 
             // check if account exists
             database.collection('customers').get().then(snapshot => {
                 snapshot.docs.forEach(doc => {
                     if (doc.id === this.customer.username) {
                         alert("Username exists, please try another username.");
-                        toCreate = false;
+                        this.toCreate = false;
                     }
                 })
             }).then(() => {
-                if (toCreate === true) {
+                if (this.toCreate === true) {
                     database.collection('customers').doc(this.customer.username).set(this.customer);
                     alert("Account created successfully!")
                 }
             }).then(() => {
-                if (toCreate === true) {
+                if (this.toCreate === true) {
                     this.$router.push({path: 'signup-success'});
                 }
             })
