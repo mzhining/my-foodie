@@ -1,7 +1,8 @@
 <template>
     <div id="signup-cust">
         <h1>Sign up now to start ordering!</h1>
-        <form id="custsignup" v-on:submit.prevent="createCust()">
+        <!-- <form id="custsignup" v-on:submit.prevent="createCust()"> -->
+        <form id="custsignup" v-on:submit.prevent="registerCust()">
             <h2>Account Information</h2>
             <label>First Name: </label>
             <input type="text" v-model="customer.first_name" required /><br><br>
@@ -42,7 +43,8 @@
 
 
 <script>
-import database from '../firebase.js'
+// import database from '../firebase.js'
+import firebase from 'firebase';
 
 export default {
     data() {
@@ -84,27 +86,38 @@ export default {
                 this.pwdText = ""
             }
         },
-        createCust() {
-            // add customer details to firebase
+        // createCust() {
+        //     // add customer details to firebase
 
-            // check if account exists
-            database.collection('customers').get().then(snapshot => {
-                snapshot.docs.forEach(doc => {
-                    if (doc.id === this.customer.username) {
-                        alert("Username exists, please try another username.");
-                        this.toCreate = false;
-                    }
-                })
-            }).then(() => {
-                if (this.toCreate === true) {
-                    database.collection('customers').doc(this.customer.username).set(this.customer);
-                    alert("Account created successfully!")
-                }
-            }).then(() => {
-                if (this.toCreate === true) {
-                    this.$router.push({path: 'signup-success'});
-                }
-            })
+        //     // check if account exists
+        //     database.collection('customers').get().then(snapshot => {
+        //         snapshot.docs.forEach(doc => {
+        //             if (doc.id === this.customer.username) {
+        //                 alert("Username exists, please try another username.");
+        //                 this.toCreate = false;
+        //             }
+        //         })
+        //     }).then(() => {
+        //         if (this.toCreate === true) {
+        //             database.collection('customers').doc(this.customer.username).set(this.customer);
+        //             alert("Account created successfully!")
+        //         }
+        //     }).then(() => {
+        //         if (this.toCreate === true) {
+        //             this.$router.push({path: 'signup-success'});
+        //         }
+        //     })
+        // },
+        registerCust: function() {
+            firebase.auth().createUserWithEmailAndPassword(this.customer.email, this.customer.password)
+            .then(user => {
+                // alert(`Account for ${user.email} created in Firebase`);
+                alert(`Account created in Firebase for ${user.email}`);
+                this.$router.push('/login');
+            },
+            err => {
+                alert(err.message);
+            });
         }
     }
 }

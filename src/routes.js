@@ -11,13 +11,13 @@ import Register from './components/Register.vue'
 export default [
     { path: '/', component: Home },
     // { path: '/delivery', component: Delivery },
-    { path: '/reservation', component: Reservation},
+    { path: '/reservation', component: Reservation, meta: {requiresAuth: true}},
     // { path: '/pickup', component: Pickup }
-    { path: '/signup-cust', component: CustSignup},
-    { path: '/signup-rest', component: RestSignup},
+    { path: '/signup-cust', component: CustSignup, meta: {requiresGuest: true}},
+    { path: '/signup-rest', component: RestSignup, meta: {requiresGuest: true}},
     { path: '/signup-success', component: SignupSuccess},
-    { path: '/login', component: Login},
-    { path: '/register', component: Register},
+    { path: '/login', name: 'login', component: Login, meta: {requiresGuest: true}},
+    { path: '/register', name: 'register', component: Register},
 ]
 
 /* <router-link to="/" exact>Home</router-link>
