@@ -8,6 +8,7 @@ Vue.config.productionTip = false
 Vue.use(VueRouter)
 
 const myRouter = new VueRouter({
+// let myRouter = new VueRouter({
   routes: Routes,
   mode: 'history'
 });
@@ -18,13 +19,13 @@ new Vue({
 }).$mount('#app')
 
 
-// Nav Guards
+// Navigation Guards
 // myRouter.beforeEach((to, from, next) => {
-//   // Check for requiredAuth guard
+//   // this route requires auth, check if logged in
 //   if (to.matched.some(record => record.meta.requiresAuth)) {
 //     // check if not logged in
 //     if (!firebase.auth().currentUser) {
-//       // go to login page
+//       // redirect to login page if not logged in
 //       next({
 //         path: '/register',
 //         query: {
@@ -38,15 +39,15 @@ new Vue({
 //     if (firebase.auth().currentUser) {
 //       // redirect to dashboard
 //       next({
-//         path: '/',
+//         path: '/account',
 //         query: {
 //           redirect: to.fullPath
 //         }
 //       });
-//     } else {
-//       next();
 //     }
-//   }
+//    } else {
+//       next();
+//    }
 // });
 
 // export default myRouter;
