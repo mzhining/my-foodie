@@ -5,7 +5,20 @@
         <div class="section">
         </div>
         <h2>Today's reservation</h2>
+        <!-- Assume reservations is one document one resaturant? -->
         <div class="section">
+            <div id="name">
+
+            </div>
+            <aside id="NoPax">
+
+            </aside>
+            <aside id="Time">
+
+            </aside>
+            <aside id="order">
+
+            </aside>
         </div>
         
     </div>
@@ -13,23 +26,26 @@
 
 <script>
 import database from "../firebase.js"
-
+//use Jollibee as an example!
 export default {
     data() {
         return {
             pickup: [],
             reservation:[],
-            restaurant :{}
+            restaurant :{},
+            name:[],
+
         }
     },
     methods:{
         fetchItems: function() {
-            database.collection('restaurants').doc('starbucks').get().then(doc =>{
-                //retrieve the data from resturant starbucks
-                this.restaurant=doc.data();
-                this.reservation=doc.data()['reservation'];
-                this.pickup=doc.data()['pickup'];
-           });
+            database.collection("reservations").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => { 
+                    if (doc.data()["restaurant_name"] == "Jollibee"){
+
+                    }
+                }); 
+            });
         }
     },
     created:function(){
