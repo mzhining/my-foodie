@@ -31,7 +31,8 @@
             </div>
             <br><br>
         </div>
-        <!--I try to use a dummy div and set the height to 700px, to leave a 700px blank, but still cannot make the footer to the bottom -->
+        <!--I try to use a dummy div and set the height to 700px, 
+        to leave a 700px blank, but still cannot make the footer to the bottom -->
         <div id="blank">
             <p> </p>
         </div>
@@ -57,12 +58,8 @@ export default {
     },
     methods:{
         fetchItems: function() {
-            //alert("here1");
-            //alert(this.$userId);
             //database.collection('customers').where("email", "==", this.$userId).get().then(doc =>{
-                //retrieve the data from customer janedoe
                 //this.customer=doc.data();
-                //alert(this.doc());
                 //this.reservation=doc.data()['reservation'];
                 //this.pickup=doc.data()['pickup'];
                 //this.fav=doc.data()['favourites'];
@@ -72,10 +69,10 @@ export default {
             //});
             database.collection("customers").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
-                    //alert("here2");
-                    //alert(doc.data()["email"] == this.$userId);
+                    ///////////////////////////////////////////////
+                    //doc.data()["email"] == this.$userId :
+                    //here I use janedoe customer as example, but actually it should be a global variable!
                     if (doc.data()["email"] == "janedoe@email.com"){
-                        //alert("here inside");
                         this.customer=doc.data();
                         this.fav=doc.data()['favourites'];
                         this.orders=doc.data()['cart'];
