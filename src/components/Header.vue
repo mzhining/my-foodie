@@ -7,18 +7,34 @@
         <router-link to="/order" exact>Order</router-link>
         <router-link to="/dashboardC" exact>My Account</router-link>
         <router-link to="/reservation" exact>Reservation (added router just to check page)</router-link>
+        <router-link to="/login" exact>Login</router-link>
+        <router-link to="/register" exact>Register</router-link>
+        <button v-on:click.prevent="logout()">Logout</button>
     </header>
     </div>
   
 </template>
 
 <script>
+import firebase from 'firebase';
+
 export default {
   
   data(){
     return{
-        msg: 'My Foodie'
-        }
+        msg: 'My Foodie',
+        isLoggedIn: false,
+        currentUser: false
+    }
+  },
+  methods: {
+      logout: function() {
+          firebase.auth().signOut().then(() => {
+              this.$router.replace('/login');
+              alert('Successfully logged out')
+            // this.$router.go({path: this.$router.path});
+          })
+      }
   }
 }
 </script>
