@@ -2,9 +2,14 @@ import Home from './components/Home.vue'
 // import Delivery from './components/Delivery.vue'
 import Reservation from './components/Reservation.vue'
 // import Pickup from './components/Pickup.vue'
+import DashboardR from './components/DashboardR.vue'
+import DashboardC from './components/dashboardC.vue'
+
 
 export default [
     { path: '/', component: Home },
+    { path: '/dashboardR', component: DashboardR},
+    { path: '/dashboardC', component: DashboardC},
     // { path: '/delivery', component: Delivery },
     { path: '/reservation', component: Reservation}
     // { path: '/pickup', component: Pickup }
