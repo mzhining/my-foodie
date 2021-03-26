@@ -24,7 +24,8 @@ Vue.use(VueRouter)
 const myRouter = new VueRouter({
 // let myRouter = new VueRouter({
   routes: [
-    { path: '/', component: Home, redirect: '/login' },
+    // { path: '/', component: Home, redirect: '/login' },
+    { path: '/', component: Home },
     // { path: '/delivery', component: Delivery },
     // { path: '/reservation', component: Reservation},
     { path: '/reservation', component: Reservation, meta: {requiresAuth: true}},
