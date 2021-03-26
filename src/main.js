@@ -82,15 +82,23 @@ new Vue({
 //    }
 // });
 
-// export default myRouter;
 
 myRouter.beforeEach((to, from, next) => {
   const currentUser = firebase.auth().currentUser;
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const requiresGuest = to.matched.some(record => record.meta.requiresGuest);
 
-  if (requiresAuth && !currentUser) next('login');
-  else if (!requiresAuth && currentUser) next('account');
-  else next();
+  if (requiresAuth && !currentUser) {
+    // MUST be signed in, but NOT signed in
+    next('login');
+  // } else if (!requiresAuth && currentUser) next('account');
+  } else if (requiresGuest && currentUser) {
+    // MUST NOT be signed in, but signed in
+    next('/account')
+  } else {
+    // no restrictions, proceed
+    next();
+  }
 });
 
 export default myRouter;
