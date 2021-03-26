@@ -20,6 +20,8 @@ import DashboardC from './components/DashboardC.vue';
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
+//global variable that can be accessed by every component!
+Vue.prototype.$userId = 'jamesbond@gmail.com'
 
 const myRouter = new VueRouter({
 // let myRouter = new VueRouter({
