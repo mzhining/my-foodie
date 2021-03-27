@@ -14,6 +14,7 @@ import RestSignup from './components/RestSignup.vue'
 import SignupSuccess from './components/SignupSuccess.vue'
 import Login from './components/Login.vue'
 import Register from './components/Register.vue'
+import TopRated from './components/TopRated.vue'
 // end of import from routes.js
 
 import DashboardC from './components/DashboardC.vue';
@@ -28,6 +29,7 @@ const myRouter = new VueRouter({
   routes: [
     // { path: '/', component: Home, redirect: '/login' },
     { path: '/', component: Home },
+    { path: '/toprated', component: TopRated },
     // { path: '/delivery', component: Delivery },
     // { path: '/reservation', component: Reservation},
     { path: '/reservation', component: Reservation, meta: {requiresAuth: true}},
