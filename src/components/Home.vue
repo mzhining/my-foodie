@@ -8,7 +8,7 @@
             
             <div class="kotak-mereng-content">
                 <img id="pic" src="@/assets/breakfast.jpg" alt="Breakfast">
-                <p id="slogan">One Stop Place for Your Stomach!</p>
+                <p id="slogan">One Stop Place for Your Stomach! </p>
             </div>
         </div>
         
