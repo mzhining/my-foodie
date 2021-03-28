@@ -56,7 +56,7 @@ export default {
             item.avail--;
             item.pax = this.reservation.pax;
             this.reservation = item;
-            //database.collection('reservations').doc(doc_id).update(this.reservation).then(this.$router.push('confirmReservation'));
+            //database.collection('reservations').doc(doc_id).update(this.reservation).then(this.$router.push({ name: 'confirmReservation', params: {id: doc_id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time}}));
         },
         selectDate: function() {
             var selectedDate = this.reservation.date;
@@ -69,11 +69,43 @@ export default {
             }
             this.available = slots;
             this.show = true;
+        },
+        setMaxDate: function() {
+            var today = new Date();
+            var tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1)
+            var maxday = new Date(tomorrow);
+            maxday.setDate(maxday.getDate() + 7)
+            var dd = tomorrow.getDate();
+            var mm = tomorrow.getMonth()+1; //January is 0!
+            var yyyy = tomorrow.getFullYear();
+            if(dd<10){
+                dd='0'+dd;
+            } 
+            if(mm<10){
+                mm='0'+mm;
+            } 
+            tomorrow = yyyy+'-'+mm+'-'+dd;
+            document.getElementById("datefield").setAttribute("min", tomorrow);
+            var maxdd = maxday.getDate();
+            var maxmm = maxday.getMonth()+1; //January is 0!
+            var maxyyyy = maxday.getFullYear();
+            if(maxdd<10){
+                maxdd='0'+maxdd;
+            } 
+            if(maxmm<10){
+                maxmm='0'+maxmm;
+            } 
+            maxday = maxyyyy+'-'+maxmm+'-'+maxdd;
+            document.getElementById("datefield").setAttribute("max", maxday);
         }
+    }
     },
     created() {
         this.fetchItems();
-    }
+        this.setMaxDate();
+    },
+
 }
 
 //note to zhenghao : 
