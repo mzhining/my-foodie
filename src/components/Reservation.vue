@@ -17,9 +17,9 @@
         <label v-if="show==true"> Time: </label>
         <br>
         <ul>
-            <li v-for="slot in available" v-bind:key="slot.id">
+            <li v-for="slot in available" v-bind:key="slot.time">
                 <p> {{slot.time}} </p>
-                <button v-on:click="book($event)" v-bind:id="slot.id"> Book </button>
+                <button v-on:click="book($event)" v-bind:time="slot.time"> Book </button>
             </li>
         </ul>
         <br>
@@ -43,27 +43,40 @@ export default {
         fetchItems: function() {
             let item = {};
             database.collection('reservations').get().then((querySnapShot)=>{
-                querySnapShot.forEach(doc=>{
-                    item = doc.data();
-                    this.allSlots.push(item);
-                });
+                if (doc.data()["restaurant_name"] == this.restaurant_name) {
+                    querySnapShot.forEach(doc=>{
+                        item = doc.data()["slots"];
+                        this.allSlots.push(item);
+                    });
+                }
             });
         },
         book: function(event) {
             let item = {};
-            let doc_id = event.target.getAttribute("id");
-            item = database.collection('reservations').doc(doc_id).get();
-            item.avail--;
-            item.pax = this.reservation.pax;
-            this.reservation = item;
-            //database.collection('reservations').doc(doc_id).update(this.reservation).then(this.$router.push({ name: 'confirmReservation', params: {id: doc_id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time}}));
+            let time = event.target.getAttribute("time");
+            this.reservation.time = time;
+            database.collection('reservations').get().then((querySnapShot)=>{
+                if (doc.data()["restaurant_name"] == this.restaurant_name) {
+                    querySnapShot.forEach(doc=>{
+                        for (slot in doc["slots"]) {
+                            if (slot["date"] == this.reservation.date && slot["time"] == this.reservation.time) {
+                                slot["orders"].push({});
+                                slot["pax"].push(this.reservation.pax);
+                                slot["reservedBy"].push("customerID");
+                                slot["avail"]--;
+                            }
+                        }
+                        item = doc.data()["slots"];
+                        this.allSlots.push(item);
+                    });
+                }
+            }).then(this.$router.push({ name: 'confirmReservation', params: {id: doc_id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time}}));
         },
         selectDate: function() {
             var selectedDate = this.reservation.date;
             let slots = [];
-            var slot;
             for (slot in this.allSlots) {
-                if (slot.date == selectedDate && slot.avail > 0) {
+                if (slot["date"] == selectedDate && slot["avail"] > 0) {
                     slots.push(slot);
                 }
             }
@@ -99,7 +112,6 @@ export default {
             maxday = maxyyyy+'-'+maxmm+'-'+maxdd;
             document.getElementById("datefield").setAttribute("max", maxday);
         }
-    }
     },
     created() {
         this.fetchItems();
