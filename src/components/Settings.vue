@@ -1,7 +1,8 @@
 <template>
     <div id="settings">
         <h1>Account Settings</h1>
-        
+
+        <!-- update restaurant information -->
         <h2 v-on:click="updateInfo=!updateInfo" v-show="!updateInfo"><a>&#9654; Update Restaurant Information</a></h2>
         <h2 v-on:click="updateInfo=!updateInfo" v-show="updateInfo"><a>&#9660; Update Restaurant Information</a></h2>
         <div v-show="updateInfo">
@@ -24,21 +25,38 @@
                 <span v-if="datapacket.image[2] != ''">Image preview:<br><img v-bind:src="datapacket.image[2]" alt="Not found"></span><br>
                 <label>PayNow Number: +65 </label>
                 <input type="tel" v-model="datapacket.paynow[2]" pattern="[0-9]{8}" v-bind:placeholder="datapacket.paynow[1]" /><br>                
-                <p><button type="submit">Save changes</button></p>
+                <p><button type="submit" class="save">Save changes</button></p>
             </form>
         </div>
 
+        <!-- update restaurant menu -->
         <h2 v-on:click="updateMenu=!updateMenu" v-show="!updateMenu"><a>&#9654; Update Menu</a></h2>
         <h2 v-on:click="updateMenu=!updateMenu" v-show="updateMenu"><a>&#9660; Update Menu</a></h2>
-        <p v-show="updateMenu">
-        &#9660; Add Item<br>
-        Choose an item:<br>
-        <button class="add">Add</button>&nbsp;
-        <button class="modify">Modify</button>&nbsp;
-        <button class="remove">Remove</button>
-        </p>
+        <div v-show="updateMenu">
+            <!-- action buttons -->
+            <p>Choose an item action below<br>
+            <button class="add" v-on:click="updateAction='add'">Add</button>&nbsp;or
+            <button class="modify" v-on:click="updateAction='modify'">Modify</button>&nbsp;or
+            <button class="remove" v-on:click="updateAction='remove'">Remove</button>
+            </p>
 
-        <p><button class="done">Done</button></p>
+            <form v-show="updateAction=='add'" id="add-item" v-on:submit.prevent="addItem()">
+                <p><label>Name of Item: </label>
+                <input type="text" v-model="itemToAdd.name" required /></p>
+                <p><label>Price: $</label>
+                <input type="number" step='0.01' v-model="itemToAdd.price" required /></p>
+                <p><button type="submit" class="save">Add item</button></p>
+            </form>
+
+
+            <ul v-for="item in menu" v-bind:key="item.key">
+                <li>{{item.name}}: {{item.price}}</li>
+            </ul>
+
+
+        </div>
+
+        <p><button class="done" v-on:click="returnDash()">Return to dashboard</button></p>
     </div>
 </template>
 
@@ -51,6 +69,7 @@ export default {
         return {
             updateInfo: false,
             updateMenu: false,
+            updateAction: "",
             // [current, new]
             datapacket: {
                 restaurant_name: ['Restaurant Name', '', ''],
@@ -62,7 +81,12 @@ export default {
                 address: ['Address', '', ''],
                 postal_code: ['Postal Code', '', ''],
                 paynow: ['PayNow', '', ''],
-                }
+                },
+            menu: {},
+            itemToAdd: {
+                name: '',
+                price: 0
+            },
         }
     },
     methods: {
@@ -81,13 +105,14 @@ export default {
                         }
                     }
                 }
-                console.log(this.datapacket);
+                // console.log(this.datapacket);
                 // console.log(this.datapacket['restaurant_name'])
             })
         },
         modifyData: function() {
             // update data in firebase
             let user_id = 'Slurh0dQXG2ce18UHAfO';
+
             let updateFields = [];
             for (let data in this.datapacket) {
                 // console.log(this.datapacket[data][2]);
@@ -101,13 +126,51 @@ export default {
             }
             
             database.collection('restaurants').doc(user_id).update(updateData).then(() => {
-                alert("Information successfully updated!");
+                alert("Information updated successfully!");
                 location.reload();
             });
+        },
+        fetchMenu: function() {
+            // retrieve user ID
+            // let user_id = this.$route.params.user
+            let user_id = 'Slurh0dQXG2ce18UHAfO';
+            database.collection('restaurants').doc(user_id).get().then((doc) => {
+                let dbMenu = doc.data().menu;
+                this.menu = dbMenu;
+            })
+
+        },
+        addItem: function() {
+            // retrieve user ID
+            // let user_id = this.$route.params.user
+            let user_id = 'Slurh0dQXG2ce18UHAfO';
+            // let addData = {}
+            // let itemName = this.itemToAdd.name;
+            let addData = {
+                menu: {
+                    itemName0: {
+                        name: this.itemToAdd.name,
+                        price: this.itemToAdd.price
+                    }
+                }
+            }
+            // database.collection('restaurants').doc(user_id).update({menu: this.itemToAdd}).then(() => {
+                database.collection('restaurants').doc(user_id).set(addData, {merge: true})
+                .then(() => {
+                    alert("Item added successfully!");
+                    this.itemToAdd.name = '';
+                    this.itemToAdd.price = 0;
+            // }).then(()=>location.reload())
+        })
+        },
+        returnDash: function() {
+            // return to dashboard
+            this.$router.push('/account');
         }
     },
     created() {
         this.fetchInfo();
+        this.fetchMenu();
     }
 }
 </script>
@@ -151,7 +214,11 @@ ul {
     list-style-type: none;
 }
 
-.done {
+.save {
     background: rgb(255, 255, 217);
+}
+
+.done {
+    background: rgb(254, 222, 255);
 }
 </style>
