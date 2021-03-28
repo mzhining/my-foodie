@@ -50,7 +50,7 @@ export default {
 
 <style scoped>
 #login, button {
-    font-family: Poppins;
+    font-family: 'Poppins', sans-serif;
     font-style: normal;
 }
 
