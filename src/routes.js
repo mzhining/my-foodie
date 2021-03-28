@@ -10,9 +10,11 @@ import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import DashboardR from './components/DashboardR.vue'
 import DashboardC from './components/dashboardC.vue'
+import TopRated from './components/TopRated.vue'
 
 export default [
     { path: '/', component: Home, redirect: '/login' },
+    { path: '/toprated', component: TopRated},
     { path: '/dashboardR', component: DashboardR},
     { path: '/dashboardC', component: DashboardC},
     // { path: '/delivery', component: Delivery },
