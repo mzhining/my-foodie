@@ -15,21 +15,24 @@
         <hr id="line">
 
         <div class="content">
-            <p id="new"> What's new? </p>
+            <p id="new"> Featured Posts from your Favourite Restaurants! </p>
+            <br>
 
             <div id="content">
                 <div class="card">
                     <div>
-                    <img src="@/assets/collins.jpeg" alt="Collins" height=15rem>
+                    <img src="@/assets/jollibee.jpeg" alt="Jollibee" height=15rem>
                     </div>
-                    <p>GREAT DEAL : 1-FOR-1 Mains in Collins</p>
+                    <p>Check out Chicken and Fries set! Now on sale, limited time only! 🔥</p>
                 </div>
+
+                <br>
 
                 <div class="card">
                     <div>
-                    <img src="@/assets/coffeebean.png" alt="Coffeebean" height=15rem>
+                    <img src="@/assets/starbucks.jpeg" alt="Starbucks" height=15rem>
                     </div>
-                    <p>Check out The Coffee Bean with Home Special</p>
+                    <p>Fancy a good quality coffee to get ready for your day? Order now!</p>
                 </div>
             </div>
         </div>
@@ -37,13 +40,63 @@
 </template>
 
 <script>
+import database from '../firebase.js'
 export default {
-    name: "Home"
+  name: 'TopRated',
+  data () {
+    return {
+      items : []
+    }
+  },
+  created(){
+    this.fetchItems()    
+  },
+  components : {
+
+  }, 
+  
+  methods : {
+    fetchItems:function(){
+      database.collection('toprated').get().then((querySnapShot)=>{
+        let item={}
+        querySnapShot.forEach(doc=>{
+            item=doc.data()
+            item.show=false
+            item.id=doc.id
+            this.items.push(item) 
+         })      
+       })    
+    }
+  }
 }
 </script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+
+#itemsList {
+    width: 100%;
+    max-width: 100%;
+    margin: 0px;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+  
+ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    flex-grow: 1;
+    flex-basis: 200px;
+    text-align: center;
+    padding: 1px;
+    /* border: 1px solid #222; */
+    margin: 2px;
+}
 
 .home {
     display: flex;
@@ -130,6 +183,7 @@ img {
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-size: 20px;
 }
 
 .card {
