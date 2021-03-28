@@ -4,7 +4,7 @@
         <router-link to="/" exact>Home</router-link>
         <router-link to="/toprated" exact>Top Rated </router-link>
         <router-link to="/featured" exact>Featured</router-link>
-        <router-link to="/order" exact>Order</router-link>
+        <router-link to="/ordertoDelivery" exact>Order</router-link>
         <router-link to="/account" exact>My Account</router-link>
         <router-link to="/reservation" exact>Reservation (added router just to check page)</router-link>
         <router-link to="/login" exact>Login</router-link>

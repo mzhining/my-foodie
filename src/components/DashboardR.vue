@@ -1,24 +1,80 @@
 <template> 
     <div >
+        <div class="kotak-mereng">
+            <div class="penyot">
+                <div class="rectangle" />
+                <div class="segitiga" />
+            </div>
+            
+            <div class="kotak-mereng-content">
+                <img id="pic" src="@/assets/breakfast.jpg" alt="Breakfast">
+                <p id="slogan">One Stop Place for Your Stomach! </p>
+            </div>
+        </div>
+        <hr id="line">
         <h1>Restaurant Overview</h1>
         <h2>My current order</h2>
         <div class="section">
+            <pre id="heading">Name                         Time                            Order</pre>
+            <div id="container">
+                <div id="nameP">
+                    <li v-for="item in nameP" v-bind:key="item.id" id="itemlist">
+                        <span>{{item}}</span>
+                        <br><br>
+                    </li>
+                </div>
+                <!-- How to display time nicely???-->
+                <div id="TimeP">
+                    <li v-for="item in timeP" v-bind:key="item.id" id="itemlist">
+                        <span>{{item}}</span>
+                        <br><br>
+                    </li>
+                </div>
+                <div id="orderP">
+                    <li v-for="item in itemsP" v-bind:key="item.id" id="itemlist">
+                        <span>{{item}}</span>
+                        <br><br>
+                    </li>        
+                </div>
+            </div>
         </div>
         <h2>Today's reservation</h2>
         <!-- Assume reservations is one document one resaturant? -->
         <div class="section">
-            <div id="name">
-
+            <!--
+            <li v-for="item in reorder" v-bind:key="item.id" id="itemlist">
+                <span>{{item.name}}    {{item.pax}}    {{item.time}}    {{item.order}}</span>
+                <br>
+            </li>
+            -->
+            <pre id="heading">Name        No.of Pax              Time                            Order</pre>
+            <div id="container">
+                <div id="name">
+                    <li v-for="item in name" v-bind:key="item.id" id="itemlist">
+                        <span>{{item}}</span>
+                        <br><br>
+                    </li>
+                </div>
+                <div id="NoPax">
+                    <li v-for="item in pax" v-bind:key="item.id" id="itemlist">
+                        <span>{{item}}</span>
+                        <br><br>
+                    </li>
+                </div>
+                <!-- How to display time nicely???-->
+                <div id="Time">
+                    <li v-for="item in time" v-bind:key="item.id" id="itemlist">
+                        <span>{{item}}</span>
+                        <br><br>
+                    </li>
+                </div>
+                <div id="order">
+                    <li v-for="item in reservationorder" v-bind:key="item.id" id="itemlist">
+                        <span>{{item}}</span>
+                        <br><br>
+                    </li>        
+                </div>
             </div>
-            <aside id="NoPax">
-
-            </aside>
-            <aside id="Time">
-
-            </aside>
-            <aside id="order">
-
-            </aside>
         </div>
         
     </div>
@@ -30,11 +86,21 @@ import database from "../firebase.js"
 export default {
     data() {
         return {
+            //for reservations in this restaurant
+            restaurantR :{},
+            //for pickup in this restaurant
+            restaurantP :{},
             pickup: [],
-            reservation:[],
-            restaurant :{},
-            name:[],
 
+            reservationorder:[],
+            name:[],
+            pax:[],
+            time:[],
+            reorder:[],//now is useless
+
+            nameP:[],
+            itemsP:[],
+            timeP:[]
         }
     },
     methods:{
@@ -42,8 +108,52 @@ export default {
             database.collection("reservations").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => { 
                     if (doc.data()["restaurant_name"] == "Jollibee"){
-
+                        this.restaurantR=doc.data();
+                        for (var key of Object.keys(doc.data())) {
+                            if (key!="restaurant_name"){
+                                var oneSlot=doc.data()[key];
+                                //this.reservationorder.concat(oneSlot.orders);
+                                //this.pax.concat(oneSlot.pax);
+                                //this.name.concat(oneSlot.reservedBy);
+                                //alert("here");
+                                for (var i = 0; i < oneSlot.reservedBy.length; i++) {
+                                    var dt=oneSlot.dateAndTime;
+                                    this.time.push(dt);
+                                    this.reservationorder.push(oneSlot.orders[i]);
+                                    this.pax.push(oneSlot.pax[i]);
+                                    this.name.push(oneSlot.reservedBy[i]);
+                                }
+                            }
+                        }
+                        //alert(this.name);
+                        //alert("here4");
+                        //reorder to group the information for each reservation together
+                        //for (let i = 0; i < this.name.length; i++) {
+                        //    alert("here5");
+                        //    var oneOrder={};
+                        //    oneOrder.name=this.name[i];
+                        //    oneOrder.pax=this.pax[i];
+                        //    oneOrder.order=this.reservationorder[i];
+                        //    oneOrder.time=this.time[i];
+                        //    this.reorder.push(oneOrder);
+                        //    alert(this.reorder);
+                        //}
                     }
+
+                }); 
+            });
+            database.collection("pickup").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => { 
+                    if (doc.data()["restaurant_name"] == "Jollibee"){
+                        this.restaurantP=doc.data();
+                        var pickupOrders=doc.data().orders;
+                        for (var i = 0; i < pickupOrders.length; i++) {
+                            this.nameP.push(pickupOrders[i].customer);
+                            this.itemsP.push(pickupOrders[i].items);
+                            this.timeP.push(pickupOrders[i].time);
+                        }
+                    }
+
                 }); 
             });
         }
@@ -56,18 +166,170 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+
+.home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.kotak-mereng {
+    position: relative;
+    height: 20rem;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.kotak-mereng-content {
+    max-width: 1300px;
+    position: relative;
+    width: 100%;
+}
+.rectangle{
+    height: 5rem;
+    background-color: rgba(224, 116, 114, 0.64);
+}
+
+.segitiga {
+    overflow: hidden;
+    height: 0;
+    border-width: 10rem 100vw 0 0;
+    border-style: solid;
+    border-color: rgba(224, 116, 114, 0.64) transparent transparent rgba(224, 116, 114, 0.64);
+}
+
+.penyot {
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    width: 100%;
+    z-index: 0;
+}
+
+#slogan {
+    font-family: Carosello;
+    font-size: 40px;
+    color: white;
+    margin: 0;
+    position: absolute;
+    z-index: 69;
+    left: 10%;
+    top: 30%;
+}
+
+#pic {
+    height: 17rem;
+    position: absolute;
+    z-index: 69;
+    right: 8%;
+    top: 8%;
+    height: 15rem;
+}
+#line {
+    border: 3px dashed #90141C;
+}
+
 h1 {
   font-size:30px;
   color:black;
-  margin-left: 30px;
+  margin-left: 10%;
   font-weight: bold;
+  text-align: left;
 }
 h2 {
   font-size:20px;
   color:black;
-  margin-left: 40px;
+  margin-left: 10%;
+  text-align: left;
 }
 
+#fav {
+    font-size:15px;
+    list-style-type: none;
+    text-align: left;
+    margin-left: 10%;
+
+}
+
+#header {
+    font-size:20px;
+    list-style-type: none;
+    text-align: left;
+    font-weight: bold;
+    margin-left: 2%;
+}
+
+#itemlist {
+    font-size:20px;
+    list-style-type: none;
+    text-align: left;
+    margin-left: 2%;
+}
+
+.section {
+    background-color:rgb(198, 204, 204);
+    margin-left: 10%;
+    margin-right: 10%;
+    border-radius: 10px;
+}
+#block {
+    font-size:20px;
+    list-style-type: none;
+    text-align: left;
+    margin-left: 2%;
+}
+.blank {
+    height:700px;
+}
+.box { 
+    display: inline; 
+    margin-left: 5px;
+    margin-right: 5px;
+}
+#heading {
+    font-weight: bold;
+    font-size:22px;
+    text-align: left;
+    margin-left: 2%;
+}
+#container {
+    width: 100%;
+    overflow: hidden;
+}
+#name {
+    margin-left:2%;
+    float: left;
+    width: 15%;
+}
+#NoPax {
+    float: left;
+    width: 10%;
+}
+#Time {
+    float: left;
+    width: 25%;
+}
+#order {
+    margin-left:5%;
+    float: left;
+    width: 25%;
+}
+#nameP {
+    margin-left:2%;
+    float: left;
+    width: 20%;
+}
+
+#TimeP {
+    float: left;
+    width: 25%;
+}
+#orderP {
+    margin-left:5%;
+    float: left;
+    width: 30%;
+}
 
 </style>
 
