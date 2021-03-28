@@ -27,7 +27,7 @@
             <label>Postal Code: </label>
             <input type="tel" v-model="restaurant.postal_code" pattern="[0-9]{6}" required /><br><br>
             <label>Upload Restaurant Logo (please paste image URL):</label><br>
-            <input type="url" v-model="restaurant.image" required /><br>
+            <input type="url" v-model.lazy="restaurant.image" required /><br>
             <span v-if="restaurant.image != ''">Image preview:<br>
             <img v-bind:src="restaurant.image" alt="Not found"></span><br>
             <h2>Payment Details</h2>
