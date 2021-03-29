@@ -23,6 +23,7 @@ import DashboardC from './components/DashboardC.vue';
 import DashboardR from './components/DashboardR.vue';
 import Delivery from './components/Delivery.vue';
 import OrdertoDelivery from './components/OrdertoDelivery.vue';
+import Settings from './components/Settings.vue';
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
@@ -53,7 +54,8 @@ const myRouter = new VueRouter({
     { path: '/accountR', component: DashboardR, meta: {requiresAuth: true}},
     { name:'delivery', path: '/delivery', component: Delivery, props:true, meta: {requiresAuth: true}},
     //{ path: '/delivery', component: Delivery, meta: {requiresAuth: true}},
-    { path: '/ordertoDelivery', component: OrdertoDelivery, meta: {requiresAuth: true}}
+    { path: '/ordertoDelivery', component: OrdertoDelivery, meta: {requiresAuth: true}},
+    { path: '/settings', component: Settings}
 
   ],
   mode: 'history'

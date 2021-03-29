@@ -30,7 +30,7 @@ export default {
 
 <style scoped>
 #register {
-    font-family: Poppins;
+    font-family: 'Poppins', sans-serif;
     font-style: normal;
 }
 
@@ -39,7 +39,7 @@ button {
 }
 
 .newacc {
-    font-family: Poppins;
+    font-family: 'Poppins', sans-serif;
     font-style: normal;
     padding: 10px 20px;
     background: #FDFFD0;
@@ -49,7 +49,7 @@ button {
 }
 
 .existacc {
-    font-family: Poppins;
+    font-family: 'Poppins', sans-serif;
     font-style: normal;
     padding: 10px 20px;
     background: #E3FFE6;

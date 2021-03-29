@@ -20,7 +20,7 @@ export default {
 
 <style scoped>
 div, button {
-    font-family: Poppins;
+    font-family: 'Poppins', sans-serif;
     font-style: normal;
     /* text-align: left; */
     /* padding-left: 300px; */
