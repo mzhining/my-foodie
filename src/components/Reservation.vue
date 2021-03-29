@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1> Make a reservation for Jollibee at S(828761) </h1>
+        <h1> Make a reservation for {{this.$route.params.id}} at {{this.reservation.postal}} </h1>
         <label> Number of pax: </label>
         <br>
         <input type="number" placeholder=0 min="1" max="8" v-model.lazy="reservation.pax" required/>
@@ -42,12 +42,12 @@ export default {
     methods: {
         fetchItems: function() {
             let item = {};
-            database.collection('reservations').get().then((querySnapShot)=>{
-                if (doc.data()["restaurant_name"] == this.restaurant_name) {
-                    querySnapShot.forEach(doc=>{
-                        item = doc.data()["slots"];
-                        this.allSlots.push(item);
-                    });
+            database.collection('reservations').doc(this.$route.params.id).get().then((querySnapShot)=>{
+                this.reservation.postal = doc.data()["postal"];
+                querySnapShot.forEach(doc=>{
+                    item = doc.data()["slots"];
+                    this.allSlots.push(item);
+                });
                 }
             });
         },
@@ -56,7 +56,7 @@ export default {
             let time = event.target.getAttribute("time");
             this.reservation.time = time;
             database.collection('reservations').get().then((querySnapShot)=>{
-                if (doc.data()["restaurant_name"] == this.restaurant_name) {
+                if (doc.data()["restaurant_name"] == this.$route.params.id) {
                     querySnapShot.forEach(doc=>{
                         for (slot in doc["slots"]) {
                             if (slot["date"] == this.reservation.date && slot["time"] == this.reservation.time) {
@@ -70,7 +70,7 @@ export default {
                         this.allSlots.push(item);
                     });
                 }
-            }).then(this.$router.push({ name: 'confirmReservation', params: {id: doc_id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time}}));
+            }).then(this.$router.push({ name: 'confirmReservation', params: {id: doc_id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.reservation.postal}}));
         },
         selectDate: function() {
             var selectedDate = this.reservation.date;
@@ -116,8 +116,7 @@ export default {
     created() {
         this.fetchItems();
         this.setMaxDate();
-    },
-
+    }
 }
 
 //note to zhenghao : 
