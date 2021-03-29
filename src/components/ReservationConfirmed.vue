@@ -7,6 +7,12 @@
         <br>
         <br>
         <p> Thank you for making a reservation for Jollibee with MyFoodie! </p>
+        <br>
+        <br>
+        <button> Order in advance </button>
+        <br>
+        <br>
+        <button> Back to Homepage </button>
     </div>
 </template>
 
