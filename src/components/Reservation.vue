@@ -48,7 +48,6 @@ export default {
                     item = doc.data()["slots"];
                     this.allSlots.push(item);
                 });
-                }
             });
         },
         book: function(event) {
