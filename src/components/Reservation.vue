@@ -70,7 +70,7 @@ export default {
                         this.allSlots.push(item);
                     });
                 }
-            }).then(this.$router.push({ name: 'confirmReservation', params: {id: doc_id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.reservation.postal}}));
+            }).then(this.$router.push({ name: 'reservationConfirmed', params: {id: doc_id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.reservation.postal}}));
         },
         selectDate: function() {
             var selectedDate = this.reservation.date;
