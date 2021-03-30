@@ -15,9 +15,9 @@
         <h1>Restaurant Overview</h1>
         <h2>My current order</h2>
         <div class="section">
-            <pre id="heading">Name                         Time                            Order</pre>
             <div id="container">
                 <div id="nameP">
+                    <p id="heading">Name</p>
                     <li v-for="item in nameP" v-bind:key="item.id" id="itemlist">
                         <span>{{item}}</span>
                         <br><br>
@@ -25,12 +25,14 @@
                 </div>
                 <!-- How to display time nicely???-->
                 <div id="TimeP">
+                    <p id="heading">Time</p>
                     <li v-for="item in timeP" v-bind:key="item.id" id="itemlist">
                         <span>{{item}}</span>
                         <br><br>
                     </li>
                 </div>
                 <div id="orderP">
+                    <p id="heading">Order</p>
                     <li v-for="item in itemsP" v-bind:key="item.id" id="itemlist">
                         <span>{{item}}</span>
                         <br><br>
@@ -47,15 +49,16 @@
                 <br>
             </li>
             -->
-            <pre id="heading">Name        No.of Pax              Time                            Order</pre>
             <div id="container">
                 <div id="name">
+                    <p id="heading">Name</p>
                     <li v-for="item in name" v-bind:key="item.id" id="itemlist">
                         <span>{{item}}</span>
                         <br><br>
                     </li>
                 </div>
                 <div id="NoPax">
+                    <p id="heading">No.of Pax</p>
                     <li v-for="item in pax" v-bind:key="item.id" id="itemlist">
                         <span>{{item}}</span>
                         <br><br>
@@ -63,12 +66,14 @@
                 </div>
                 <!-- How to display time nicely???-->
                 <div id="Time">
+                    <p id="heading">Time</p>
                     <li v-for="item in time" v-bind:key="item.id" id="itemlist">
                         <span>{{item}}</span>
                         <br><br>
                     </li>
                 </div>
                 <div id="order">
+                    <p id="heading">Order</p>
                     <li v-for="item in reservationorder" v-bind:key="item.id" id="itemlist">
                         <span>{{item}}</span>
                         <br><br>
@@ -76,6 +81,7 @@
                 </div>
             </div>
         </div>
+        <router-link to="/settings" exact><h2>Setting</h2></router-link>
         
     </div>
 </template>
@@ -109,22 +115,37 @@ export default {
                 querySnapshot.forEach((doc) => { 
                     if (doc.data()["restaurant_name"] == "Jollibee"){
                         this.restaurantR=doc.data();
-                        for (var key of Object.keys(doc.data())) {
-                            if (key!="restaurant_name"){
-                                var oneSlot=doc.data()[key];
-                                //this.reservationorder.concat(oneSlot.orders);
-                                //this.pax.concat(oneSlot.pax);
-                                //this.name.concat(oneSlot.reservedBy);
-                                //alert("here");
-                                for (var i = 0; i < oneSlot.reservedBy.length; i++) {
-                                    var dt=oneSlot.dateAndTime;
-                                    this.time.push(dt);
-                                    this.reservationorder.push(oneSlot.orders[i]);
-                                    this.pax.push(oneSlot.pax[i]);
-                                    this.name.push(oneSlot.reservedBy[i]);
-                                }
+                        //alert("here1");
+                        for (var i = 0; i < doc.data()["slots"].length; i++) {
+                            //alert("here2");
+                            var oneSlot=doc.data()["slots"][i];
+                            //alert("here3");
+                            for (var j = 0; j < oneSlot.reservedBy.length; j++) {
+                                //alert("here4");
+                                var dt=oneSlot.date + " "+oneSlot.time; 
+                                //alert(dt);
+                                this.time.push(dt);
+                                this.reservationorder.push(oneSlot.orders[j]);
+                                this.pax.push(oneSlot.pax[j]);
+                                this.name.push(oneSlot.reservedBy[j]);
                             }
                         }
+                        //for (var key of Object.keys(doc.data())) {
+                        //    if (key!="restaurant_name"){
+                        //        var oneSlot=doc.data()[key];
+                        //        //this.reservationorder.concat(oneSlot.orders);
+                        //        //this.pax.concat(oneSlot.pax);
+                        //        //this.name.concat(oneSlot.reservedBy);
+                        //        //alert("here");
+                        //        for (var i = 0; i < oneSlot.reservedBy.length; i++) {
+                        //            var dt=oneSlot.dateAndTime;
+                        //            this.time.push(dt);
+                        //            this.reservationorder.push(oneSlot.orders[i]);
+                        //            this.pax.push(oneSlot.pax[i]);
+                        //            this.name.push(oneSlot.reservedBy[i]);
+                        //        }
+                        //    }
+                        //}
                         //alert(this.name);
                         //alert("here4");
                         //reorder to group the information for each reservation together
