@@ -26,6 +26,10 @@
             <textarea v-model="restaurant.address" cols="30" rows="2" required /><br><br>
             <label>Postal Code: </label>
             <input type="tel" v-model="restaurant.postal_code" pattern="[0-9]{6}" required /><br><br>
+            <label>Upload Restaurant Logo (please paste image URL):</label><br>
+            <input type="url" v-model.lazy="restaurant.image" required /><br>
+            <span v-if="restaurant.image != ''">Image preview:<br>
+            <img v-bind:src="restaurant.image" alt="Not found"></span><br>
             <h2>Payment Details</h2>
             Payment for your orders will be sent to your PayNow phone number.<br><br>
             <label>PayNow Number: </label>
@@ -58,7 +62,8 @@ export default {
                 contact_num: "",
                 address: "",
                 postal_code: "",
-                paynow: ""
+                paynow: "",
+                image: ""
             }
         }
     },
@@ -122,8 +127,10 @@ export default {
 
 
 <style scoped>
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap'); */
+
 #signup-rest, button {
-    font-family: Poppins;
+    font-family: 'Poppins', sans-serif;
     font-style: normal;
     /* text-align: left; */
     /* padding-left: 300px; */
