@@ -28,7 +28,7 @@ export default {
             this.$router.push({ name: 'reservationOrder', params: {id: this.$route.params.id, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal}});
         },
         home: function() {
-            this.$router.push(home);
+            this.$router.push('/');
         }
     }
 }
