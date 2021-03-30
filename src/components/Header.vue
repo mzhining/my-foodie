@@ -23,17 +23,21 @@ export default {
   data(){
     return{
         msg: 'My Foodie',
-        isLoggedIn: false,
-        currentUser: false
+        // isLoggedIn: false,
+        // currentUser: false
     }
   },
   methods: {
       logout: function() {
-          firebase.auth().signOut().then(() => {
-              this.$router.replace('/login');
-              alert('Successfully logged out')
-            // this.$router.go({path: this.$router.path});
-          })
+          if (firebase.auth().currentUser) {
+              firebase.auth().signOut().then(() => {
+                  this.$router.replace('/login');
+                  alert('Successfully logged out');
+                // this.$router.go({path: this.$router.path});
+              })
+          } else {
+              alert('ERROR: Not logged in!');
+          }
       }
   }
 }
