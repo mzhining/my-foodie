@@ -35,6 +35,7 @@ export default {
                   alert('Successfully logged out');
                 // this.$router.go({path: this.$router.path});
               })
+              .catch((error) => alert(error.message))
           } else {
               alert('ERROR: Not logged in!');
           }

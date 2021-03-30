@@ -8,7 +8,6 @@
             <input type="email" v-model="email" /><br><br>
             <label>Password: </label>
             <input type="password" v-model="password" /><br><br>
-            <!-- <p><button type="submit" v-on:click.prevent="redirectDashboard()">Login</button></p> -->
             <p><button type="submit" v-on:click.prevent="loginAcc()">Login</button></p>
         </form>
     </div>
@@ -21,26 +20,23 @@ import firebase from 'firebase';
 export default {
     data() {
         return {
-            // username: "",
             email: "",
             password: "",
         }
     },
     methods: {
-        // redirectDashboard() {
-        //     // "Redirect to Dashboard (customer/restaurant)";
-        //     // this.$router.push({name: 'Dashboard', params: {username: this.login.username, password: this.login.password}})
-        // },
         loginAcc: function() {
-            firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-            .then(user => {
+            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+                return firebase.auth().signInWithEmailAndPassword(this.email, this.password)})
+                .then(user => {
                 alert(`You are logged in as ${user.user.email}`);
-                this.$router.push('/account');
-                // this.$router.go({path: this.$router.path});
-
+                this.$root.userId = user.user.uid;
+                console.log("login id: ", this.$root.userId);
+                this.$router.push('/settings');
             },
             err => {
                 alert(err.message);
+            
             })
         }
     }

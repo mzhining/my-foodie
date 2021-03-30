@@ -64,7 +64,8 @@ export default {
                 postal_code: "",
                 paynow: "",
                 image: ""
-            }
+            },
+            user_id: '',
         }
     },
     methods: {
@@ -111,12 +112,20 @@ export default {
                 firebase.auth().createUserWithEmailAndPassword(this.restaurant.email, this.restaurant.password)
                 .then(user => {
                     alert(`Account created for ${user.user.email}`);
-                    this.$router.push('/signup-success').then(()=>location.reload());
+                    this.$root.signup_user_id = user.user.uid;
+                    // database.collection('restaurants').doc(this.user_id).set(this.restaurant);
+                    // this.$router.push('/signup-success').then(()=>location.reload());
                     // this.$router.go({path: this.$router.path});
                 },
                 err => {
                     alert(err.message);
-                });
+                }).then(() => {
+                    if (this.$root.signup_user_id != '') {
+                        database.collection('restaurants').doc(this.$root.signup_user_id).set(this.restaurant)
+                        // this.$router.push('/signup-success')
+                        .then(()=>location.replace('/signup-success'));
+                    }
+                })
             } else {
                 alert("Please check that you have filled in all details correctly. Your password must match.")
             }

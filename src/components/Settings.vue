@@ -94,7 +94,7 @@
 
 <script>
 import database from '../firebase.js';
-// import firebase from 'firebase';
+import firebase from 'firebase';
 
 export default {
     data() {
@@ -120,15 +120,16 @@ export default {
                 price: '',
                 image: ''
             },
-            itemToRemove: ''
+            itemToRemove: '',
         }
     },
     methods: {
         fetchInfo: function() {
-            // retrieve user ID
-            // let user_id = this.$route.params.user
-            let user_id = 'Slurh0dQXG2ce18UHAfO';
-            database.collection('restaurants').doc(user_id).get().then((doc) => {
+            // console.log("Settings|Firebase uid: ", firebase.auth().currentUser.uid);
+            // this.$root.userId = firebase.auth().currentUser.uid;
+            // console.log("Settings|rootuserid: ", this.$root.userId);
+            console.log('fetchInfo: ', this.$root.userId);
+            database.collection('restaurants').doc(this.$root.userId).get().then((doc) => {
                 let storedData = doc.data();
                 for (let data in storedData) { // existing data (key)
                     for (let info in this.datapacket) { // current storage [old, new]
@@ -145,8 +146,6 @@ export default {
         },
         modifyData: function() {
             // update data in firebase
-            let user_id = 'Slurh0dQXG2ce18UHAfO';
-
             let updateFields = [];
             for (let data in this.datapacket) {
                 // console.log(this.datapacket[data][2]);
@@ -159,27 +158,19 @@ export default {
                 updateData[field] = this.datapacket[field][2];
             }
             
-            database.collection('restaurants').doc(user_id).update(updateData).then(() => {
+            database.collection('restaurants').doc(this.$root.userId).update(updateData).then(() => {
                 alert("Information updated successfully!");
                 location.reload();
             });
         },
         fetchMenu: function() {
-            // retrieve user ID
-            // let user_id = this.$route.params.user
-            let user_id = 'Slurh0dQXG2ce18UHAfO';
-            database.collection('restaurants').doc(user_id).get().then((doc) => {
+            database.collection('restaurants').doc(this.$root.userId).get().then((doc) => {
                 let dbMenu = doc.data().menu;
                 this.menu = dbMenu;
             })
 
         },
         addItem: function() {
-            // retrieve user ID
-            // let user_id = this.$route.params.user
-            let user_id = 'Slurh0dQXG2ce18UHAfO';
-            // let addData = {}
-            // let itemName = this.itemToAdd.name;
             let addData = {
                 menu: {}
             }
@@ -189,26 +180,19 @@ export default {
                 image: this.itemToAdd.image
             }
 
-            // database.collection('restaurants').doc(user_id).update({menu: this.itemToAdd}).then(() => {
-                database.collection('restaurants').doc(user_id).set(addData, {merge: true})
-                .then(() => {
-                    alert("Item added successfully!");
-                    this.itemToAdd.name = '';
-                    this.itemToAdd.price = '';
-                    this.itemToAdd.image = '';
-                }).then(()=>location.reload())
+            database.collection('restaurants').doc(this.$root.userId).set(addData, {merge: true})
+            .then(() => {
+                alert("Item added successfully!");
+                this.itemToAdd.name = '';
+                this.itemToAdd.price = '';
+                this.itemToAdd.image = '';
+            }).then(()=>location.reload())
                 // })
         },
         removeItem: function() {
-            // retrieve user ID
-            // let user_id = this.$route.params.user
-            let user_id = 'Slurh0dQXG2ce18UHAfO';
             let menu = this.menu;
             let new_menu = {};
-            // for (let item in menu) {
-            //     // if (item != this.itemToRemove) {
-            //     new_menu[item] = menu[item];
-            // }
+
             if (this.itemToRemove in menu) {
                 // item exists in menu
                 // update menu with new_menu
@@ -217,12 +201,15 @@ export default {
                         new_menu[item] = menu[item];
                     }
                 }
-                database.collection('restaurants').doc(user_id).update({menu: new_menu})
+                database.collection('restaurants').doc(this.$root.userId).update({menu: new_menu})
                 .then(() => {
                     alert(this.itemToRemove + ' removed successfully!');
-                }).then(() => location.reload())
+                    location.reload();
+                })
+                .catch((err) => alert(err.message))
             } else {
                 // does not exist
+                console.log("removeItem: ", this.$root.userId);
                 alert(this.itemToRemove + ' does not exist!');
             }
         },
@@ -233,8 +220,35 @@ export default {
             // return to dashboard
             this.$router.push('/account');
         },
+        getState() {
+            // firebase.auth().onAuthStateChanged((user) => {
+            //     if (user) {
+            //         console.log('getState: ', user.uid);
+            //         this.$root.userId = user.uid;
+            //         console.log('this.$root.userId: ', this.$root.userId);
+            //         // return user.uid;
+            //     } else if (firebase.auth().currentUser) {
+            //         this.$root.userId = firebase.auth().currentUser.uid;
+            //     } else {
+            //         console.log('not signed in')
+            //     }
+            // })
+            // this.$root.userId = firebase.auth().currentUser.uid;
+            this.$root.userId = firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    this.$root.userId = user.uid;
+                    console.log('getState: ', this.$root.userId);
+                }
+            })
+            // console.log('getState: ', this.$root.userId)
+        }
     },
     created() {
+        // this.getState().then(() => {
+        //     this.fetchInfo();
+        //     this.fetchMenu();
+        // }).catch((err) => alert(err.message))
+        this.getState();
         this.fetchInfo();
         this.fetchMenu();
     }
