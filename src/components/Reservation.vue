@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import database from '../firebase.js'
+//import database from '../firebase.js'
 
 export default {
     data() {
@@ -41,46 +41,46 @@ export default {
     },
     methods: {
         fetchItems: function() {
-            let item = {};
-            database.collection('reservations').doc(this.$route.params.id).get().then((querySnapShot)=>{
-                this.reservation.postal = doc.data()["postal"];
-                querySnapShot.forEach(doc=>{
-                    item = doc.data()["slots"];
-                    this.allSlots.push(item);
-                });
-            });
+        //    let item = {};
+        //    database.collection('reservations').doc(this.$route.params.id).get().then((querySnapShot)=>{
+        //        this.reservation.postal = doc.data()["postal"];
+        //        querySnapShot.forEach(doc=>{
+        //            item = doc.data()["slots"];
+        //            this.allSlots.push(item);
+        //        });
+        //    });
         },
         book: function(event) {
-            let item = {};
+        //    let item = {};
             let time = event.target.getAttribute("time");
             this.reservation.time = time;
-            database.collection('reservations').get().then((querySnapShot)=>{
-                if (doc.data()["restaurant_name"] == this.$route.params.id) {
-                    querySnapShot.forEach(doc=>{
-                        for (slot in doc["slots"]) {
-                            if (slot["date"] == this.reservation.date && slot["time"] == this.reservation.time) {
-                                slot["orders"].push({});
-                                slot["pax"].push(this.reservation.pax);
-                                slot["reservedBy"].push("customerID");
-                                slot["avail"]--;
-                            }
-                        }
-                        item = doc.data()["slots"];
-                        this.allSlots.push(item);
-                    });
-                }
-            }).then(this.$router.push({ name: 'reservationConfirmed', params: {id: doc_id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.reservation.postal}}));
+        //    database.collection('reservations').get().then((querySnapShot)=>{
+        //        if (doc.data()["restaurant_name"] == this.$route.params.id) {
+        //            querySnapShot.forEach(doc=>{
+        //                for (slot in doc["slots"]) {
+        //                    if (slot["date"] == this.reservation.date && slot["time"] == this.reservation.time) {
+        //                        slot["orders"].push({});
+        //                        slot["pax"].push(this.reservation.pax);
+        //                        slot["reservedBy"].push("customerID");
+        //                        slot["avail"]--;
+        //                    }
+        //                }
+        //                item = doc.data()["slots"];
+        //                this.allSlots.push(item);
+        //            });
+        //        }
+        //    }).then(this.$router.push({ name: 'reservationConfirmed', params: {id: doc_id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.reservation.postal}}));
         },
         selectDate: function() {
-            var selectedDate = this.reservation.date;
-            let slots = [];
-            for (slot in this.allSlots) {
-                if (slot["date"] == selectedDate && slot["avail"] > 0) {
-                    slots.push(slot);
-                }
-            }
-            this.available = slots;
-            this.show = true;
+        //    var selectedDate = this.reservation.date;
+        //    let slots = [];
+        //    for (slot in this.allSlots) {
+        //        if (slot["date"] == selectedDate && slot["avail"] > 0) {
+        //            slots.push(slot);
+        //        }
+        //    }
+        //    this.available = slots;
+        //    this.show = true;
         },
         setMaxDate: function() {
             var today = new Date();

@@ -63,7 +63,11 @@ export default {
             fav_html:[],
             customer:{},
             reservation:{},
-            //assume one people can only have one reservation
+            ///////////////////////////////////////////////////
+            //use the document janedoe as sample display!!!!
+            //assume one people can only have one reservation, since the reservation in customer document is a map rather than an array
+            //and other document in customers does not have reservation feild.
+            //For pickup, it is stored in cart attribute in the document
             reservation_order:{},
             userEmail:""
         }
@@ -81,7 +85,7 @@ export default {
             //});
             database.collection("customers").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
-                    ///////////////////////////////////////////////
+                    ///////////////////////////////////////////////////////////////////////
                     //doc.data()["email"] == this.$userId :
                     //here I use janedoe customer as example, but actually it should be a global variable!
                     if (doc.data()["email"] == "janedoe@email.com"){
@@ -101,11 +105,15 @@ export default {
                                 }); 
                             });
                         }
+                        ///////////////////////////////////////////////
+                        //to get the reservations of this customer
                         database.collection("reservations").get().then((querySnapshot) => {
                             querySnapshot.forEach((doc) => {
                                 if (doc.data()["restaurant_name"] == this.reservation.restaurant_name){
                                     var idindex=parseInt(this.reservation.id);
-                                    this.reservation_order=doc.data().slot.orders[idindex];
+                                    /////////////////////////////////////////////////////////////////////////////
+                                    //assume that it only retrieve from slots[0], so we need 2 index to decide which reservation the customer has
+                                    this.reservation_order=doc.data().slots[0].orders[idindex];
                                 }
                             }); 
                         });
