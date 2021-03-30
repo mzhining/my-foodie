@@ -25,6 +25,8 @@ import DashboardC from './components/DashboardC.vue';
 import DashboardR from './components/DashboardR.vue';
 import Delivery from './components/Delivery.vue';
 import OrdertoDelivery from './components/OrdertoDelivery.vue';
+import OrdertoPickup from './components/OrdertoPickup.vue';
+import OrdertoReservation from './components/OrdertoReservation.vue';
 import Settings from './components/Settings.vue';
 
 Vue.config.productionTip = false
@@ -42,8 +44,10 @@ const myRouter = new VueRouter({
     { path: '/contactus', component: ContactUs },
     { path: '/pickup', component: Pickup, name : 'pickup', props : true },
     // { path: '/reservation', component: Reservation},
+
     { path: '/reservation', component: Reservation, meta: {requiresAuth: true}},
      { path: '/ordertoPickup', component: OrdertoPickup },
+
     // { path: '/signup-cust', component: CustSignup},
     { path: '/signup-cust', component: CustSignup, meta: {requiresGuest: true}},
     { path: '/pickup-confirmation', component: PickupConfirmation, name : 'pickup-confirmation'},
@@ -56,8 +60,11 @@ const myRouter = new VueRouter({
     { path: '/account', component: DashboardC, name : 'account', meta: {requiresAuth: true}},
     { path: '/accountR', component: DashboardR, meta: {requiresAuth: true}},
     { name:'delivery', path: '/delivery', component: Delivery, props:true, meta: {requiresAuth: true}},
-    //{ path: '/delivery', component: Delivery, meta: {requiresAuth: true}},
+    { name:'reservation', path: '/reservation', component: Reservation, props:true, meta: {requiresAuth: true}},
+    //{ name:'pickup', path: '/pickup', component: Pickup, props:true, meta: {requiresAuth: true}},
     { path: '/ordertoDelivery', component: OrdertoDelivery, meta: {requiresAuth: true}},
+    { path: '/ordertoPickup', component: OrdertoPickup, meta: {requiresAuth: true}},
+    { path: '/ordertoReservation', component: OrdertoReservation, meta: {requiresAuth: true}},
     { path: '/settings', component: Settings}
 
   ],

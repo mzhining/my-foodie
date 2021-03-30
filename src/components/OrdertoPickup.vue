@@ -14,10 +14,10 @@
         <hr id="line">
         <div id="container">
             <div id="navigationbar">
-                <ul>
-                    <li><router-link to="/delivery" exact>Delivery </router-link></li>
+                <ul id="naviBar">
+                    <li><router-link to="/ordertoDelivery" exact>Delivery </router-link></li>
                     <br><br>
-                    <li><router-link to="/reservation" exact>Reservation </router-link></li>
+                    <li><router-link to="/ordertoReservation" exact>Reservation </router-link></li>
                     <br><br>
                     <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
                 </ul>
@@ -47,7 +47,8 @@ import database from "../firebase.js"
 export default {
     data() {
         return {
-            restaurants:[], //to store the whole object
+            restaurants:[],//to store the whole object
+
             image:[]
         }
     },
@@ -62,18 +63,17 @@ export default {
                     this.image.push(doc.data()["image"]);
                 });
             });
-            console.log(this.restaurants)
-        }
     },
     created:function(){
         this.fetchItems();
     }
 }
+}
 
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
 
 #itemsList {
     width: 100%;
@@ -81,14 +81,14 @@ export default {
     margin: 0px;
     padding: 0 5px;
     box-sizing: border-box;
-}
-  
+} 
 ul {
     display: flex;
     flex-wrap: wrap;
     list-style-type: none;
     padding: 0;
 }
+
 
 li {
     flex-grow: 1;
@@ -214,6 +214,10 @@ li {
 #picture {
     float: left;
     width: 80%;
+}
+
+.content p:hover {
+    color: blue;
 }
 
 </style>

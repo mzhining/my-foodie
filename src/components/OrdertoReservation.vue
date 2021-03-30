@@ -29,7 +29,7 @@
                             <!--first direct them to delivery page -->
                             <img v-bind:src="item.image"/>  
                             <br> 
-                            <p v-bind:id="item.restaurant_name" v-on:click="route($event)">{{item.restaurant_name}} </p>
+                            <p v-bind:id="item.restaurant_name" v-bind:postal="item.postal_code" v-on:click="route($event)">{{item.restaurant_name}} </p>
                         </li>
                     </ul>
                 </div>
@@ -51,7 +51,9 @@ export default {
     methods:{
         route:function(event){
             let restaurant_name = event.target.getAttribute("id");
-            this.$router.push({name:'pickup', params:{restaurantN:restaurant_name}});
+            let postal_code=event.target.getAttribute("postal");
+            this.$router.push({name:'reservation', params:{restaurantN:restaurant_name, postal: postal_code}});
+            //I set this name as pickup!!
         },
         fetchItems: function() {
             database.collection("restaurants").get().then((querySnapshot) => {
