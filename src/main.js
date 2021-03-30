@@ -28,7 +28,7 @@ import Settings from './components/Settings.vue';
 Vue.config.productionTip = false
 Vue.use(VueRouter)
 //global variable that can be accessed by every component!
-// Vue.prototype.$userId = 'jamesbond@gmail.com'
+Vue.prototype.$userId = 'jamesbond@gmail.com'
 
 const myRouter = new VueRouter({
 // let myRouter = new VueRouter({
@@ -57,23 +57,11 @@ const myRouter = new VueRouter({
   mode: 'history'
 });
 
-// Vue.mixin({
-//   created() {
-//     if (firebase.auth().currentUser) {
-//       this.$root.userId = firebase.auth().currentUser.uid;
-//     }
-//   }
-// })
-
 new Vue({
   render: h => h(App),
-  router:myRouter,
-  data: {
-    userId: ''
-  },
+  router:myRouter
 }).$mount('#app')
 
-// firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 // Navigation Guards (draft)
 // myRouter.beforeEach((to, from, next) => {
@@ -109,6 +97,9 @@ new Vue({
 // Navigation Guards (working)
 myRouter.beforeEach((to, from, next) => {
   const currentUser = firebase.auth().currentUser;
+  
+  // console.log(currentUser.uid, currentUser.email);
+  
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const requiresGuest = to.matched.some(record => record.meta.requiresGuest);
 
