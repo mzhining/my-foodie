@@ -25,7 +25,7 @@ export default {
     },
     methods: {
         goToOrder: function() {
-            this.$router.push({ name: 'reservationOrder', params: {id: this.$route.params.id, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal}});
+            this.$router.push({ name: 'reservationOrder', params: {id: this.$route.params.id, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal, data: this.$route.params.data}});
         },
         home: function() {
             this.$router.push('/');

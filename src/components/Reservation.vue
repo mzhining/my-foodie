@@ -63,7 +63,7 @@ export default {
                 }
             }
             database.collection('reservation').doc(this.$route.params.id).update(this.data).then(
-                this.$router.push({ name: 'reservationConfirmed', params: {id: this.$route.params.id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.data.postal}}));
+                this.$router.push({ name: 'reservationConfirmed', params: {id: this.$route.params.id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.data.postal, data: this.data}}));
         },
         selectDate: function() {
             this.reservation.date = this.reservation.date.toString();
