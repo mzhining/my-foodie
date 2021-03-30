@@ -51,7 +51,7 @@ export default {
     methods:{
         route:function(event){
             let restaurant_name = event.target.getAttribute("id");
-            this.$router.push({name:'pickup', params:{restaurantN:restaurant_name}});
+            this.$router.push({name:'delivery', params:{restaurantN:restaurant_name}});
         },
         fetchItems: function() {
             database.collection("restaurants").get().then((querySnapshot) => {

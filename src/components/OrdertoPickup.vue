@@ -25,15 +25,13 @@
             <aside id="picture">
                 <div class="content">
                     <ul id = "itemsList">
-
-                        <li v-for="item in restaurants" v-bind:key="item.restaurant_name" >
+                        <li v-for="item in restaurants" v-bind:key="item.restaurant_name" id="picture_display">
+                            <!--first direct them to delivery page -->
                             <img v-bind:src="item.image" class = "icon"/>  
                             <br> 
-                            <p v-bind:id="item.restaurant_name">{{item.restaurant_name}}</p>
-                            <button v-bind:id="item.restaurant_name" v-on:click="route($event)"> Order </button>
-                            <br>
+                            <p v-bind:id="item.restaurant_name" >{{item.restaurant_name}} </p>
+                            <button v-on:click="route($event)"> Order </button>
                         </li>
-
                     </ul>
                 </div>
             </aside>
@@ -48,13 +46,13 @@ export default {
     data() {
         return {
             restaurants:[],//to store the whole object
-
             image:[]
         }
     },
     methods:{
         route:function(event){
-            this.$router.push({name: 'pickup', params: {id: event.target.getAttribute("rest_name")}})
+            let restaurant_name = event.target.getAttribute("id");
+            this.$router.push({name:'pickup', params:{restaurantN:restaurant_name}});
         },
         fetchItems: function() {
             database.collection("restaurants").get().then((querySnapshot) => {
@@ -63,17 +61,18 @@ export default {
                     this.image.push(doc.data()["image"]);
                 });
             });
+
+      }
     },
     created:function(){
         this.fetchItems();
     }
 }
-}
 
 </script>
 
 <style scoped>
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
 
 #itemsList {
     width: 100%;
@@ -81,20 +80,19 @@ export default {
     margin: 0px;
     padding: 0 5px;
     box-sizing: border-box;
-} 
-ul {
     display: flex;
     flex-wrap: wrap;
     list-style-type: none;
     padding: 0;
 }
 
-
-li {
+#picture_display {
     flex-grow: 1;
-    flex-basis: 100px;
+    flex-basis: 200px;
     text-align: center;
-    /* border: 1px solid #222;  */
+    padding: 1px;
+    /* border: 1px solid #222; */
+    margin: 2px;
 }
 
 .home {
@@ -151,7 +149,7 @@ li {
 
 #icon {
     height: 15rem;
-    width: 15rem;
+    weight: 15rem;
 }
 
 #pic {
@@ -206,16 +204,21 @@ li {
     overflow: hidden;
 }
 #navigationbar {
+    text-align: left;
     font-size:20px;
-    margin-left:2%;
+    margin-left:5%;
     float: left;
     width: 10%;
+
+}
+#naviBar {
+    list-style-type: none;
+    padding: 0;
 }
 #picture {
     float: left;
     width: 80%;
 }
-
 .content p:hover {
     color: blue;
 }
