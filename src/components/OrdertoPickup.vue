@@ -25,12 +25,15 @@
             <aside id="picture">
                 <div class="content">
                     <ul id = "itemsList">
+
                         <li v-for="item in restaurants" v-bind:key="item.restaurant_name" >
-                            <!--first direct them to delivery page -->
-                            <img v-bind:src="item.image"/>  
+                            <img v-bind:src="item.image" class = "icon"/>  
                             <br> 
-                            <p v-bind:id="item.restaurant_name" v-on:click="route($event)">{{item.restaurant_name}} </p>
+                            <p v-bind:id="item.restaurant_name">{{item.restaurant_name}}</p>
+                            <button v-bind:id="item.restaurant_name" v-on:click="route($event)"> Order </button>
+                            <br>
                         </li>
+
                     </ul>
                 </div>
             </aside>
@@ -44,14 +47,13 @@ import database from "../firebase.js"
 export default {
     data() {
         return {
-            restaurants:[],//to store the whole object
+            restaurants:[], //to store the whole object
             image:[]
         }
     },
     methods:{
         route:function(event){
-            let restaurant_name = event.target.getAttribute("id");
-            this.$router.push({name:'pickup', params:{restaurantN:restaurant_name}});
+            this.$router.push({name: 'pickup', params: {id: event.target.getAttribute("rest_name")}})
         },
         fetchItems: function() {
             database.collection("restaurants").get().then((querySnapshot) => {
@@ -60,8 +62,8 @@ export default {
                     this.image.push(doc.data()["image"]);
                 });
             });
-
-      }
+            console.log(this.restaurants)
+        }
     },
     created:function(){
         this.fetchItems();
@@ -90,11 +92,9 @@ ul {
 
 li {
     flex-grow: 1;
-    flex-basis: 200px;
+    flex-basis: 100px;
     text-align: center;
-    padding: 1px;
-    /* border: 1px solid #222; */
-    margin: 2px;
+    /* border: 1px solid #222;  */
 }
 
 .home {
@@ -149,8 +149,9 @@ li {
     top: 30%;
 }
 
-img {
+#icon {
     height: 15rem;
+    width: 15rem;
 }
 
 #pic {
@@ -205,10 +206,10 @@ img {
     overflow: hidden;
 }
 #navigationbar {
-    font-size:30px;
+    font-size:20px;
     margin-left:2%;
     float: left;
-    width: 15%;
+    width: 10%;
 }
 #picture {
     float: left;

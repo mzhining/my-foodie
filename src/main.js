@@ -8,7 +8,7 @@ import firebase from 'firebase';
 import Home from './components/Home.vue'
 // import Delivery from './components/Delivery.vue'
 import Reservation from './components/Reservation.vue'
-// import Pickup from './components/Pickup.vue'
+import OrdertoPickup from './components/OrdertoPickup.vue'
 import CustSignup from './components/CustSignup.vue'
 import RestSignup from './components/RestSignup.vue'
 import SignupSuccess from './components/SignupSuccess.vue'
@@ -17,6 +17,8 @@ import Register from './components/Register.vue'
 import TopRated from './components/TopRated.vue'
 import Featured from './components/Featured.vue'
 import ContactUs from './components/ContactUs.vue'
+import Pickup from './components/Pickup.vue'
+import PickupConfirmation from './components/PickupConfirmation.vue'
 // end of import from routes.js
 
 import DashboardC from './components/DashboardC.vue';
@@ -38,19 +40,20 @@ const myRouter = new VueRouter({
     { path: '/toprated', component: TopRated },
     { path: '/featured', component: Featured },
     { path: '/contactus', component: ContactUs },
+    { path: '/pickup', component: Pickup, name : 'pickup', props : true },
     // { path: '/reservation', component: Reservation},
     { path: '/reservation', component: Reservation, meta: {requiresAuth: true}},
-    // { path: '/pickup', component: Pickup }
+     { path: '/ordertoPickup', component: OrdertoPickup },
     // { path: '/signup-cust', component: CustSignup},
     { path: '/signup-cust', component: CustSignup, meta: {requiresGuest: true}},
+    { path: '/pickup-confirmation', component: PickupConfirmation, name : 'pickup-confirmation'},
     // { path: '/signup-rest', component: RestSignup},
     { path: '/signup-rest', component: RestSignup, meta: {requiresGuest: true}},
     { path: '/signup-success', component: SignupSuccess},
     // { path: '/login', name: 'login', component: Login},
     { path: '/login', name: 'login', component: Login, meta: {requiresGuest: true}},
     { path: '/register', name: 'register', component: Register, meta: {requiresGuest: true}},
-
-    { path: '/account', component: DashboardC, meta: {requiresAuth: true}},
+    { path: '/account', component: DashboardC, name : 'account', meta: {requiresAuth: true}},
     { path: '/accountR', component: DashboardR, meta: {requiresAuth: true}},
     { name:'delivery', path: '/delivery', component: Delivery, props:true, meta: {requiresAuth: true}},
     //{ path: '/delivery', component: Delivery, meta: {requiresAuth: true}},
