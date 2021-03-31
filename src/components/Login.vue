@@ -29,9 +29,8 @@ export default {
             firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
                 return firebase.auth().signInWithEmailAndPassword(this.email, this.password)})
                 .then(user => {
-                alert(`You are logged in as ${user.user.email}`);
-                this.$root.userId = user.user.uid;
-                console.log("login id: ", this.$root.userId);
+                alert(`Welcome! You are logged in as ${user.user.email}`);
+                // console.log("Login: ", firebase.auth().currentUser.email);
                 this.$router.push('/settings');
             },
             err => {

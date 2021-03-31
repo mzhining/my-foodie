@@ -121,15 +121,12 @@ export default {
                 image: ''
             },
             itemToRemove: '',
+            // userId: ''
         }
     },
     methods: {
         fetchInfo: function() {
-            // console.log("Settings|Firebase uid: ", firebase.auth().currentUser.uid);
-            // this.$root.userId = firebase.auth().currentUser.uid;
-            // console.log("Settings|rootuserid: ", this.$root.userId);
-            console.log('fetchInfo: ', this.$root.userId);
-            database.collection('restaurants').doc(this.$root.userId).get().then((doc) => {
+            database.collection('restaurants').doc(this.userId).get().then((doc) => {
                 let storedData = doc.data();
                 for (let data in storedData) { // existing data (key)
                     for (let info in this.datapacket) { // current storage [old, new]
@@ -143,6 +140,7 @@ export default {
                 // console.log(this.datapacket);
                 // console.log(this.datapacket['restaurant_name'])
             })
+            console.log('fetchInfo: ', this.userId, this.userProfile);
         },
         modifyData: function() {
             // update data in firebase
@@ -158,13 +156,13 @@ export default {
                 updateData[field] = this.datapacket[field][2];
             }
             
-            database.collection('restaurants').doc(this.$root.userId).update(updateData).then(() => {
+            database.collection('restaurants').doc(this.userId).update(updateData).then(() => {
                 alert("Information updated successfully!");
                 location.reload();
             });
         },
         fetchMenu: function() {
-            database.collection('restaurants').doc(this.$root.userId).get().then((doc) => {
+            database.collection('restaurants').doc(this.userId).get().then((doc) => {
                 let dbMenu = doc.data().menu;
                 this.menu = dbMenu;
             })
@@ -180,7 +178,7 @@ export default {
                 image: this.itemToAdd.image
             }
 
-            database.collection('restaurants').doc(this.$root.userId).set(addData, {merge: true})
+            database.collection('restaurants').doc(this.userId).set(addData, {merge: true})
             .then(() => {
                 alert("Item added successfully!");
                 this.itemToAdd.name = '';
@@ -201,7 +199,7 @@ export default {
                         new_menu[item] = menu[item];
                     }
                 }
-                database.collection('restaurants').doc(this.$root.userId).update({menu: new_menu})
+                database.collection('restaurants').doc(this.userId).update({menu: new_menu})
                 .then(() => {
                     alert(this.itemToRemove + ' removed successfully!');
                     location.reload();
@@ -209,7 +207,7 @@ export default {
                 .catch((err) => alert(err.message))
             } else {
                 // does not exist
-                console.log("removeItem: ", this.$root.userId);
+                console.log("removeItem: ", this.userId);
                 alert(this.itemToRemove + ' does not exist!');
             }
         },
@@ -220,37 +218,27 @@ export default {
             // return to dashboard
             this.$router.push('/account');
         },
-        getState() {
-            // firebase.auth().onAuthStateChanged((user) => {
-            //     if (user) {
-            //         console.log('getState: ', user.uid);
-            //         this.$root.userId = user.uid;
-            //         console.log('this.$root.userId: ', this.$root.userId);
-            //         // return user.uid;
-            //     } else if (firebase.auth().currentUser) {
-            //         this.$root.userId = firebase.auth().currentUser.uid;
-            //     } else {
-            //         console.log('not signed in')
-            //     }
-            // })
-            // this.$root.userId = firebase.auth().currentUser.uid;
-            this.$root.userId = firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
-                    this.$root.userId = user.uid;
-                    console.log('getState: ', this.$root.userId);
-                }
-            })
-            // console.log('getState: ', this.$root.userId)
-        }
     },
     created() {
-        // this.getState().then(() => {
-        //     this.fetchInfo();
-        //     this.fetchMenu();
-        // }).catch((err) => alert(err.message))
-        this.getState();
-        this.fetchInfo();
-        this.fetchMenu();
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.userId = user.uid;
+                database.collection('restaurants').doc(this.userId).get().then((doc) => {
+                    if (doc.exists) {
+                        this.userData = doc.data();
+                        this.userProfile = this.userData.profile;
+                    } else {
+                        console.log('doc does not exist')
+                    }
+                })
+            } else {
+                this.userId = 'not logged in'
+            }
+            console.log('created: ', this.userId);
+            console.log('profile: ', this.userProfile)
+            this.fetchInfo();
+            this.fetchMenu();
+        })
     }
 }
 </script>

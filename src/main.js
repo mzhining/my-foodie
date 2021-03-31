@@ -57,14 +57,6 @@ const myRouter = new VueRouter({
   mode: 'history'
 });
 
-// Vue.mixin({
-//   created() {
-//     if (firebase.auth().currentUser) {
-//       this.$root.userId = firebase.auth().currentUser.uid;
-//     }
-//   }
-// })
-
 new Vue({
   render: h => h(App),
   router:myRouter,
