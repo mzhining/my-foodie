@@ -27,9 +27,10 @@
                     <ul id = "itemsList">
                         <li v-for="item in restaurants" v-bind:key="item.restaurant_name" id="picture_display">
                             <!--first direct them to delivery page -->
-                            <img v-bind:src="item.image"/>  
+                            <img v-bind:src="item.image" class = "icon"/>  
                             <br> 
-                            <p v-bind:id="item.restaurant_name" v-bind:postal="item.postal_code" v-on:click="route($event)">{{item.restaurant_name}} </p>
+                            <p v-bind:id="item.restaurant_name" >{{item.restaurant_name}} </p>
+                            <button v-on:click="route($event)"> Order </button>
                         </li>
                     </ul>
                 </div>
@@ -51,9 +52,7 @@ export default {
     methods:{
         route:function(event){
             let restaurant_name = event.target.getAttribute("id");
-            let postal_code=event.target.getAttribute("postal");
-            this.$router.push({name:'pickup', params:{restaurantN:restaurant_name, postal: postal_code}});
-            //I set this name as pickup!!
+            this.$router.push({name:'pickup', params:{restaurantN:restaurant_name}});
         },
         fetchItems: function() {
             database.collection("restaurants").get().then((querySnapshot) => {
@@ -148,8 +147,9 @@ export default {
     top: 30%;
 }
 
-img {
+#icon {
     height: 15rem;
+    weight: 15rem;
 }
 
 #pic {
@@ -205,10 +205,10 @@ img {
 }
 #navigationbar {
     text-align: left;
-    font-size:30px;
+    font-size:20px;
     margin-left:5%;
     float: left;
-    width: 15%;
+    width: 10%;
 
 }
 #naviBar {

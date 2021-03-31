@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <h1> Make a reservation for {{this.$route.params.id}} at {{this.data.postal}} </h1>
         <label> Number of pax: </label>
         <br>
@@ -23,7 +24,7 @@
             </li>
         </ul>
         <br>
-        <br>
+        <br> -->
     </div>
 </template>
 
