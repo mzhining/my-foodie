@@ -24,16 +24,18 @@ import DashboardR from './components/DashboardR.vue';
 import Delivery from './components/Delivery.vue';
 import OrdertoDelivery from './components/OrdertoDelivery.vue';
 import Settings from './components/Settings.vue';
+import loadData from './loadData.js';
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
 //global variable that can be accessed by every component!
-Vue.prototype.$userId = 'jamesbond@gmail.com'
+// Vue.prototype.$userId = 'jamesbond@gmail.com'
+Vue.mixin(loadData)
+
 
 const myRouter = new VueRouter({
 // let myRouter = new VueRouter({
   routes: [
-    // { path: '/', component: Home, redirect: '/login' },
     { path: '/', component: Home },
     { path: '/toprated', component: TopRated },
     { path: '/featured', component: Featured },
@@ -41,12 +43,9 @@ const myRouter = new VueRouter({
     // { path: '/reservation', component: Reservation},
     { path: '/reservation', component: Reservation, meta: {requiresAuth: true}},
     // { path: '/pickup', component: Pickup }
-    // { path: '/signup-cust', component: CustSignup},
     { path: '/signup-cust', component: CustSignup, meta: {requiresGuest: true}},
-    // { path: '/signup-rest', component: RestSignup},
     { path: '/signup-rest', component: RestSignup, meta: {requiresGuest: true}},
     { path: '/signup-success', component: SignupSuccess},
-    // { path: '/login', name: 'login', component: Login},
     { path: '/login', name: 'login', component: Login, meta: {requiresGuest: true}},
     { path: '/register', name: 'register', component: Register, meta: {requiresGuest: true}},
 
@@ -63,11 +62,15 @@ const myRouter = new VueRouter({
 
 new Vue({
   render: h => h(App),
-  router:myRouter
+  router:myRouter,
+  data: {
+    userId: ''
+  },
 }).$mount('#app')
 
+// firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-// Navigation Guards
+// Navigation Guards (draft)
 // myRouter.beforeEach((to, from, next) => {
 //   // this route requires auth, check if logged in
 //   if (to.matched.some(record => record.meta.requiresAuth)) {
@@ -98,7 +101,7 @@ new Vue({
 //    }
 // });
 
-
+// Navigation Guards (working)
 myRouter.beforeEach((to, from, next) => {
   const currentUser = firebase.auth().currentUser;
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
@@ -110,7 +113,7 @@ myRouter.beforeEach((to, from, next) => {
   // } else if (!requiresAuth && currentUser) next('account');
   } else if (requiresGuest && currentUser) {
     // MUST NOT be signed in, but signed in
-    next('/account')
+    next('account')
   } else {
     // no restrictions, proceed
     next();
