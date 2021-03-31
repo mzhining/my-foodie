@@ -140,7 +140,7 @@ export default {
                 // console.log(this.datapacket);
                 // console.log(this.datapacket['restaurant_name'])
             })
-            console.log('fetchInfo: ', this.userId, this.userProfile);
+            // console.log('fetchInfo: ', this.userId, this.userProfile, this.userData);
         },
         modifyData: function() {
             // update data in firebase
@@ -166,6 +166,7 @@ export default {
                 let dbMenu = doc.data().menu;
                 this.menu = dbMenu;
             })
+            // console.log('fetchMenu: ', this.userId, this.userProfile, this.userData);
 
         },
         addItem: function() {
@@ -226,18 +227,20 @@ export default {
                 database.collection('restaurants').doc(this.userId).get().then((doc) => {
                     if (doc.exists) {
                         this.userData = doc.data();
+                        this.userEmail = this.userData.email;
                         this.userProfile = this.userData.profile;
                     } else {
                         console.log('doc does not exist')
                     }
+
+                    // insert functions here
+                    this.fetchInfo();
+                    this.fetchMenu();
+
                 })
             } else {
                 this.userId = 'not logged in'
             }
-            console.log('created: ', this.userId);
-            console.log('profile: ', this.userProfile)
-            this.fetchInfo();
-            this.fetchMenu();
         })
     }
 }
