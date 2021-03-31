@@ -54,6 +54,7 @@ export default {
         book: function(event) {
             let time = event.target.getAttribute("time");
             this.reservation.time = time;
+            this.reservation.pax = Number(this.reservation.pax);
             for (let i = 0; i < this.data.slots.length; i++) {
                 if (this.data.slots[i]["date"] == this.reservation.date && this.data.slots[i]["time"] == this.reservation.time) {
                     this.data.slots[i]["orders"].push({});
@@ -62,7 +63,7 @@ export default {
                     this.data.slots[i]["avail"]--;
                 }
             }
-            database.collection('reservation').doc(this.$route.params.id).update(this.data).then(
+            database.collection('reservations').doc(this.$route.params.id).update(this.data).then(
                 this.$router.push({ name: 'reservationConfirmed', params: {id: this.$route.params.id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.data.postal, data: this.data}}));
         },
         selectDate: function() {
