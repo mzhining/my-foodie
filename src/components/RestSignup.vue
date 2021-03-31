@@ -63,7 +63,12 @@ export default {
                 address: "",
                 postal_code: "",
                 paynow: "",
-                image: ""
+                image: "",
+                profile: 'restaurant',
+                menu: {},
+                pickup: {},
+                reservation: {},
+
             },
             user_id: '',
         }
