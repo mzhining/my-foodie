@@ -52,7 +52,9 @@
                 this.itemsSelected.forEach((item) => {
                     newOrder[item[0]] = item[1];
                 });
+                this.$route.params.data["orders"].push(newOrder);
                 //add order to database
+                database.collection('reservation').doc(this.$route.params.id).update(this.data);
             }
         }
     }

@@ -61,12 +61,14 @@
                 }
             },
             fetchItems: function() {
-                database.collection('menu').get().then(snapshot => {
+                database.collection('restaurants').get().then(querySnapshot => {
                     let item={};
-                    snapshot.docs.forEach(doc => {
-                        item=doc.data();
-                        item.show=false;
-                        this.items.push(item);
+                    querySnapshot.docs.forEach(doc => {
+                        if (doc.id == this.$route.params.id) {
+                            item=doc.data();
+                            item.show=false;
+                            this.items.push(item);
+                        }
                     });
                 });
             }
