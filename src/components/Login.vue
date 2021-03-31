@@ -31,7 +31,7 @@ export default {
                 .then(user => {
                 alert(`Welcome! You are logged in as ${user.user.email}`);
                 // console.log("Login: ", firebase.auth().currentUser.email);
-                this.$router.push('/settings');
+                this.$router.push('/account');
             },
             err => {
                 alert(err.message);
