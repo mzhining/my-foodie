@@ -24,11 +24,14 @@ import DashboardR from './components/DashboardR.vue';
 import Delivery from './components/Delivery.vue';
 import OrdertoDelivery from './components/OrdertoDelivery.vue';
 import Settings from './components/Settings.vue';
+import loadData from './loadData.js';
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
 //global variable that can be accessed by every component!
 // Vue.prototype.$userId = 'jamesbond@gmail.com'
+Vue.mixin(loadData)
+
 
 const myRouter = new VueRouter({
 // let myRouter = new VueRouter({
