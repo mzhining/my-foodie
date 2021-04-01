@@ -1,3 +1,6 @@
+
+// OBSOLETE - import directly in 'main.js'
+
 // import Home from './components/Home.vue'
 // // import Delivery from './components/Delivery.vue'
 // import Reservation from './components/Reservation.vue'

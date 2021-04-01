@@ -2,7 +2,7 @@
     <div id="signup-cust">
         <h1>Sign up now to start ordering!</h1>
         <!-- <form id="custsignup" v-on:submit.prevent="createCust()"> -->
-        <form id="custsignup" v-on:submit.prevent="createCust();registerCust()">
+        <form id="custsignup" v-on:submit.prevent="registerCust()">
             <h2>Account Information</h2>
             <label>First Name: </label>
             <input type="text" v-model="customer.first_name" required /><br><br>
@@ -67,6 +67,8 @@ export default {
                 },
                 cart: {},
                 favourites: [],
+                profile: 'customer',
+                reservation: {}
             }
         }
     },
@@ -84,42 +86,25 @@ export default {
                 this.pwdText = ""
             }
         },
-        createCust() {
-            // add customer details to firebase
-            if (this.toCreate === true) {
-                database.collection('customers').add(this.customer);
-            }
-
-            // // check if account exists
-            // database.collection('customers').get().then(snapshot => {
-            //     snapshot.docs.forEach(doc => {
-            //         if (doc.id === this.customer.username) {
-            //             alert("Username exists, please try another username.");
-            //             this.toCreate = false;
-            //         }
-            //     })
-            // }).then(() => {
-            //     if (this.toCreate === true) {
-            //         database.collection('customers').doc(this.customer.username).set(this.customer);
-            //         alert("Account created successfully!")
-            //     }
-            // }).then(() => {
-            //     if (this.toCreate === true) {
-            //         this.$router.push('/signup-success');
-            //     }
-            // })
-        },
         registerCust: function() {
             if (this.toCreate === true) {
                 firebase.auth().createUserWithEmailAndPassword(this.customer.email, this.customer.password)
                 .then(user => {
                     alert(`Account created for ${user.user.email}`);
-                    this.$router.push('/signup-success').then(()=>location.reload());
+                    this.$root.signup_user_id = user.user.uid;
+                    // database.collection('restaurants').doc(this.user_id).set(this.restaurant);
+                    // this.$router.push('/signup-success').then(()=>location.reload());
                     // this.$router.go({path: this.$router.path});
                 },
                 err => {
                     alert(err.message);
-                });
+                }).then(() => {
+                    if (this.$root.signup_user_id != '') {
+                        database.collection('customers').doc(this.$root.signup_user_id).set(this.customer)
+                        // this.$router.push('/signup-success')
+                        .then(()=>location.replace('/signup-success'));
+                    }
+                })
             } else {
                 alert("Please check that you have filled in all details correctly. Your password must match.")
             }

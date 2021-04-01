@@ -1,7 +1,7 @@
 <template>
     <div id="signup-rest">
         <h1>Sign up now to start taking orders!</h1>
-        <form id="restsignup" v-on:submit.prevent="createRest();registerRest()">
+        <form id="restsignup" v-on:submit.prevent="registerRest()">
             <h2>Account Information</h2>
             <label>First Name: </label>
             <input type="text" v-model="restaurant.first_name" required /><br><br>
@@ -63,8 +63,14 @@ export default {
                 address: "",
                 postal_code: "",
                 paynow: "",
-                image: ""
-            }
+                image: "",
+                profile: 'restaurant',
+                menu: {},
+                pickup: {},
+                reservation: {},
+
+            },
+            user_id: '',
         }
     },
     methods: {
@@ -81,42 +87,25 @@ export default {
                 this.pwdText = ""
             }
         },
-        createRest() {
-            // add restaurant details to firebase
-            if (this.toCreate === true) {
-                database.collection('restaurants').add(this.restaurant);
-            }
-
-            // // check if account exists
-            // database.collection('restaurants').get().then(snapshot => {
-            //     snapshot.docs.forEach(doc => {
-            //         if (doc.id === this.restaurant.username) {
-            //             alert("Username exists, please try another username.");
-            //             this.toCreate = false;
-            //         }
-            //     })
-            // }).then(() => {
-            //     if (this.toCreate === true) {
-            //         database.collection('restaurants').doc(this.restaurant.username).set(this.restaurant);
-            //         alert("Account created successfully!")
-            //     }
-            // }).then(() => {
-            //     if (this.toCreate === true) {
-            //         this.$router.push({path: 'signup-success'})
-            //     }
-            // })
-        },
         registerRest: function() {
             if (this.toCreate === true) {
                 firebase.auth().createUserWithEmailAndPassword(this.restaurant.email, this.restaurant.password)
                 .then(user => {
                     alert(`Account created for ${user.user.email}`);
-                    this.$router.push('/signup-success').then(()=>location.reload());
+                    this.$root.signup_user_id = user.user.uid;
+                    // database.collection('restaurants').doc(this.user_id).set(this.restaurant);
+                    // this.$router.push('/signup-success').then(()=>location.reload());
                     // this.$router.go({path: this.$router.path});
                 },
                 err => {
                     alert(err.message);
-                });
+                }).then(() => {
+                    if (this.$root.signup_user_id != '') {
+                        database.collection('restaurants').doc(this.$root.signup_user_id).set(this.restaurant)
+                        // this.$router.push('/signup-success')
+                        .then(()=>location.replace('/signup-success'));
+                    }
+                })
             } else {
                 alert("Please check that you have filled in all details correctly. Your password must match.")
             }
