@@ -45,7 +45,7 @@ const myRouter = new VueRouter({
     // { path: '/pickup', component: Pickup }
     { path: '/signup-cust', component: CustSignup, meta: {requiresGuest: true}},
     { path: '/signup-rest', component: RestSignup, meta: {requiresGuest: true}},
-    { path: '/signup-success', component: SignupSuccess},
+    { path: '/signup-success', component: SignupSuccess, meta: {requiresGuest: true}},
     { path: '/login', name: 'login', component: Login, meta: {requiresGuest: true}},
     { path: '/register', name: 'register', component: Register, meta: {requiresGuest: true}},
 
@@ -54,7 +54,7 @@ const myRouter = new VueRouter({
     { name:'delivery', path: '/delivery', component: Delivery, props:true, meta: {requiresAuth: true}},
     //{ path: '/delivery', component: Delivery, meta: {requiresAuth: true}},
     { path: '/ordertoDelivery', component: OrdertoDelivery, meta: {requiresAuth: true}},
-    { path: '/settings', component: Settings}
+    { path: '/settings', component: Settings, meta: {requiresAuth: true}}
 
   ],
   mode: 'history'
@@ -63,9 +63,6 @@ const myRouter = new VueRouter({
 new Vue({
   render: h => h(App),
   router:myRouter,
-  data: {
-    userId: ''
-  },
 }).$mount('#app')
 
 // firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
