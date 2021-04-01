@@ -40,7 +40,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(row,i) in this.datapacket.order" :key="i">
+                                <tr v-for="(row,i) in this.datapacket.orders" :key="i">
                                     <td>{{row.name}}</td>
                                     <td>{{row.quantity}}</td>
                                     <td>${{row.price}}</td>
