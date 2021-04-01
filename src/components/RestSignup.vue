@@ -1,7 +1,7 @@
 <template>
     <div id="signup-rest">
         <h1>Sign up now to start taking orders!</h1>
-        <form id="restsignup" v-on:submit.prevent="createRest();registerRest()">
+        <form id="restsignup" v-on:submit.prevent="registerRest()">
             <h2>Account Information</h2>
             <label>First Name: </label>
             <input type="text" v-model="restaurant.first_name" required /><br><br>
@@ -86,31 +86,6 @@ export default {
             } else {
                 this.pwdText = ""
             }
-        },
-        createRest() {
-            // add restaurant details to firebase
-            if (this.toCreate === true) {
-                database.collection('restaurants').add(this.restaurant);
-            }
-
-            // // check if account exists
-            // database.collection('restaurants').get().then(snapshot => {
-            //     snapshot.docs.forEach(doc => {
-            //         if (doc.id === this.restaurant.username) {
-            //             alert("Username exists, please try another username.");
-            //             this.toCreate = false;
-            //         }
-            //     })
-            // }).then(() => {
-            //     if (this.toCreate === true) {
-            //         database.collection('restaurants').doc(this.restaurant.username).set(this.restaurant);
-            //         alert("Account created successfully!")
-            //     }
-            // }).then(() => {
-            //     if (this.toCreate === true) {
-            //         this.$router.push({path: 'signup-success'})
-            //     }
-            // })
         },
         registerRest: function() {
             if (this.toCreate === true) {

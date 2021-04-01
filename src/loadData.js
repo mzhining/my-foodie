@@ -7,31 +7,31 @@ export default {
         loadData: function() {
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
-                    Vue.prototype.$userId = user.uid;
-                    database.collection('restaurants').doc(this.$userId).get().then((doc) => {
+                    Vue.prototype.$userUid = user.uid;
+                    database.collection('restaurants').doc(this.$userUid).get().then((doc) => {
                         if (doc.exists) {
                             Vue.prototype.$userData = doc.data();
-                            Vue.prototype.$userEmail = this.$userData.email;
+                            Vue.prototype.$userId = this.$userData.email;
                             Vue.prototype.$userProfile = this.$userData.profile;
-                            // console.log('rest exists', this.$userId, this.$userEmail, this.$userProfile, this.$userData);
+                            // console.log('rest exists', this.$userUid, this.$userId, this.$userProfile, this.$userData);
                         } else {
                             // console.log('not restaurant, search customer db');
-                            database.collection('customers').doc(this.$userId).get().then((doc) => {
+                            database.collection('customers').doc(this.$userUid).get().then((doc) => {
                                 console.log(doc.data());
                                 if (doc.exists) {
                                     Vue.prototype.$userData = doc.data();
-                                    Vue.prototype.$userEmail = this.$userData.email;
+                                    Vue.prototype.$userId = this.$userData.email;
                                     Vue.prototype.$userProfile = this.$userData.profile;
-                                    // console.log('cust exists', this.$userId, this.$userEmail, this.$userProfile, this.$userData);
+                                    // console.log('cust exists', this.$userUid, this.$userId, this.$userProfile, this.$userData);
                                 }
                             })
                         }
                     })
                 } else {
                     // console.log('not logged in');
-                    Vue.prototype.$userId = '';
+                    Vue.prototype.$userUid = '';
                     Vue.prototype.$userData = '';
-                    Vue.prototype.$userEmail = '';
+                    Vue.prototype.$userId = '';
                     Vue.prototype.$userProfile = '';
                 }
             })
