@@ -128,7 +128,7 @@ export default {
     },
     methods: {
         fetchInfo: function() {
-            database.collection('restaurants').doc(this.$userId).get().then((doc) => {
+            database.collection('restaurants').doc(this.$userUid).get().then((doc) => {
                 let storedData = doc.data();
                 for (let data in storedData) { // existing data (key)
                     for (let info in this.datapacket) { // current storage [old, new]
@@ -158,13 +158,13 @@ export default {
                 updateData[field] = this.datapacket[field][2];
             }
             
-            database.collection('restaurants').doc(this.$userId).update(updateData).then(() => {
+            database.collection('restaurants').doc(this.$userUid).update(updateData).then(() => {
                 alert("Information updated successfully!");
                 location.reload();
             });
         },
         fetchMenu: function() {
-            database.collection('restaurants').doc(this.$userId).get().then((doc) => {
+            database.collection('restaurants').doc(this.$userUid).get().then((doc) => {
                 let dbMenu = doc.data().menu;
                 this.menu = dbMenu;
             })
@@ -181,7 +181,7 @@ export default {
                 image: this.itemToAdd.image
             }
 
-            database.collection('restaurants').doc(this.$userId).set(addData, {merge: true})
+            database.collection('restaurants').doc(this.$userUid).set(addData, {merge: true})
             .then(() => {
                 alert("Item added successfully!");
                 this.itemToAdd.name = '';
@@ -202,7 +202,7 @@ export default {
                         new_menu[item] = menu[item];
                     }
                 }
-                database.collection('restaurants').doc(this.$userId).update({menu: new_menu})
+                database.collection('restaurants').doc(this.$userUid).update({menu: new_menu})
                 .then(() => {
                     alert(this.itemToRemove + ' removed successfully!');
                     location.reload();
@@ -210,7 +210,7 @@ export default {
                 .catch((err) => alert(err.message))
             } else {
                 // does not exist
-                // console.log("removeItem: ", this.$userId);
+                // console.log("removeItem: ", this.$userUid);
                 alert(this.itemToRemove + ' does not exist!');
             }
         },
@@ -225,22 +225,22 @@ export default {
     created() {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-                this.$userId = user.uid;
-                database.collection('restaurants').doc(this.$userId).get().then((doc) => {
+                this.$userUid = user.uid;
+                database.collection('restaurants').doc(this.$userUid).get().then((doc) => {
                     if (doc.exists) {
                         this.$userData = doc.data();
-                        this.$userEmail = this.$userData.email;
+                        this.$userId = this.$userData.email;
                         this.$userProfile = this.$userData.profile;
-                        // console.log('rest exists', this.$userId, this.$userEmail, this.$userProfile, this.$userData);
+                        // console.log('rest exists', this.$userUid, this.$userId, this.$userProfile, this.$userData);
                     } else {
                         // console.log('not restaurant, search customer db');
-                        database.collection('customers').doc(this.$userId).get().then((doc) => {
+                        database.collection('customers').doc(this.$userUid).get().then((doc) => {
                             console.log(doc.data());
                             if (doc.exists) {
                                 this.$userData = doc.data();
-                                this.$userEmail = this.$userData.email;
+                                this.$userId = this.$userData.email;
                                 this.$userProfile = this.$userData.profile;
-                                // console.log('cust exists', this.$userId, this.$userEmail, this.$userProfile, this.$userData);
+                                // console.log('cust exists', this.$userUid, this.$userId, this.$userProfile, this.$userData);
                             }
                         })
                     }
@@ -253,9 +253,9 @@ export default {
                 })
             } else {
                 // console.log('not logged in');
-                this.$userId = '';
+                this.$userUid = '';
                 this.$userData = '';
-                this.$userEmail = '';
+                this.$userId = '';
                 this.$userProfile = '';
             }
         })
