@@ -6,7 +6,6 @@
         <router-link to="/featured" exact>Featured</router-link>
         <router-link to="/ordertoDelivery" exact>Order</router-link>
         <router-link to="/account" exact>My Account</router-link>
-        <router-link to="/reservation" exact>Reservation (added router just to check page)</router-link>
         <router-link to="/login" exact>Login</router-link>
         <router-link to="/register" exact>Register</router-link>
         <button v-on:click.prevent="logout()">Logout</button>
