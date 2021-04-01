@@ -89,8 +89,18 @@
             </div>
         </div>
 
-        <p><button class="save" v-on:click="refresh()">Refresh with new changes</button>&nbsp;
-        <button class="done" v-on:click="returnDash()">Return to dashboard</button></p>
+        <div v-else><settings-c></settings-c></div>
+
+        <!-- <div v-if="profile==''">
+            <h1>Not logged in!</h1>
+            <p><button v-on:click="redLogin()" class='display'>Log in or Register</button></p>
+        </div> -->
+
+        <div v-show="profile!=''">
+            <p><button class="save" v-on:click="refresh()">Refresh with new changes</button>&nbsp;
+            <button class="done" v-on:click="returnDash()">Return to dashboard</button></p>
+        </div>
+
     </div>
 </template>
 
@@ -98,8 +108,12 @@
 <script>
 import database from '../firebase.js';
 import firebase from 'firebase';
+import SettingsC from './SettingsC.vue';
 
 export default {
+    components: {
+        'settings-c': SettingsC
+    },
     data() {
         return {
             updateInfo: false,
@@ -228,6 +242,9 @@ export default {
             // return to dashboard
             this.$router.push('/account');
         },
+        redLogin: function() {
+            this.$router.push('/register');
+        }
     },
     created() {
         firebase.auth().onAuthStateChanged((user) => {
