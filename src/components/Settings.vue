@@ -46,6 +46,7 @@
                 <!-- display menu from database -->
                 <div v-show="updateAction=='display'" id="display-item">
                     <h3>My Menu</h3>
+                    <p>You have {{numItems}} item(s) in your menu.</p>
                     <ul v-for="item in menu" v-bind:key="item.name">
                         <li>
                         &#9660; {{item.name}}: ${{item.price}}<br>
@@ -124,6 +125,7 @@ export default {
             },
             itemToRemove: '',
             profile: '',
+            numItems: 0,
         }
     },
     methods: {
@@ -138,6 +140,11 @@ export default {
                             break;
                         }
                     }
+                }
+
+                for (let item in storedData.menu) {
+                    item;
+                    this.numItems++;
                 }
                 // console.log(this.datapacket);
                 // console.log(this.datapacket['restaurant_name'])
