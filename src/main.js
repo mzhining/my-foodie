@@ -8,9 +8,9 @@ import firebase from 'firebase';
 import Home from './components/Home.vue'
 // import Delivery from './components/Delivery.vue'
 import Reservation from './components/Reservation.vue'
-
 import ReservationConfirmed from './components/ReservationConfirmed'
 import ReservationOrder from './components/ReservationOrder'
+
 // import Pickup from './components/Pickup.vue'
 
 
