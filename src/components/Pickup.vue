@@ -29,7 +29,7 @@
             <aside id="picture">
                 <div class="content" align = "left">
                     <div class = "menu">
-                        <p> Choose your order </p>
+                        <h1> Choose your order </h1>
                         <br>
                         
                         <li v-for="item in this.datapacket.menu" v-bind:key="item.name" id="section">
@@ -43,29 +43,24 @@
                         </li>
                     </div>
                     <div align = "center" class = "total">
-                        <button v-on:click="findTotal()"> Calculate Total </button>
+                        <button class = "special" v-on:click="findTotal()"> Calculate Total </button>
                         <p> <b> Total price: ${{this.subTotal}} </b> </p>
                     </div>
                     <div class = "time" align = "center"> 
                         <p> When will you be picking up? </p>
                         <select v-model="selected">
                                 <option disabled value="">Please select one</option>
-                                <option>09.00</option>
-                                <option>09.30</option>
-                                <option>10.00</option>
-                                <option>10.30</option>
-                                <option>11.00</option>
-                                <option>11.30</option>
-                                <option>12.00</option>
-                                <option>12.30</option>
-                                <option>13.00</option>
-                                <option>13.30</option>
-                                <option>14.00</option>
-                                <option>14.30</option>
-                                <option>15.00</option>
-                                <option>15.30</option>
-                                <option>16.00</option>
-                                <option>16.30</option>
+                                <option>10.00 AM</option>
+                                <option>11.00 AM</option>
+                                <option>12.00 AM</option>
+                                <option>01.00 PM</option>
+                                <option>02.00 PM</option>
+                                <option>03.00 PM</option>
+                                <option>04.00 PM</option>
+                                <option>05.00 PM</option>
+                                <option>06.00 PM</option>
+                                <option>07.00 PM</option>
+                                <option>08.00 PM</option>
                                 </select>
                                 <br>
                                 <br>
@@ -74,8 +69,7 @@
                 
                 <div class = "bottom" align = "center">
                     <br>
-                    <br>
-                    <button v-on:click="sendOrder()"> Order! </button>
+                    <button class = "special" v-on:click="checkForm(), sendOrder(), findTotal()" > Order! </button>
                     <br>
                     <br>
                 </div>
@@ -114,6 +108,13 @@ export default {
         this.fetchItems();
     },
     methods:{
+        checkForm:function(e) {
+            if(this.selected) 
+                return true;
+            if(!this.selected) 
+                alert("Please choose your pick up time")
+            e.preventDefault();
+        },
         fetchItems:function(){
             database.collection('pickup')
             .doc(this.rname)
@@ -282,6 +283,17 @@ li {
     margin-bottom: 20px;
     border-radius: 10px;
     list-style-type: none;
+}
+
+.special {
+    background-color: pink; 
+    border: 10px;
+    color: black;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    display:inline-block;
+    padding:8px;
 }
 
 </style>

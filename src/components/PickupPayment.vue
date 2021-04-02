@@ -29,7 +29,7 @@
             <aside id="picture">
                 <div class="content" align = "left">
                     <div>
-                        <p> Please confirm your order and make a payment </p>
+                        <h1> Confirm and make your payment </h1>
                         <br>
                         <table id="firstTable">
                             <thead>
@@ -48,8 +48,9 @@
                             </tbody>
                         </table>
                         <p> Total price: ${{this.datapacket.orders[this.datapacket.orders.length - 1].total}}</p>
+                        <p> This order is for <b> pickup </b> at {{this.time}}</p>
                         <br>
-                        <p> Payment methods </p>
+                        <p> Payment method </p>
                            <select v-model="selected">
                             <option disabled value="">Please select one</option>
                             <option>Card A</option>
@@ -63,7 +64,7 @@
                 <div class = "bottom" align = "center">
                     <br>
                     <br>
-                    <button v-on:click="route()"> Make Payment </button>
+                    <button class = "special" v-on:click="route()"> Make Payment </button>
                     <br>
                     <br>
                 </div>
@@ -101,16 +102,16 @@ export default {
         route:function() {
             this.$router.push({ name: 'pickup-confirmation', params : {rname : this.rname, time : this.time}})
         },
-      fetchItems:function(){
-        database.collection('pickup')
-        .doc(this.rname)
-        .get()
-        .then(snapshot => {
-            var data = snapshot.data()
-            this.datapacket = data
-            console.log(this.datapacket)
-        });
-      }
+        fetchItems:function(){
+            database.collection('pickup')
+            .doc(this.rname)
+            .get()
+            .then(snapshot => {
+                var data = snapshot.data()
+                this.datapacket = data
+                console.log(this.datapacket)
+            });
+        }
     }
 }
 </script>
@@ -120,14 +121,14 @@ table {
   font-family: 'Open Sans', sans-serif;
   width: 750px;
   border-collapse: collapse;
-  border: 3px solid #44475C;
+  border: 3px solid #90141C;
   margin: 10px 10px 0 10px;
 }
 
 table th {
   text-transform: uppercase;
-  text-align: left;
-  background: #44475C;
+  text-align: center;
+  background: #90141C;
   color: #FFF;
   padding: 8px;
   min-width: 30px;
@@ -136,13 +137,13 @@ table th {
 table td {
   text-align: left;
   padding: 8px;
-  border-right: 2px solid #7D82A8;
+  border-right: 2px solid #90141C;
 }
 table td:last-child {
   border-right: none;
 }
 table tbody tr:nth-child(2n) td {
-  background: #D4D8F9;
+  background: #f4c2c2;
 }
 
 
@@ -204,7 +205,14 @@ li {
     /* border: 1px solid #222;  */
 }
 
-#pink-box {
-    background-color: pink;
+.special {
+    background-color: pink; 
+    border: 10px;
+    color: black;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    display:inline-block;
+    padding:8px;
 }
 </style>
