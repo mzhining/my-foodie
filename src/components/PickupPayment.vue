@@ -80,12 +80,17 @@ export default {
     name : 'Pickup',
     data(){
         return{
-          datapacket:[],
-          rname:'Jollibee'
+          datapacket:[]
         }
     },
     props : {
       total : {
+          type : String
+      }, 
+      rname : {
+          type : String
+      },
+      time : {
           type : String
       }
     },
@@ -94,7 +99,7 @@ export default {
     },
     methods:{
         route:function() {
-            this.$router.push({ name: 'pickup-confirmation'})
+            this.$router.push({ name: 'pickup-confirmation', params : {rname : this.rname, time : this.time}})
         },
       fetchItems:function(){
         database.collection('pickup')

@@ -40,15 +40,38 @@
                             <img v-bind:src="item.image" id = "menupic"/>  
                             <QuantityCounter v-bind:item="item" v-on:counter="onCounter"> </QuantityCounter> 
                         <br> 
-                        <hr id="separate">
                         </li>
-
+                    </div>
+                    <div align = "center" class = "total">
                         <button v-on:click="findTotal()"> Calculate Total </button>
-
-                        <p> Total price: ${{this.subTotal}}</p>
-                        <br>
+                        <p> <b> Total price: ${{this.subTotal}} </b> </p>
+                    </div>
+                    <div class = "time" align = "center"> 
+                        <p> When will you be picking up? </p>
+                        <select v-model="selected">
+                                <option disabled value="">Please select one</option>
+                                <option>09.00</option>
+                                <option>09.30</option>
+                                <option>10.00</option>
+                                <option>10.30</option>
+                                <option>11.00</option>
+                                <option>11.30</option>
+                                <option>12.00</option>
+                                <option>12.30</option>
+                                <option>13.00</option>
+                                <option>13.30</option>
+                                <option>14.00</option>
+                                <option>14.30</option>
+                                <option>15.00</option>
+                                <option>15.30</option>
+                                <option>16.00</option>
+                                <option>16.30</option>
+                                </select>
+                                <br>
+                                <br>
                     </div>
                 </div>
+                
                 <div class = "bottom" align = "center">
                     <br>
                     <br>
@@ -71,16 +94,16 @@ export default {
     name : 'Pickup',
     data(){
         return{
+            selected : '',
             subTotal : 0, 
             orderList : [],
             datapacket: [],
-            rname:'Jollibee',
             itemsSelected:[],
             oneOrder : []
         }
     },
     props : {
-      id : {
+      rname : {
           type : String
       }
     },
@@ -115,7 +138,7 @@ export default {
             database.collection('pickup')
             .doc(this.rname)
             .update({orders : this.orderList })
-            .then(()=>{this.$router.push({ name: 'pickup-payment', params : {total : this.subTotal}})});
+            .then(()=>{this.$router.push({ name: 'pickup-payment', params : {total : this.subTotal, rname : this.rname, time : this.selected}})});
         },
 
         getOrder : function() {
@@ -208,6 +231,12 @@ img {
 #line {
     border: 3px dashed #90141C;
 }
+
+.time {
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
 #container {
     width: 100%;
     overflow: hidden;
@@ -250,8 +279,7 @@ li {
 } */
 #section {
     background-color:rgb(255, 237, 188);
-    /* margin-left: 10%;
-    margin-right: 10%; */
+    margin-bottom: 20px;
     border-radius: 10px;
     list-style-type: none;
 }

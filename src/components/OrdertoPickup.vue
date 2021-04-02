@@ -25,12 +25,11 @@
             <aside id="picture">
                 <div class="content">
                     <ul id = "itemsList">
-                        <li v-for="item in restaurants" v-bind:key="item.restaurant_name" id="picture_display">
+                        <li v-for="item in restaurants" v-bind:key="item.restaurant_name" id="picture_display" v-on:click="route($event)">
                             <!--first direct them to delivery page -->
                             <img v-bind:src="item.image" class = "icon"/>  
                             <br> 
                             <p v-bind:id="item.restaurant_name" >{{item.restaurant_name}} </p>
-                            <button v-on:click="route($event)"> Order </button>
                         </li>
                     </ul>
                 </div>
@@ -51,8 +50,8 @@ export default {
     },
     methods:{
         route:function(event){
-            let restaurant_name = event.target.getAttribute("id");
-            this.$router.push({name:'pickup', params:{restaurantN:restaurant_name}});
+            let restName = event.target.getAttribute("id");
+            this.$router.push({name:'pickup', params:{rname:restName}});
         },
         fetchItems: function() {
             database.collection("restaurants").get().then((querySnapshot) => {
@@ -90,9 +89,12 @@ export default {
     flex-grow: 1;
     flex-basis: 200px;
     text-align: center;
-    padding: 1px;
-    /* border: 1px solid #222; */
-    margin: 2px;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-top: 30px;
+    background-color:rgb(255, 237, 188);
+    margin-bottom: 20px;
+    border-radius: 10px;
 }
 
 .home {
@@ -203,6 +205,7 @@ export default {
     width: 100%;
     overflow: hidden;
 }
+
 #navigationbar {
     text-align: left;
     font-size:20px;
@@ -220,7 +223,8 @@ export default {
     width: 80%;
 }
 .content p:hover {
-    color: blue;
+    background-color:#90141C;
+    color:white;
 }
 
 </style>

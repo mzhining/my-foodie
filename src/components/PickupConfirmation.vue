@@ -28,9 +28,9 @@
             </div>
             <aside id="picture">
                 <div class="content" align = "left">
-                    <p> Your order for Jollibee at S(838761) is complete. <br>
-                        Your food will be ready for pick-up at 6:30pm on 18 Feb (Thu). <br>
-                        Thank you for ordering Jollibee with MyFoodie!</p>
+                    <p> Your order for {{this.datapacket.restaurant_name}} for {{this.$userData.postal_code}} is complete. <br>
+                        Your food will be ready for pick-up at {{this.time}}. <br>
+                        Thank you for ordering {{this.datapacket.restaurant_name}} with MyFoodie!</p>
                         <br>
                         
                     <br>
@@ -45,15 +45,17 @@
 <script>
 import database from "../firebase.js"
 export default {
-    name : 'Pickup',
+    name : 'PickupConfirmation',
     data(){
         return{
           datapacket:[],
-          rname:'Jollibee'
         }
     },
     props : {
-      id : {
+      rname : {
+          type : String
+      }, 
+      time : {
           type : String
       }
     },

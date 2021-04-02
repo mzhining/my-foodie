@@ -55,7 +55,7 @@ const myRouter = new VueRouter({
     { path: '/pickup-payment', component: PickupPayment, name : 'pickup-payment', props : true },
     { path: '/reservation', component: Reservation, meta: {requiresAuth: true}},
     { path: '/signup-cust', component: CustSignup, meta: {requiresGuest: true}},
-    { path: '/pickup-confirmation', component: PickupConfirmation, name : 'pickup-confirmation'},
+    { path: '/pickup-confirmation', component: PickupConfirmation, name : 'pickup-confirmation', props : true},
     { path: '/signup-rest', component: RestSignup, meta: {requiresGuest: true}},
     { path: '/signup-success', component: SignupSuccess},
     { path: '/login', name: 'login', component: Login, meta: {requiresGuest: true}},
