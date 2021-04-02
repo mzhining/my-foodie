@@ -26,7 +26,17 @@
             <h2 v-on:click="updatePayment=!updatePayment" v-show="!updatePayment"><a>&#9654; Update Payment Details</a></h2>
             <h2 v-on:click="updatePayment=!updatePayment" v-show="updatePayment"><a>&#9660; Update Payment Details</a></h2>
             <div v-show="updatePayment">
-                // payment
+                <form id="edit-payment" v-on:submit.prevent="modifyPayment()">
+                    <label>Card Number: </label>
+                    <input type="text" v-model="datapacket.card.number[2]" v-bind:placeholder="datapacket.card.number[1]" /><br>
+                    <label>Name on card: </label>
+                    <input type="text" v-model="datapacket.card.name[2]" v-bind:placeholder="datapacket.card.name[1]" /><br>
+                    <label>CVV: </label>
+                    <input type="tel" v-model="datapacket.card.cvv[2]" pattern="[0-9]{3}" v-bind:placeholder="datapacket.card.cvv[1]" /><br>
+                    <label>Expiry Date: </label>
+                    <input type="month" v-model="datapacket.card.expiry[2]" v-bind:placeholder="datapacket.card.expiry[1]" /><br>
+                    <p><button type="submit" class="save">Save changes</button></p>
+                </form>
             </div>
         </div>
     </div>
@@ -49,12 +59,12 @@ export default {
                 contact: ['Contact Number', '', ''],
                 address: ['Address', '', ''],
                 postal_code: ['Postal Code', '', ''],
-                // card: {
-                //     name: ['Name on card', '', ''],
-                //     number: ['Card Number', '', ''],
-                //     cvv: ['CVV', '', ''],
-                //     expiry: ['Expiry Date', '', ''],
-                // }
+                card: {
+                    name: ['Name on card', '', ''],
+                    number: ['Card Number', '', ''],
+                    cvv: ['CVV', '', ''],
+                    expiry: ['Expiry Date', '', ''],
+                }
             },
             profile: '',
         }
@@ -72,6 +82,17 @@ export default {
                         }
                     }
                 }
+                for (let cardData in storedData.card) {
+                    for (let cardInfo in this.datapacket.card) {
+                        if (cardData == cardInfo) {
+                            this.datapacket.card[cardInfo][1] = storedData.card[cardData];
+                            break;
+                        }
+                    }
+                }
+
+                // this.datapacket.card.expiry[1] = Date.parse(this.datapacket.card.expiry[1]);
+                console.log(this.datapacket.card.expiry[1]);
             })
         },
         modifyData: function() {
