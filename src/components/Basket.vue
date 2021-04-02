@@ -1,5 +1,6 @@
 <template>
     <div>
+        <p id="test"></p>
         <p>Menu:</p>
         <ul id="list">
             <li id="list" v-for="item in itemsSelected" v-bind:key="item.id">
@@ -22,12 +23,21 @@
         props: {
             itemsSelected: {
                 type: Array
+            },
+            data: {
+                type: Object
+            },
+            doc_id: {
+                type: String
+            },
+            slotNumber: {
+                type: Number
             }
         },
         data() {
             return {
                 subtotal: 0,
-                show: false,
+                show: false
             }
         },
         computed: {
@@ -46,15 +56,13 @@
                 this.subtotal = sub;
             },
             sendOrder() {
-                var newOrder = {
-                    //item: quantity
-                };
+                let newOrder = new Map()
                 this.itemsSelected.forEach((item) => {
                     newOrder[item[0]] = item[1];
                 });
-                this.$route.params.data["orders"].push(newOrder);
+                this.data.slots[this.slotNumber].orders[-1] = newOrder;
                 //add order to database
-                database.collection('reservation').doc(this.$route.params.id).update(this.data);
+                database.collection('reservations').doc(this.doc_id).update(this.data);
             }
         }
     }

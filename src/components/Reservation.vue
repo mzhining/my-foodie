@@ -4,7 +4,7 @@
         <h1> Make a reservation for {{this.$route.params.id}} at {{this.data.postal}} </h1>
         <label> Number of pax: </label>
         <br>
-        <input type="number" placeholder=1 min="1" max="8" v-model.lazy="reservation.pax" required/>
+        <input type="number" min="1" max="8" v-model.lazy="reservation.pax" required/>
         <br>
         <br>
         <label> Date: </label>
@@ -37,7 +37,8 @@ export default {
             reservation: {},
             available: [],
             show: false,
-            data: {}
+            data: {},
+            slotNumber: 100
         }
     },
     methods: {
@@ -65,7 +66,7 @@ export default {
                 }
             }
             database.collection('reservations').doc(this.$route.params.id).update(this.data).then(
-                this.$router.push({ name: 'reservationConfirmed', params: {id: this.$route.params.id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.data.postal, data: this.data}}));
+                this.$router.push({ name: 'reservationConfirmed', params: {id: this.$route.params.id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.data.postal, data: this.data, slotNumber: this.slotNumber}}));
         },
         selectDate: function() {
             this.reservation.date = this.reservation.date.toString();
@@ -73,6 +74,7 @@ export default {
             let availSlots = [];
             for (let i = 0; i < this.data.slots.length; i++) {
                 if (this.data.slots[i]["date"] == selectedDate && this.data.slots[i]["avail"] > 0) {
+                    this.slotNumber = i;
                     availSlots.push(this.data.slots[i]);
                 }
             }
