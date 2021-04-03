@@ -56,7 +56,7 @@
         <div id="blank">
             <p> </p>
         </div>
-        <router-link to="/accountR" exact>Go to DashboardR </router-link>
+        <!--<router-link to="/accountR" exact>Go to DashboardR </router-link>-->
     </div>
 </template>
 
