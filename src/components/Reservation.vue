@@ -30,6 +30,7 @@
 
 <script>
 import database from '../firebase.js'
+import firebase from 'firebase'
 
 export default {
     data() {
@@ -38,7 +39,8 @@ export default {
             available: [],
             show: false,
             data: {},
-            slotNumber: 100
+            slotNumber: 100,
+            orderNumber: 100
         }
     },
     methods: {
@@ -60,13 +62,15 @@ export default {
             for (let i = 0; i < this.data.slots.length; i++) {
                 if (this.data.slots[i]["date"] == this.reservation.date && this.data.slots[i]["time"] == this.reservation.time) {
                     this.data.slots[i]["orders"].push({});
+                    this.orderNumber = this.data.slots[i]["orders"].length - 1;
                     this.data.slots[i]["pax"].push(this.reservation.pax);
+                    //this.data.slots[i]["reservedBy"].push(this.$userId);
                     this.data.slots[i]["reservedBy"].push("customerID");
                     this.data.slots[i]["avail"]--;
                 }
             }
             database.collection('reservations').doc(this.$route.params.id).update(this.data).then(
-                this.$router.push({ name: 'reservationConfirmed', params: {id: this.$route.params.id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.data.postal, data: this.data, slotNumber: this.slotNumber}}));
+                this.$router.push({ name: 'reservationConfirmed', params: {id: this.$route.params.id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.data.postal, data: this.data, slotNumber: this.slotNumber, orderNumber: this.orderNumber}}));
         },
         selectDate: function() {
             this.reservation.date = this.reservation.date.toString();
@@ -83,7 +87,39 @@ export default {
         }
     },
     created() {
-        this.fetchItems();
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.$userUid = user.uid;
+                database.collection('restaurants').doc(this.$userUid).get().then((doc) => {
+                    if (doc.exists) {
+                        this.$userData = doc.data();
+                        this.$userId = this.$userData.email;
+                        this.$userProfile = this.$userData.profile;
+                        // console.log('rest exists', this.$userUid, this.$userId, this.$userProfile, this.$userData);
+                    } else {
+                        // console.log('not restaurant, search customer db');
+                        database.collection('customers').doc(this.$userUid).get().then((doc) => {
+                            console.log(doc.data());
+                            if (doc.exists) {
+                                this.$userData = doc.data();
+                                this.$userId = this.$userData.email;
+                                this.$userProfile = this.$userData.profile;
+                                // console.log('cust exists', this.$userUid, this.$userId, this.$userProfile, this.$userData);
+                            }
+                        })
+                    }
+
+                    // insert functions here
+                    this.fetchItems();
+                })
+            } else {
+                // console.log('not logged in');
+                this.$userUid = '';
+                this.$userData = '';
+                this.$userId = '';
+                this.$userProfile = '';
+            }
+        })
     }
 }
 
