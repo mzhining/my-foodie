@@ -27,20 +27,29 @@
         </div>
         <h2>Current Order</h2>
         <div class="section">
-            <p id="header">{{orders.restaurant}} -- {{orders.type}}</p>
-            <li v-for="item in orders.orders" v-bind:key="item.id" id="itemlist">
-                <span>{{item.qty}}x {{item.item}}</span>
-                <br>
-            </li>
+            <div id="multi_pickup">
+                <ul id="pickups" v-for="onePickup in orders" v-bind:key="onePickup.id">
+                    <p id="header">{{onePickup.restaurant}} -- {{onePickup.type}}</p>
+                    <li v-for="item in onePickup.orders" v-bind:key="item.id" id="itemlist">
+                        <span>{{item.qty}}x {{item.item}}</span>
+                        <br>
+                    </li>`
+                    <br>
+                </ul>
+            </div>
             <br><br>
         </div>
         <h2>Reservation</h2>
         <div class="section">
-            <p id="header">{{reservation.restaurant_name}} -- reservation</p>
-            <div id="block" v-for="(key, value) in reservation_order" v-bind:key="key">
-                {{key}}x {{value}}  <br>
+            <div id="multi_reservations">
+                <ul id="reservations" v-for="oneReser in reservation_orders" v-bind:key="oneReser.id">
+                    <p id="header">{{oneReser.restaurant_name}} -- reservation</p>
+                    <div id="block" v-for="(key, value) in oneReser.orders" v-bind:key="key">
+                        <span>{{key}}x {{value}}</span>  <br>
+                    </div>
+                    <br><br>
+                </ul>
             </div>
-            <br><br>
         </div>
         <!--I try to use a dummy div and set the height to 700px, 
         to leave a 700px blank, but still cannot make the footer to the bottom -->
@@ -57,11 +66,12 @@ import database from "../firebase.js"
 export default {
     data() {
         return {
-            orders: {},
+            orders: [],//to store multiple pickup
             fav:[],
             fav_img:[],
             fav_html:[],
             customer:{},
+            reservations:[],//to store muptiple reservations
             reservation:{},
             ///////////////////////////////////////////////////
             //use the document janedoe as sample display!!!!
@@ -69,6 +79,7 @@ export default {
             //and other document in customers does not have reservation feild.
             //For pickup, it is stored in cart attribute in the document
             reservation_order:{},
+            reservation_orders:[],//store muptiple order information for reservations
             userEmail:""
         }
     },
@@ -91,32 +102,50 @@ export default {
                     if (doc.data()["email"] == "janedoe@email.com"){
                         this.customer=doc.data();
                         this.fav=doc.data()['favourites'];
-                        this.orders=doc.data()['cart'];
-                        this.reservation=doc.data()['reservation'];
+                        this.orders=doc.data()['cart'];//store multiple pickup
+                        this.reservations=doc.data()['reservation'];//store multiple reservations
                         for (let i = 0; i < this.fav.length; i++) {
                             database.collection("restaurants").get().then((querySnapshot) => {
                                 querySnapshot.forEach((doc) => {
                                     if (doc.data()["restaurant_name"] == this.fav[i]){
                                         this.fav_img.push(doc.data()["image"]);
-                                        //alert(this.fav_img);
-                                        //var img = document.createElement('img');
-                                        //img.src = linkInfo.img;
                                     }
                                 }); 
                             });
                         }
                         ///////////////////////////////////////////////
                         //to get the reservations of this customer
-                        database.collection("reservations").get().then((querySnapshot) => {
-                            querySnapshot.forEach((doc) => {
-                                if (doc.data()["restaurant_name"] == this.reservation.restaurant_name){
-                                    var idindex=parseInt(this.reservation.id);
-                                    /////////////////////////////////////////////////////////////////////////////
-                                    //assume that it only retrieve from slots[0], so we need 2 index to decide which reservation the customer has
-                                    this.reservation_order=doc.data().slots[0].orders[idindex];
-                                }
-                            }); 
-                        });
+                        for (let i = 0; i < this.reservations.length; i++) {
+                            database.collection("reservations").get().then((querySnapshot) => {
+                                querySnapshot.forEach((doc) => {
+                                    if (doc.data()["restaurant_name"] == this.reservations[i].restaurant_name){
+                                        //alert("here1");
+                                        for (let j = 0; j <doc.data()["slots"].length; j++) {
+                                            var thisSlot=doc.data()["slots"][j];
+                                            //alert("here2");
+                                            if ((this.reservations[i].date==thisSlot.date) && (this.reservations[i].time==thisSlot.time)){
+                                                //alert("here3");
+                                                for (let z=0;z<thisSlot["reservedBy"].length;z++){
+                                                    //alert("here4");
+                                                    if (this.reservations[i].customerID==thisSlot["reservedBy"][z]){
+                                                        alert("here5");
+                                                        this.reservation_order={};
+                                                        this.reservation_order["orders"]=thisSlot.orders[z];
+                                                        this.reservation_order["restaurant_name"]=this.reservations[i].restaurant_name;
+                                                        this.reservation_orders.push(this.reservation_order);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        //var idindex=parseInt(this.reservation.id);
+                                        /////////////////////////////////////////////////////////////////////////////
+                                        //assume that it only retrieve from slots[0], so we need 2 index to decide which reservation the customer has
+                                        //this.reservation_order=doc.data().slots[0].orders[idindex];
+                                    }
+                                }); 
+                            });
+                        }
+                        
                     }
                 });
             });
@@ -222,7 +251,7 @@ h2 {
     list-style-type: none;
     text-align: left;
     font-weight: bold;
-    margin-left: 2%;
+
 }
 
 #itemlist {
@@ -230,6 +259,9 @@ h2 {
     list-style-type: none;
     text-align: left;
     margin-left: 2%;
+}
+#multi_pickup {
+    text-align: left;
 }
 
 .section {
