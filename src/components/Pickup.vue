@@ -153,7 +153,8 @@ export default {
             this.orderList.push({
                 email : this.$userId, 
                 one_order : this.oneOrder, 
-                total : this.subTotal
+                total : this.subTotal,
+                time : this.selected
             })
             },
 
