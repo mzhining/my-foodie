@@ -25,11 +25,11 @@
             <aside id="picture">
                 <div class="content">
                     <ul id = "itemsList">
-                        <li v-for="item in restaurants" v-bind:key="item.restaurant_name" id="picture_display">
+                        <li v-for="item in restaurants" v-bind:key="item.restaurant_name" id="picture_display" v-on:click="route($event)">
                             <!--first direct them to delivery page -->
-                            <img v-bind:src="item.image"/>  
+                            <img v-bind:src="item.image" class = "icon"/>  
                             <br> 
-                            <p v-bind:id="item.restaurant_name" v-bind:postal="item.postal_code" v-on:click="route($event)">{{item.restaurant_name}} </p>
+                            <p v-bind:id="item.restaurant_name" >{{item.restaurant_name}} </p>
                         </li>
                     </ul>
                 </div>
@@ -50,10 +50,8 @@ export default {
     },
     methods:{
         route:function(event){
-            let restaurant_name = event.target.getAttribute("id");
-            let postal_code=event.target.getAttribute("postal");
-            this.$router.push({name:'pickup', params:{restaurantN:restaurant_name, postal: postal_code}});
-            //I set this name as pickup!!
+            let restName = event.target.getAttribute("id");
+            this.$router.push({name:'pickup', params:{rname:restName}});
         },
         fetchItems: function() {
             database.collection("restaurants").get().then((querySnapshot) => {
@@ -91,9 +89,12 @@ export default {
     flex-grow: 1;
     flex-basis: 200px;
     text-align: center;
-    padding: 1px;
-    /* border: 1px solid #222; */
-    margin: 2px;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-top: 30px;
+    background-color:rgb(255, 237, 188);
+    margin-bottom: 20px;
+    border-radius: 10px;
 }
 
 .home {
@@ -148,8 +149,9 @@ export default {
     top: 30%;
 }
 
-img {
+#icon {
     height: 15rem;
+    weight: 15rem;
 }
 
 #pic {
@@ -203,12 +205,13 @@ img {
     width: 100%;
     overflow: hidden;
 }
+
 #navigationbar {
     text-align: left;
-    font-size:30px;
+    font-size:20px;
     margin-left:5%;
     float: left;
-    width: 15%;
+    width: 10%;
 
 }
 #naviBar {
@@ -220,7 +223,8 @@ img {
     width: 80%;
 }
 .content p:hover {
-    color: blue;
+    background-color:#90141C;
+    color:white;
 }
 
 </style>

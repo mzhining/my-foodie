@@ -8,7 +8,13 @@ import firebase from 'firebase';
 import Home from './components/Home.vue'
 // import Delivery from './components/Delivery.vue'
 import Reservation from './components/Reservation.vue'
+import ReservationConfirmed from './components/ReservationConfirmed'
+import ReservationOrder from './components/ReservationOrder'
+
 // import Pickup from './components/Pickup.vue'
+
+
+
 import CustSignup from './components/CustSignup.vue'
 import RestSignup from './components/RestSignup.vue'
 import SignupSuccess from './components/SignupSuccess.vue'
@@ -17,6 +23,9 @@ import Register from './components/Register.vue'
 import TopRated from './components/TopRated.vue'
 import Featured from './components/Featured.vue'
 import ContactUs from './components/ContactUs.vue'
+import Pickup from './components/Pickup.vue'
+import PickupConfirmation from './components/PickupConfirmation.vue'
+import PickupPayment from './components/PickupPayment.vue'
 // end of import from routes.js
 
 import DashboardC from './components/DashboardC.vue';
@@ -26,39 +35,40 @@ import OrdertoDelivery from './components/OrdertoDelivery.vue';
 import OrdertoPickup from './components/OrdertoPickup.vue';
 import OrdertoReservation from './components/OrdertoReservation.vue';
 import Settings from './components/Settings.vue';
+import loadData from './loadData.js';
 
 Vue.config.productionTip = false
 Vue.use(VueRouter)
 //global variable that can be accessed by every component!
-Vue.prototype.$userId = 'jamesbond@gmail.com'
+// Vue.prototype.$userId = 'jamesbond@gmail.com'
+Vue.mixin(loadData)
+
 
 const myRouter = new VueRouter({
 // let myRouter = new VueRouter({
   routes: [
-    // { path: '/', component: Home, redirect: '/login' },
     { path: '/', component: Home },
     { path: '/toprated', component: TopRated },
     { path: '/featured', component: Featured },
     { path: '/contactus', component: ContactUs },
-    // { path: '/reservation', component: Reservation},
-    
-    // { path: '/pickup', component: Pickup }
-    // { path: '/signup-cust', component: CustSignup},
+
+    { path: '/pickup-payment', component: PickupPayment, name : 'pickup-payment', props : true },
+    { path: '/reservation', component: Reservation, meta: {requiresAuth: true}},
     { path: '/signup-cust', component: CustSignup, meta: {requiresGuest: true}},
-    // { path: '/signup-rest', component: RestSignup},
+    { path: '/pickup-confirmation', component: PickupConfirmation, name : 'pickup-confirmation', props : true},
     { path: '/signup-rest', component: RestSignup, meta: {requiresGuest: true}},
     { path: '/signup-success', component: SignupSuccess},
-    // { path: '/login', name: 'login', component: Login},
     { path: '/login', name: 'login', component: Login, meta: {requiresGuest: true}},
     { path: '/register', name: 'register', component: Register, meta: {requiresGuest: true}},
-
-    { path: '/account', component: DashboardC, meta: {requiresAuth: true}},
+    { path: '/account', component: DashboardC, name : 'account', meta: {requiresAuth: true}},
     { path: '/accountR', component: DashboardR, meta: {requiresAuth: true}},
     { name:'delivery', path: '/delivery', component: Delivery, props:true, meta: {requiresAuth: true}},
     { name:'reservation', path: '/reservation', component: Reservation, props:true, meta: {requiresAuth: true}},
-    //{ name:'pickup', path: '/pickup', component: Pickup, props:true, meta: {requiresAuth: true}},
+    { name:'reservationConfirmed', path: '/reservationConfirmed', component: ReservationConfirmed, props:true, meta: {requiresAuth: true}},
+    { name:'reservationOrder', path: '/reservationOrder', component: ReservationOrder, props:true, meta: {requiresAuth: true}},
+    { name:'pickup', path: '/pickup', component: Pickup, props:true, meta: {requiresAuth: true}},
     { path: '/ordertoDelivery', component: OrdertoDelivery, meta: {requiresAuth: true}},
-    { path: '/ordertoPickup', component: OrdertoPickup, meta: {requiresAuth: true}},
+    { path: '/ordertoPickup', component: OrdertoPickup},
     { path: '/ordertoReservation', component: OrdertoReservation, meta: {requiresAuth: true}},
     { path: '/settings', component: Settings}
 
@@ -68,11 +78,15 @@ const myRouter = new VueRouter({
 
 new Vue({
   render: h => h(App),
-  router:myRouter
+  router:myRouter,
+  data: {
+    userId: ''
+  },
 }).$mount('#app')
 
+// firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-// Navigation Guards
+// Navigation Guards (draft)
 // myRouter.beforeEach((to, from, next) => {
 //   // this route requires auth, check if logged in
 //   if (to.matched.some(record => record.meta.requiresAuth)) {
@@ -103,7 +117,7 @@ new Vue({
 //    }
 // });
 
-
+// Navigation Guards (working)
 myRouter.beforeEach((to, from, next) => {
   const currentUser = firebase.auth().currentUser;
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
@@ -115,7 +129,7 @@ myRouter.beforeEach((to, from, next) => {
   // } else if (!requiresAuth && currentUser) next('account');
   } else if (requiresGuest && currentUser) {
     // MUST NOT be signed in, but signed in
-    next('/account')
+    next('account')
   } else {
     // no restrictions, proceed
     next();

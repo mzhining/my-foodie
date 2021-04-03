@@ -3,7 +3,7 @@
         <h1>Facing any issues? Contact us below</h1>      
         
         <form id = "content">
-            <label>Name: </label>
+            <label>Name: </label> 
             <input type="text" v-model="contactus.name" required/><br><br>
 
             <label>Email: </label>

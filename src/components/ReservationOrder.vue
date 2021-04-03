@@ -1,30 +1,35 @@
 <template>
     <div>
+        <p> Ordering for your reservation for {{this.$route.params.pax}} pax at {{this.$route.params.time}} on {{this.$route.params.date}} at {{this.$route.params.id}} at {{this.$route.params.postal}}. </p>
         <ul id="itemsList">
             <li v-for="item in items" v-bind:key="item.id">
                 <p id="itemName">{{item.name}}</p>
-                <img :src="item.imageURL">
+                <img v-bind:src="item.itemImage"/>
                 <p id="price">${{item.price}}</p>
-                <qtyCounter v-on:counter="onCounter" v-bind:item = "item"></qtyCounter>
+                <QuantityCounter v-on:counter="onCounter" v-bind:item = "item"></QuantityCounter>
             </li>
         </ul>
-        <Basket id="shoppingBasket" v-bind:itemsSelected="itemsSelected"></Basket>
+        <Basket id="shoppingBasket" v-bind:itemsSelected="itemsSelected" v-bind:data="data" v-bind:doc_id="doc_id" v-bind:slotNumber="slotNumber"></Basket>
   </div>
 </template>
 
 <script>
     import Basket from './Basket.vue'
+    import QuantityCounter from './QuantityCounter'
     import database from '../firebase.js'
 
     export default {
         data() {
             return {
                 itemsSelected: [],
-                items: []
+                items: [],
+                data: {},
+                doc_id: ""
             }
         },
         components: {
             Basket,
+            QuantityCounter
         },
         methods: {
             onCounter: function (item, count) {
@@ -61,12 +66,17 @@
                 }
             },
             fetchItems: function() {
-                database.collection('menu').get().then(snapshot => {
+                this.data = this.$route.params.data;
+                this.doc_id = this.$route.params.id;
+                this.slotNumber = this.$route.params.slotNumber;
+                database.collection('restaurants').get().then(querySnapshot => {
                     let item={};
-                    snapshot.docs.forEach(doc => {
-                        item=doc.data();
-                        item.show=false;
-                        this.items.push(item);
+                    querySnapshot.docs.forEach(doc => {
+                        if (doc.id == this.$route.params.id) {
+                            item=doc.data();
+                            item.show=false;
+                            this.items = item["menu"];
+                        }
                     });
                 });
             }
