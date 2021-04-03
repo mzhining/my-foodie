@@ -15,6 +15,34 @@
         <h1>Restaurant Overview</h1>
         <h2>My current order</h2>
         <div class="section">
+            <table style="width:100%" >
+                <tr id="headingPickup">
+                    <th><br>Name<br></th>
+                    <th><br>Time<br></th>
+                    <th><br>Order<br></th>
+                </tr>
+                <tbody>
+                <tr v-for="oneOrder in pickupComb" v-bind:key="oneOrder.email">
+                    <td>{{oneOrder.name}}</td>
+                    <td>{{oneOrder.time}}</td>
+                    <td>
+                        <ul v-for="item in oneOrder.orderinfo" v-bind:key="item.name">
+                            <span>{{item.count}}x {{item.name}}</span>
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <!--
+            <pre id="pickupheader">Name     Time       Order </pre>
+            <ul v-for="oneOrder in pickupComb" v-bind:key="oneOrder.email">
+                <span>{{oneOrder.email}}   {{oneOrder.}}
+
+                </span>
+                    <br>
+            </ul>
+            -->
+            <!--
             <div id="container">
                 <div id="nameP">
                     <p id="heading">Name</p>
@@ -23,7 +51,7 @@
                         <br><br>
                     </li>
                 </div>
-                <!-- How to display time nicely???-->
+                 How to display time nicely???
                 <div id="TimeP">
                     <p id="heading">Time</p>
                     <li v-for="item in timeP" v-bind:key="item.id" id="itemlist">
@@ -33,12 +61,17 @@
                 </div>
                 <div id="orderP">
                     <p id="heading">Order</p>
-                    <li v-for="item in itemsP" v-bind:key="item.id" id="itemlist">
+                    <li v-for="oneOrder in itemsP" v-bind:key="oneOrder.id" id="itemlist">
+                        <ul v-for="item in oneOrder" v-bind:key="item.name">
+                            <span>{{item.count}}x {{item.name}}</span>
+                        </ul>
                         <span>{{item}}</span>
-                        <br><br>
+                        <br>
                     </li>        
                 </div>
             </div>
+            -->
+            
         </div>
         <h2>Today's reservation</h2>
         <!-- Assume reservations is one document one resaturant? -->
@@ -82,7 +115,6 @@
             </div>
         </div>
         <router-link to="/settings" exact><h2>Setting</h2></router-link>
-        
     </div>
 </template>
 
@@ -93,6 +125,7 @@ export default {
     data() {
         return {
             //for reservations in this restaurant
+            thisRestaurant:this.$userData,
             restaurantR :{},
             //for pickup in this restaurant
             restaurantP :{},
@@ -106,24 +139,21 @@ export default {
 
             nameP:[],
             itemsP:[],
-            timeP:[]
+            timeP:[],
+            pickupComb:[]
         }
     },
     methods:{
         fetchItems: function() {
             database.collection("reservations").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => { 
-                    if (doc.data()["restaurant_name"] == "Jollibee"){
+                    
+                    if (doc.data()["restaurant_name"] == this.thisRestaurant["restaurant_name"]){
                         this.restaurantR=doc.data();
-                        //alert("here1");
                         for (var i = 0; i < doc.data()["slots"].length; i++) {
-                            //alert("here2");
                             var oneSlot=doc.data()["slots"][i];
-                            //alert("here3");
                             for (var j = 0; j < oneSlot.reservedBy.length; j++) {
-                                //alert("here4");
                                 var dt=oneSlot.date + " "+oneSlot.time; 
-                                //alert(dt);
                                 this.time.push(dt);
                                 this.reservationorder.push(oneSlot.orders[j]);
                                 this.pax.push(oneSlot.pax[j]);
@@ -165,13 +195,31 @@ export default {
             });
             database.collection("pickup").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => { 
-                    if (doc.data()["restaurant_name"] == "Jollibee"){
+                    if (doc.data()["restaurant_name"] == this.thisRestaurant["restaurant_name"]){
                         this.restaurantP=doc.data();
                         var pickupOrders=doc.data().orders;
                         for (var i = 0; i < pickupOrders.length; i++) {
-                            this.nameP.push(pickupOrders[i].customer);
-                            this.itemsP.push(pickupOrders[i].items);
-                            this.timeP.push(pickupOrders[i].time);
+                            this.nameP.push(pickupOrders[i].email);
+                            var oneorderobject={};
+                            for (var j=0;j<pickupOrders[i].one_order.length;j++){
+                                
+                                var name=pickupOrders[i].one_order[j].name;
+                                var count=pickupOrders[i].one_order[j].count;
+                                oneorderobject[name]=count;
+                                //alert(name);
+                                //alert(count);
+                                //alert(oneorderobject);
+                            }
+                            //alert(oneorderobject);
+                            this.itemsP.push(oneorderobject);
+                            //this.itemsP.push(pickupOrders[i].one_order);
+                            //alert(pickupOrders[i].one_order);
+                            //this.timeP.push(pickupOrders[i].time);
+                            var onepickup = {};
+                            onepickup["name"]=pickupOrders[i].email;
+                            onepickup["orderinfo"]=pickupOrders[i].one_order;
+                            onepickup["time"]="dummy time";
+                            this.pickupComb.push(onepickup);
                         }
                     }
 
@@ -272,7 +320,24 @@ h2 {
     margin-left: 10%;
 
 }
-
+table {
+    border-collapse: collapse;
+    border-style: hidden;
+    border-left: none;
+    border-right: none;
+}
+table td {
+    border-left: none;
+    border-right: none;
+    border: 1px solid black;
+}
+#headingPickup{
+    font-size:20px;
+    font-weight: bold;
+}
+tbody {
+    font-size:20px;
+}
 #header {
     font-size:20px;
     list-style-type: none;
@@ -308,6 +373,7 @@ h2 {
     margin-left: 5px;
     margin-right: 5px;
 }
+
 #heading {
     font-weight: bold;
     font-size:22px;
@@ -339,7 +405,7 @@ h2 {
 #nameP {
     margin-left:2%;
     float: left;
-    width: 20%;
+    width: 25%;
 }
 
 #TimeP {
@@ -349,7 +415,7 @@ h2 {
 #orderP {
     margin-left:5%;
     float: left;
-    width: 30%;
+    width: 40%;
 }
 
 </style>

@@ -28,8 +28,9 @@ import PickupConfirmation from './components/PickupConfirmation.vue'
 import PickupPayment from './components/PickupPayment.vue'
 // end of import from routes.js
 
-import DashboardC from './components/DashboardC.vue';
-import DashboardR from './components/DashboardR.vue';
+import Dashboard from './components/Dashboard.vue';
+//import DashboardC from './components/DashboardC.vue';
+//import DashboardR from './components/DashboardR.vue';
 import Delivery from './components/Delivery.vue';
 import OrdertoDelivery from './components/OrdertoDelivery.vue';
 import OrdertoPickup from './components/OrdertoPickup.vue';
@@ -60,8 +61,8 @@ const myRouter = new VueRouter({
     { path: '/signup-success', component: SignupSuccess},
     { path: '/login', name: 'login', component: Login, meta: {requiresGuest: true}},
     { path: '/register', name: 'register', component: Register, meta: {requiresGuest: true}},
-    { path: '/account', component: DashboardC, name : 'account', meta: {requiresAuth: true}},
-    { path: '/accountR', component: DashboardR, meta: {requiresAuth: true}},
+    { path: '/account', component: Dashboard, name : 'account', meta: {requiresAuth: true}},
+    //{ path: '/accountR', component: DashboardR, meta: {requiresAuth: true}},
     { name:'delivery', path: '/delivery', component: Delivery, props:true, meta: {requiresAuth: true}},
     { name:'reservation', path: '/reservation', component: Reservation, props:true, meta: {requiresAuth: true}},
     { name:'reservationConfirmed', path: '/reservationConfirmed', component: ReservationConfirmed, props:true, meta: {requiresAuth: true}},
