@@ -10,7 +10,8 @@ import Home from './components/Home.vue'
 import Reservation from './components/Reservation.vue'
 import ReservationConfirmed from './components/ReservationConfirmed'
 import ReservationOrder from './components/ReservationOrder'
-
+import ReservationPayment from './components/ReservationPayment'
+import ReservationComplete from './components/ReservationComplete'
 // import Pickup from './components/Pickup.vue'
 
 
@@ -67,6 +68,8 @@ const myRouter = new VueRouter({
     { name:'reservation', path: '/reservation', component: Reservation, props:true, meta: {requiresAuth: true}},
     { name:'reservationConfirmed', path: '/reservationConfirmed', component: ReservationConfirmed, props:true, meta: {requiresAuth: true}},
     { name:'reservationOrder', path: '/reservationOrder', component: ReservationOrder, props:true, meta: {requiresAuth: true}},
+    { name:'reservationPayment', path: '/reservationPayment', component: ReservationPayment, props:true, meta: {requiresAuth: true}},
+    { name:'reservationComplete', path: '/reservationComplete', component: ReservationComplete, props:true, meta: {requiresAuth: true}},
     { name:'pickup', path: '/pickup', component: Pickup, props:true, meta: {requiresAuth: true}},
     { path: '/ordertoDelivery', component: OrdertoDelivery, meta: {requiresAuth: true}},
     { path: '/ordertoPickup', component: OrdertoPickup},
