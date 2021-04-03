@@ -37,7 +37,7 @@
                     <br>
                 </ul>
             </div>
-            <br><br>
+            <br>
         </div>
         <h2>Reservation</h2>
         <div class="section">
@@ -99,7 +99,8 @@ export default {
                     ///////////////////////////////////////////////////////////////////////
                     //doc.data()["email"] == this.$userId :
                     //here I use janedoe customer as example, but actually it should be a global variable!
-                    if (doc.data()["email"] == "janedoe@email.com"){
+                    //if (doc.data()["email"] == "janedoe@email.com"){
+                    if (doc.data()["email"] == this.$userId){
                         this.customer=doc.data();
                         this.fav=doc.data()['favourites'];
                         this.orders=doc.data()['cart'];//store multiple pickup
@@ -128,7 +129,7 @@ export default {
                                                 for (let z=0;z<thisSlot["reservedBy"].length;z++){
                                                     //alert("here4");
                                                     if (this.reservations[i].customerID==thisSlot["reservedBy"][z]){
-                                                        alert("here5");
+                                                        //alert("here5");
                                                         this.reservation_order={};
                                                         this.reservation_order["orders"]=thisSlot.orders[z];
                                                         this.reservation_order["restaurant_name"]=this.reservations[i].restaurant_name;

@@ -93,6 +93,7 @@ export default {
     data() {
         return {
             //for reservations in this restaurant
+            thisRestaurant:this.$userData,
             restaurantR :{},
             //for pickup in this restaurant
             restaurantP :{},
@@ -113,7 +114,8 @@ export default {
         fetchItems: function() {
             database.collection("reservations").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => { 
-                    if (doc.data()["restaurant_name"] == "Jollibee"){
+                    
+                    if (doc.data()["restaurant_name"] == this.thisRestaurant["restaurant_name"]){
                         this.restaurantR=doc.data();
                         //alert("here1");
                         for (var i = 0; i < doc.data()["slots"].length; i++) {
