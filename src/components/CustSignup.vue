@@ -25,7 +25,7 @@
             Currently, we only accept payment by credit/debit card.<br><br>
             <label>Card Number: </label>
             <!-- <input type="text" v-model="customer.cardNum" required /><br><br> -->
-            <input type="text" v-model="customer.card.number" required /><br><br>
+            <input type="tel" v-model="customer.card.number" pattern="[0-9]{16}" required /><br><br>
             <label>Name on card: </label>
             <input type="text" v-model="customer.card.name" required /><br><br>
             <label>CVV: </label>
@@ -65,10 +65,10 @@ export default {
                     name: "",
                     number: ""
                 },
-                cart: {},
+                cart: [],
                 favourites: [],
                 profile: 'customer',
-                reservation: {}
+                reservation: []
             }
         }
     },
