@@ -9,12 +9,21 @@
                 <QuantityCounter v-on:counter="onCounter" v-bind:item = "item"></QuantityCounter>
             </li>
         </ul>
-        <Basket id="shoppingBasket" v-bind:itemsSelected="itemsSelected" v-bind:data="data" v-bind:doc_id="doc_id" v-bind:slotNumber="slotNumber"></Basket>
+        <p>Menu:</p>
+        <ul id="list">
+            <li id="list" v-for="item in itemsSelected" v-bind:key="item.id">
+                <p>{{item[0]}} x {{item[1]}} </p>
+            </li>
+        </ul>
+        <br>
+        <br>
+        <p> Total: ${{total}}</p>
+        <br><br>
+        <button v-on:click="sendOrder"> Send Order </button>
   </div>
 </template>
 
 <script>
-    import Basket from './Basket.vue'
     import QuantityCounter from './QuantityCounter'
     import database from '../firebase.js'
 
@@ -24,11 +33,12 @@
                 itemsSelected: [],
                 items: [],
                 data: {},
-                doc_id: ""
+                doc_id: "",
+                total: 0,
+                show: false
             }
         },
         components: {
-            Basket,
             QuantityCounter
         },
         methods: {
@@ -65,6 +75,24 @@
                     }
                 }
             },
+//            findTotal: function() {
+//                this.show = true;
+//                var sub = 0;
+//                for (var i = 0; i < this.itemsSelected.length; i++) {
+//                    sub += this.itemsSelected[i][2] * this.itemsSelected[i][1];
+//                }
+//                this.subtotal = sub;
+//            },
+            sendOrder: function() {
+                let newOrder = {};
+                this.itemsSelected.forEach((item) => {
+                    newOrder[item[0]] = item[1];
+                });
+                this.data.slots[this.slotNumber]["orders"][this.$route.params.orderNumber] = newOrder;
+                //add order to database
+                database.collection('reservations').doc(this.doc_id).update(this.data).then(this.$router.push({ name: 'reservationPayment', params: {id: this.$route.params.id, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal, data: this.data, slotNumber: this.$route.params.slotNumber, orderNumber: this.$route.params.orderNumber, total: this.total}}));
+                console.log("Order sent!");
+            },
             fetchItems: function() {
                 this.data = this.$route.params.data;
                 this.doc_id = this.$route.params.id;
@@ -79,6 +107,21 @@
                         }
                     });
                 });
+            }
+        },
+//        computed: {
+//           grandtotal: function() {
+//                var rounding = this.subtotal * 1.07;
+//                return rounding.toFixed(2);
+//            }
+//        },
+        watch: {
+            itemsSelected: function() {
+                var sub = 0;
+                for (var i = 0; i < this.itemsSelected.length; i++) {
+                    sub += this.itemsSelected[i][2] * this.itemsSelected[i][1];
+                }
+                this.total = sub;
             }
         },
         created() {
