@@ -119,18 +119,16 @@ export default {
             e.preventDefault();
         },
         fetchItemsfromCustomer:function(){
-            
             database.collection('customers')
-            
+            .get()
             .then((querySnapShot) => {
                 querySnapShot.forEach(doc => {
-                    if (doc.data().email == 'jamesbond@gmail.com'){
+                    if (doc.data().email == this.$userId){
                         this.pastOrder = doc.data().cart;
                         this.docId = doc.id;
                     }
                 })
             })
-            .then(alert("HELLO ARE U WORKING"));
         }, 
         fetchItems:function(){
             database.collection('pickup')
@@ -152,10 +150,6 @@ export default {
         },
         sendOrder : function() {
             this.getOrder();
-            console.log(this.orderList);
-            console.log(this.pastOrder);
-            console.log(this.docId);
-
             this.sendToUser();
 
             database.collection('pickup')
@@ -166,7 +160,7 @@ export default {
 
         sendToUser : function() {
             database.collection('customers')
-            .doc('JztGbLDYI6XUIfEnx1lxPIppbP62')
+            .doc(this.docId)
             .update({cart : this.pastOrder});
         },
 
@@ -202,7 +196,6 @@ export default {
                 if (this.itemsSelected.length === 0 && count > 0) {
                 //If there is nothing in items selected, push the ORDER in
                     this.itemsSelected.push([item.name, count, item.price]);
-                    console.log(this.itemsSelected[0]);
                     doneAction = true;
 
                 } else {
@@ -216,7 +209,6 @@ export default {
                             this.itemsSelected.splice(i,1);
                             this.itemsSelected.push([item.name, count, item.price]);
                             doneAction = true;
-                            console.log(this.itemsSelected[0]);
                             break;
                         }
                         
