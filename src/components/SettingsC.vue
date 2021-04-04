@@ -22,19 +22,19 @@
                 </form>
             </div>
 
-            <!-- update restaurant menu -->
+            <!-- update card details -->
             <h2 v-on:click="updatePayment=!updatePayment" v-show="!updatePayment"><a>&#9654; Update Payment Details</a></h2>
             <h2 v-on:click="updatePayment=!updatePayment" v-show="updatePayment"><a>&#9660; Update Payment Details</a></h2>
             <div v-show="updatePayment">
                 <form id="edit-payment" v-on:submit.prevent="modifyPayment()">
                     <label>Card Number: </label>
-                    <input type="text" v-model="datapacket.card.number[2]" v-bind:placeholder="datapacket.card.number[1]" /><br>
+                    <input type="text" v-model="datapacket.card.number[2]" v-bind:placeholder="'xxxxxxxxxxxx' + datapacket.card.number[1].slice(-4)" /><br>
                     <label>Name on card: </label>
                     <input type="text" v-model="datapacket.card.name[2]" v-bind:placeholder="datapacket.card.name[1]" /><br>
                     <label>CVV: </label>
-                    <input type="tel" v-model="datapacket.card.cvv[2]" pattern="[0-9]{3}" v-bind:placeholder="datapacket.card.cvv[1]" /><br>
+                    <input type="tel" v-model="datapacket.card.cvv[2]" pattern="[0-9]{3}" v-bind:placeholder="'xxx'" /><br>
                     <label>Expiry Date: </label>
-                    <input type="month" v-model="datapacket.card.expiry[2]" v-bind:placeholder="datapacket.card.expiry[1]" /><br>
+                    <input type="month" v-model="datapacket.card.expiry[2]" /><br>
                     <p><button type="submit" class="save">Save changes</button></p>
                 </form>
             </div>
@@ -74,6 +74,9 @@ export default {
             database.collection('customers').doc(this.$userUid).get().then((doc) => {
                 let storedData = doc.data();
                 for (let data in storedData) { // existing data (key)
+                    if (data == 'card') {
+                        continue;
+                    }
                     for (let info in this.datapacket) { // current storage [old, new]
                         if (info === data) {
                             this.datapacket[info][1] = storedData[data];
@@ -90,9 +93,6 @@ export default {
                         }
                     }
                 }
-
-                // this.datapacket.card.expiry[1] = Date.parse(this.datapacket.card.expiry[1]);
-                console.log(this.datapacket.card.expiry[1]);
             })
         },
         modifyData: function() {
@@ -112,37 +112,52 @@ export default {
             database.collection('customers').doc(this.$userUid).update(updateData).then(() => {
                 alert("Information updated successfully!");
                 location.reload();
-            }).catch((err) => {alert(err.message)})
+            },
+            err => {alert(err.message)})
             // });
+        },
+        modifyPayment: function() {
+            // update card data in firebase
+            // console.log(this.datapacket.card);
+            let updateFields = [];
+            for (let data in this.datapacket.card) {
+                // console.log(data);
+                if (this.datapacket.card[data][2] != '') {
+                    updateFields.push(data);
+                }
+            }
+            let updateData = {card: {
+                name: this.datapacket.card.name[1],
+                number: this.datapacket.card.number[1],
+                cvv: this.datapacket.card.cvv[1],
+                expiry: this.datapacket.card.expiry[1]
+            }};
+
+            for (let field of updateFields) {
+                updateData.card[field] = this.datapacket.card[field][2];
+            }
+                        
+            database.collection('customers').doc(this.$userUid).update(updateData).then(() => {
+                alert("Information updated successfully!");
+                location.reload();
+            },
+            err => {alert(err.message)}
+            )
         }
     },
     created() {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 this.$userUid = user.uid;
-                database.collection('restaurants').doc(this.$userUid).get().then((doc) => {
+                database.collection('customers').doc(this.$userUid).get().then((doc) => {
                     if (doc.exists) {
                         this.$userData = doc.data();
                         this.$userId = this.$userData.email;
                         this.$userProfile = this.$userData.profile;
-                        // console.log('rest exists', this.$userUid, this.$userId, this.$userProfile, this.$userData);
-                    } else {
-                        // console.log('not restaurant, search customer db');
-                        database.collection('customers').doc(this.$userUid).get().then((doc) => {
-                            console.log(doc.data());
-                            if (doc.exists) {
-                                this.$userData = doc.data();
-                                this.$userId = this.$userData.email;
-                                this.$userProfile = this.$userData.profile;
-                                // console.log('cust exists', this.$userUid, this.$userId, this.$userProfile, this.$userData);
-                            }
-                        })
                     }
-
                     // insert functions here
                     this.fetchInfo();
                     this.profile = this.$userProfile;
-                    
                 })
             } else {
                 // console.log('not logged in');
