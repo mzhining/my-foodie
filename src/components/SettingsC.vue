@@ -2,11 +2,11 @@
     <div id="settingsC">
         <div id="settingsCust">
             <h1>Account Settings</h1>
-
             <!-- update customer information -->
             <h2 v-on:click="updateInfo=!updateInfo" v-show="!updateInfo"><a>&#9654; Update Account Information</a></h2>
             <h2 v-on:click="updateInfo=!updateInfo" v-show="updateInfo"><a>&#9660; Update Account Information</a></h2>
             <div v-show="updateInfo">
+                Email: {{this.$userId}}<br>
                 <form id="edit-data" v-on:submit.prevent="modifyData()">
                     <label>First Name: </label>
                     <input type="text" v-model="datapacket.first_name[2]" v-bind:placeholder="datapacket.first_name[1]" /><br>
