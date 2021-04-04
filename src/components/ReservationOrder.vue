@@ -1,26 +1,57 @@
 <template>
     <div>
-        <p> Ordering for your reservation for {{this.$route.params.pax}} pax at {{this.$route.params.time}} on {{this.$route.params.date}} at {{this.$route.params.id}} at {{this.$route.params.postal}}. </p>
-        <ul id="itemsList">
-            <li v-for="item in items" v-bind:key="item.id">
-                <p id="itemName">{{item.name}}</p>
-                <img v-bind:src="item.itemImage"/>
-                <p id="price">${{item.price}}</p>
-                <QuantityCounter v-on:counter="onCounter" v-bind:item = "item"></QuantityCounter>
-            </li>
-        </ul>
-        <p>Menu:</p>
-        <ul id="list">
-            <li id="list" v-for="item in itemsSelected" v-bind:key="item.id">
-                <p>{{item[0]}} x {{item[1]}} </p>
-            </li>
-        </ul>
-        <br>
-        <br>
-        <p> Total: ${{total}}</p>
-        <br><br>
-        <button v-on:click="sendOrder"> Send Order </button>
-  </div>
+        <div class="restaurant_info">
+
+            <div class="main-bar">
+                <h1> {{this.$route.params.id}} </h1>
+                <img v-bind:src="this.datapacket.image" class = "icon"/>  
+            </div>
+            
+            <div class="side-bar" align="left">
+                <p> {{this.datapacket.type}} </p>
+                <p> {{this.datapacket.open_until}} </p>
+                <p> {{this.datapacket.away}} </p>
+                <p> {{this.datapacket.address}} </p>
+            </div>
+    
+        </div>
+        <hr id="line">
+        <div>
+            <div id="navigationbar">
+                <ul>
+                    <li><router-link to="/delivery" exact>Delivery </router-link></li>
+                    <br><br>
+                    <li><router-link to="/reservation" exact>Reservation </router-link></li>
+                    <br><br>
+                    <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
+                </ul>
+            </div>
+            <div>
+                <p> Ordering for your reservation for {{this.$route.params.pax}} pax at {{this.$route.params.time}} on {{this.$route.params.date}} at {{this.$route.params.id}} at {{this.$route.params.postal}}. </p>
+                <ul id="menu">
+                    <li v-for="item in items" v-bind:key="item.id" id="menu">
+                        <p id="itemName">{{item.name}}</p>
+                        <img v-bind:src="item.itemImage"/>
+                        <p id="price">${{item.price}}</p>
+                        <QuantityCounter v-on:counter="onCounter" v-bind:item = "item"></QuantityCounter>
+                    </li>
+                </ul>
+                <div id="basket">
+                    <p>Menu:</p>
+                    <ul id="display">
+                        <li v-for="item in itemsSelected" v-bind:key="item.id">
+                            <p>{{item[0]}} x {{item[1]}} </p>
+                        </li>
+                    </ul>
+                    <br>
+                    <br>
+                    <p> Total: ${{total}}</p>
+                    <br><br>
+                </div>
+                <button class="special" v-on:click="sendOrder"> Send Order </button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -35,7 +66,8 @@
                 data: {},
                 doc_id: "",
                 total: 0,
-                show: false
+                show: false,
+                datapacket: []
             }
         },
         components: {
@@ -90,10 +122,18 @@
                 });
                 this.data.slots[this.slotNumber]["orders"][this.$route.params.orderNumber] = newOrder;
                 //add order to database
-                database.collection('reservations').doc(this.doc_id).update(this.data).then(this.$router.push({ name: 'reservationPayment', params: {id: this.$route.params.id, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal, data: this.data, slotNumber: this.$route.params.slotNumber, orderNumber: this.$route.params.orderNumber, total: this.total}}));
+                database.collection('reservations').doc(this.doc_id).update(this.data).then(this.$router.push({ name: 'reservationPayment', params: {id: this.$route.params.id, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal, data: this.data, slotNumber: this.$route.params.slotNumber, orderNumber: this.$route.params.orderNumber, total: this.total, itemsSelected: this.itemsSelected}}));
                 console.log("Order sent!");
             },
             fetchItems: function() {
+                database.collection('pickup')
+                .doc(this.$route.params.id)
+                .get()
+                .then(snapshot => {
+                    var data = snapshot.data()
+                    this.datapacket = data
+                    console.log(this.datapacket)
+                });
                 this.data = this.$route.params.data;
                 this.doc_id = this.$route.params.id;
                 this.slotNumber = this.$route.params.slotNumber;
@@ -131,4 +171,50 @@
 </script>
 
 <style>
+img {
+    height: 10rem;
+}
+
+.main-bar, .side-bar {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    display: inline-block;
+    border: none;
+}
+.main-bar {
+    width: 30%;
+}
+.side-bar {
+    width: 70%;
+    bottom: 20px;
+}
+#line {
+    border: 3px dashed #90141C;
+}
+
+#navigationbar {
+    font-size:20px;
+    margin-left:2%;
+    float: left;
+    width: 10%;
+}
+
+.special {
+    background-color: pink; 
+    border: 10px;
+    color: black;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    display:inline-block;
+    padding:8px;
+}
+#basket {
+    margin-left: 12%;
+}
+#display {
+    display: list-item;
+}
 </style>

@@ -1,30 +1,58 @@
 <template>
     <div>
+        <div class="restaurant_info">
 
-        <h1> Make a reservation for {{this.$route.params.id}} at {{this.data.postal}} </h1>
-        <label> Number of pax: </label>
-        <br>
-        <input type="number" min="1" max="8" v-model.lazy="reservation.pax" required/>
-        <br>
-        <br>
-        <label> Date: </label>
-        <br>
-        <input id="datefield" type="date" v-model.lazy="reservation.date" min="2021-03-14" required/>
-        <br>
-        <br>
-        <button v-on:click="selectDate"> Show available timeslots </button>
-        <br>
-        <br>
-        <label v-if="show==true"> Time: </label>
-        <br>
-        <ul>
-            <li v-for="slot in available" v-bind:key="slot.time">
-                <p> {{slot.time}} </p>
-                <button v-on:click="book($event)" v-bind:time="slot.time"> Book </button>
-            </li>
-        </ul>
-        <br>
-        <br> -->
+            <div class="main-bar">
+                <h1> {{this.$route.params.id}} </h1>
+                <img v-bind:src="this.datapacket.image" class = "icon"/>  
+            </div>
+            
+            <div class="side-bar" align="left">
+                <p> {{this.datapacket.type}} </p>
+                <p> {{this.datapacket.open_until}} </p>
+                <p> {{this.datapacket.away}} </p>
+                <p> {{this.datapacket.address}} </p>
+            </div>
+    
+        </div>
+        <hr id="line">
+        <div id="container">
+            <div id="navigationbar">
+                <ul>
+                    <li><router-link to="/delivery" exact>Delivery </router-link></li>
+                    <br><br>
+                    <li><router-link to="/reservation" exact>Reservation </router-link></li>
+                    <br><br>
+                    <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
+                </ul>
+            </div>
+            <div>
+
+                <h1> Make a reservation for {{this.$route.params.id}} at {{this.data.postal}} </h1>
+                <label> Number of pax: </label>
+                <br>
+                <input type="number" min="1" max="8" v-model.lazy="reservation.pax" required/>
+                <br>
+                <br>
+                <label> Date: </label>
+                <br>
+                <input id="datefield" type="date" v-model.lazy="reservation.date" min="2021-03-14" required/>
+                <br>
+                <br>
+                <button class="special" v-on:click="selectDate" id="showSlots"> Show available timeslots </button>
+                <br>
+                <br>
+                <div id="timeslots">
+                    <label v-if="show==true"> Time: </label>
+                    <ul>
+                        <li v-for="slot in available" v-bind:key="slot.time">
+                            <p> {{slot.time}} </p>
+                            <button id="special" v-on:click="book($event)" v-bind:time="slot.time"> Book </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -40,7 +68,8 @@ export default {
             show: false,
             data: {},
             slotNumber: 100,
-            orderNumber: 100
+            orderNumber: 100,
+            datapacket: []
         }
     },
     methods: {
@@ -54,6 +83,14 @@ export default {
                     }
                 });
             });
+            database.collection('pickup')
+            .doc(this.$route.params.id)
+            .get()
+            .then(snapshot => {
+                var data = snapshot.data();
+                this.datapacket = data;
+                console.log(this.datapacket);
+            });
         },
         book: function(event) {
             let time = event.target.getAttribute("time");
@@ -64,8 +101,8 @@ export default {
                     this.data.slots[i]["orders"].push({});
                     this.orderNumber = this.data.slots[i]["orders"].length - 1;
                     this.data.slots[i]["pax"].push(this.reservation.pax);
-                    //this.data.slots[i]["reservedBy"].push(this.$userId);
-                    this.data.slots[i]["reservedBy"].push("customerID");
+                    this.data.slots[i]["reservedBy"].push(this.$userId);
+                    //this.data.slots[i]["reservedBy"].push("customerID");
                     this.data.slots[i]["avail"]--;
                 }
             }
@@ -159,4 +196,66 @@ export default {
 </script>
 
 <style>
+img {
+    height: 10rem;
+}
+
+.main-bar, .side-bar {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    display: inline-block;
+    border: none;
+}
+.main-bar {
+    width: 30%;
+}
+.side-bar {
+    width: 70%;
+    bottom: 20px;
+}
+#line {
+    border: 3px dashed #90141C;
+}
+
+#navigationbar {
+    font-size:20px;
+    margin-left:2%;
+    float: left;
+    width: 10%;
+}
+
+ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    flex-grow: 1;
+    flex-basis: 100px;
+    text-align: center;
+    /* border: 1px solid #222;  */
+}
+
+#special {
+    background-color: pink; 
+    border: 10px;
+    color: black;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    display:inline-block;
+    padding:8px;
+}
+
+#timeslots {
+    margin-left: 12%;
+}
+
+#showSlots {
+    margin-left: 12%;
+}
 </style>
