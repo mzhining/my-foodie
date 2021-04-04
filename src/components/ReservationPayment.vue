@@ -26,48 +26,44 @@
                     <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
                 </ul>
             </div>
-            <aside id="picture">
-                <div class="content" align = "left">
-                    <div>
-                        <h1> Confirm and make your payment </h1>
-                        <br>
-                        <table id="firstTable">
-                            <thead>
-                                <tr>
-                                <th>Item</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="item in this.$route.params.itemsSelected" v-bind:key="item.id">
-                                    <td>{{item[0]}}</td>
-                                    <td>{{item[1]}}</td>
-                                    <td>${{item[2]}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <p> Total price: ${{this.$route.params.total}}</p>
-                        <br>
-                        <p> Payment method </p>
-                           <select v-model="selected">
-                            <option disabled value="">Please select one</option>
-                            <option>Card A</option>
-                            <option>Card B</option>
-                            <option>Paylah!</option>
-                            <option>Add Card</option>
-                            </select>
-                            <br>
-                    </div>
-                </div>
-                <div class = "bottom" align = "center">
+            <div>
+                <h1 align="left"> Confirm and make your payment </h1>
+                <br>
+                <table id="firstTable">
+                    <thead>
+                        <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in items" v-bind:key="item.id">
+                            <td>{{item[0]}}</td>
+                            <td>{{item[1]}}</td>
+                            <td>${{item[2]}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p> Total price: ${{this.$route.params.total}}</p>
+                <br>
+                <p> Payment method </p>
+                    <select v-model="selected">
+                    <option disabled value="">Please select one</option>
+                    <option>Card A</option>
+                    <option>Card B</option>
+                    <option>Paylah!</option>
+                    <option>Add Card</option>
+                    </select>
                     <br>
-                    <br>
-                    <button class = "special" v-on:click="route()"> Make Payment </button>
-                    <br>
-                    <br>
-                </div>
-            </aside>
+            </div>
+            <div class = "bottom" align = "center">
+                <br>
+                <br>
+                <button id="special" v-on:click="route()"> Make Payment </button>
+                <br>
+                <br>
+            </div>
         </div>
         
         
@@ -79,7 +75,8 @@ import database from "../firebase.js"
 export default {
     data(){
         return{
-          datapacket:[]
+          datapacket:[],
+          items: []
         }
     },
     created() {
@@ -90,6 +87,7 @@ export default {
             this.$router.push({ name: 'reservationComplete', params: {id: this.$route.params.id, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal}})
         },
         fetchItems:function(){
+            this.items = this.$route.params.itemsSelected;
             database.collection('pickup')
             .doc(this.$route.params.id)
             .get()
@@ -137,15 +135,6 @@ table tbody tr:nth-child(2n) td {
 img {
     height: 10rem;
 }
-
-.content {
-    width: calc(100% - 8rem);
-    margin: auto;
-    display: flex;
-    align-items: left;
-    font-size: 15px;
-}
-
 .main-bar, .side-bar {
     position: relative;
     margin: 0;
@@ -164,35 +153,14 @@ img {
 #line {
     border: 3px dashed #90141C;
 }
-#container {
-    width: 100%;
-    overflow: hidden;
-}
+
 #navigationbar {
     font-size:20px;
     margin-left:2%;
     float: left;
     width: 10%;
 }
-#picture {
-    float: left;
-    width: 80%;
-}
-ul {
-    display: flex;
-    flex-wrap: wrap;
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    flex-grow: 1;
-    flex-basis: 100px;
-    text-align: center;
-    /* border: 1px solid #222;  */
-}
-
-.special {
+#special {
     background-color: pink; 
     border: 10px;
     color: black;
