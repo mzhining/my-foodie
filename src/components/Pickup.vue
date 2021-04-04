@@ -93,7 +93,9 @@ export default {
             orderList : [],
             datapacket: [],
             itemsSelected:[],
-            oneOrder : []
+            oneOrder : [],
+            pastOrder : [],
+            docId : ''
         }
     },
     props : {
@@ -106,6 +108,7 @@ export default {
     },
     created:function(){
         this.fetchItems();
+        this.fetchItemsfromCustomer();
     },
     methods:{
         checkForm:function(e) {
@@ -115,6 +118,20 @@ export default {
                 alert("Please choose your pick up time")
             e.preventDefault();
         },
+        fetchItemsfromCustomer:function(){
+            
+            database.collection('customers')
+            
+            .then((querySnapShot) => {
+                querySnapShot.forEach(doc => {
+                    if (doc.data().email == 'jamesbond@gmail.com'){
+                        this.pastOrder = doc.data().cart;
+                        this.docId = doc.id;
+                    }
+                })
+            })
+            .then(alert("HELLO ARE U WORKING"));
+        }, 
         fetchItems:function(){
             database.collection('pickup')
             .doc(this.rname)
@@ -136,10 +153,21 @@ export default {
         sendOrder : function() {
             this.getOrder();
             console.log(this.orderList);
+            console.log(this.pastOrder);
+            console.log(this.docId);
+
+            this.sendToUser();
+
             database.collection('pickup')
             .doc(this.rname)
-            .update({orders : this.orderList })
+            .update({orders : this.orderList})
             .then(()=>{this.$router.push({ name: 'pickup-payment', params : {total : this.subTotal, rname : this.rname, time : this.selected}})});
+        },
+
+        sendToUser : function() {
+            database.collection('customers')
+            .doc('JztGbLDYI6XUIfEnx1lxPIppbP62')
+            .update({cart : this.pastOrder});
         },
 
         getOrder : function() {
@@ -150,13 +178,24 @@ export default {
                     price : this.itemsSelected[i][2]
                 })
             }
+            this.updatePastOrder();
             this.orderList.push({
                 email : this.$userId, 
                 one_order : this.oneOrder, 
                 total : this.subTotal,
                 time : this.selected
             })
-            },
+        },
+
+        updatePastOrder : function() {
+            this.pastOrder.push({
+                time : this.selected,
+                one_order : this.oneOrder,
+                restaurant : this.rname,
+                total : this.subTotal,
+                type : 'pickup'
+            })
+        },
 
             onCounter: function (item, count) {
                 var doneAction = false; 
