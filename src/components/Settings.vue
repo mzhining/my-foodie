@@ -182,6 +182,9 @@ export default {
             database.collection('restaurants').doc(this.$userUid).update(updateData).then(() => {
                 alert("Information updated successfully!");
                 location.reload();
+            },
+            err => {
+                alert(err.message);
             });
         },
         fetchMenu: function() {
@@ -227,8 +230,8 @@ export default {
                 .then(() => {
                     alert(this.itemToRemove + ' removed successfully!');
                     location.reload();
-                })
-                .catch((err) => alert(err.message))
+                },
+                err => {alert(err.message)})
             } else {
                 // does not exist
                 // console.log("removeItem: ", this.$userUid);
