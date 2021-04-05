@@ -38,21 +38,37 @@
             <div v-show="updateMenu">
                 <!-- action buttons -->
                 <p>Choose an action below:<br>
-                <button class="display" v-on:click="updateAction='display'">Display</button>&nbsp;or
+                <button class="view" v-on:click="updateAction='view'">View</button>&nbsp;or
                 <button class="add" v-on:click="updateAction='add'">Add/Modify</button>&nbsp;or
                 <button class="remove" v-on:click="updateAction='remove'">Remove</button>
                 </p>
 
-                <!-- display menu from database -->
-                <div v-show="updateAction=='display'" id="display-item">
+                <!-- view/display menu from database -->
+                <!-- <div v-show="updateAction=='view'" id="view-item">
                     <h3>My Menu</h3>
                     <p>You have {{numItems}} item(s) in your menu.</p>
-                    <ul v-for="item in menu" v-bind:key="item.name">
+                    <ul v-for="item of menu" v-bind:key="item.name">
                         <li>
                         &#9660; {{item.name}}: ${{item.price}}<br>
                         <img v-bind:src="item.image" alt="No image" style="height:50px;">
                         </li>
                     </ul>
+                </div> -->
+                <div v-show="updateAction=='view'" id="view-item">
+                    <h3>My Menu</h3>
+                    <p>You have {{numItems}} item(s) in your menu.</p>
+                    <table>
+                        <tr>
+                            <th style="text-align:center;height:30px;">Image &#9660;</th>
+                            <th style="text-align:left;">Item Name &#9660;</th>
+                            <th style="text-align:center;">Price &#9660;</th>
+                        </tr>
+                        <tr v-for="item of menu" v-bind:key="item.name">
+                            <td style="width:200px;" align="center"><img class="menuPic" v-bind:src="item.image" style="height:100px"></td>
+                            <td style="width:300px;" align="left">{{item.name}}</td>
+                            <td style="width:100px;" align="center">${{item.price}}</td>
+                        </tr>
+                    </table>
                 </div>
 
                 <!-- add or modify items in database -->
@@ -75,7 +91,7 @@
                 <div v-show="updateAction=='remove'" id="remove-item">
                     <h3>Remove Item</h3>
                     <form v-on:submit.prevent="removeItem()">
-                        Please enter the item name exactly as shown in the 'Display' page (case-sensitive).<br>
+                        Please enter the item name exactly as shown in the 'View' tab (case-sensitive).<br>
                         <p><label>Name of Item: </label>
                         <input type="text" v-model="itemToRemove" required />&nbsp;
                         </p>
@@ -99,7 +115,7 @@ export default {
             updateInfo: false,
             updateMenu: false,
             updateAction: "",
-            // [current, new]
+            // [field name, current value, new value]
             datapacket: {
                 restaurant_name: ['Restaurant Name', '', ''],
                 image: ['Restaurant Logo', '', ''],
@@ -111,7 +127,7 @@ export default {
                 postal_code: ['Postal Code', '', ''],
                 paynow: ['PayNow', '', ''],
                 },
-            menu: {},
+            menu: [],
             itemToAdd: {
                 name: '',
                 price: '',
@@ -137,7 +153,7 @@ export default {
                 }
 
                 for (let item in storedData.menu) {
-                    item;
+                    item; //placeholder usage
                     this.numItems++;
                 }
                 // console.log(this.datapacket);
@@ -176,26 +192,78 @@ export default {
 
         },
         addItem: function() {
-            let addData = {
-                menu: {}
+            let exists = false;
+            let itemIndex;
+            let itemNames = [];
+            for (let item of this.menu) {
+                itemNames.push(item.name);
+                if (item.name == this.itemToAdd.name) {
+                    exists = true;
+                    itemIndex = itemNames.indexOf(item.name);
+                }
             }
-            addData.menu[this.itemToAdd.name] = {
+            let addData = {
                 name: this.itemToAdd.name,
                 price: this.itemToAdd.price,
                 image: this.itemToAdd.image
             }
 
-            database.collection('restaurants').doc(this.$userUid).set(addData, {merge: true})
+            if (exists) {
+                // item exists in database, modify it
+                this.menu[itemIndex] = addData;
+            } else {
+                // push item to array, update database
+                this.menu.push(addData);
+            }
+
+            // console.log('exists: ', exists);
+            // console.log('itemIndex: ', itemIndex);
+            // console.log('itemNames: ', itemNames);
+            // console.log('addData: ', addData);
+            // console.log('menu: ', this.menu);
+
+            database.collection('restaurants').doc(this.$userUid).update({menu: this.menu}, {merge: true})
             .then(() => {
-                alert("Item added successfully!");
+                alert('Item added/modified successfully!');
                 this.itemToAdd.name = '';
                 this.itemToAdd.price = '';
                 this.itemToAdd.image = '';
-            }).then(()=>location.reload())
-                // })
+                location.reload();
+            }, err => {
+                alert(err.message)
+            })
         },
         removeItem: function() {
-            let menu = this.menu;
+            let exists = false;
+            let itemIndex;
+            let itemNames = [];
+            for (let item of this.menu) {
+                itemNames.push(item.name);
+                if (item.name == this.itemToRemove) {
+                    exists = true;
+                    itemIndex = itemNames.indexOf(item.name);
+                }
+            }
+
+            if (exists) {
+                // item exists, delete it
+                this.menu.splice(itemIndex, 1);
+                database.collection('restaurants').doc(this.$userUid).update({menu: this.menu}, {merge: true})
+                .then(() => {
+                    alert(this.itemToRemove + ' removed successfully!');
+                    location.reload();
+                }, err => {
+                    alert(err.message);
+                })
+            } else {
+                // error
+                alert(this.itemToRemove + ' does not exist!');
+
+            }
+            // console.log(this.menu);
+            // console.log(this.menu.length);
+
+            /*let menu = this.menu;
             let new_menu = {};
 
             if (this.itemToRemove in menu) {
@@ -206,17 +274,17 @@ export default {
                         new_menu[item] = menu[item];
                     }
                 }
-                database.collection('restaurants').doc(this.$userUid).update({menu: new_menu})
-                .then(() => {
-                    alert(this.itemToRemove + ' removed successfully!');
-                    location.reload();
-                },
-                err => {alert(err.message)})
+                // database.collection('restaurants').doc(this.$userUid).update({menu: new_menu})
+                // .then(() => {
+                //     alert(this.itemToRemove + ' removed successfully!');
+                //     location.reload();
+                // },
+                // err => {alert(err.message)})
             } else {
                 // does not exist
                 // console.log("removeItem: ", this.$userUid);
                 alert(this.itemToRemove + ' does not exist!');
-            }
+            } */
         },
     },
     created() {
@@ -249,6 +317,8 @@ export default {
 
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 #settingsR, button {
     font-family: 'Poppins', sans-serif;
     font-style: normal;
@@ -274,7 +344,7 @@ a:hover {
     background: rgb(221, 255, 221);
 }
 
-.display {
+.view {
     background: rgb(215, 232, 255);
 }
 
@@ -288,5 +358,20 @@ ul {
 
 .save {
     background: rgb(255, 255, 217);
+}
+
+table {
+    align-items: center;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+tr:nth-child(odd) {
+    background-color:seashell;
+}
+
+th {
+    background-color:papayawhip;
 }
 </style>
