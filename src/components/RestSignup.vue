@@ -26,6 +26,8 @@
             <textarea v-model="restaurant.address" cols="30" rows="2" required /><br><br>
             <label>Postal Code: </label>
             <input type="tel" v-model="restaurant.postal_code" pattern="[0-9]{6}" required /><br><br>
+            <label>Tags/Labels for Restaurant: </label>
+            <input type="text" v-model="restaurant.type" placeholder="e.g. Western, Burgers" title="Separate multiple labels with a comma" required /><br><br>
             <label>Upload Restaurant Logo (please paste image URL):</label><br>
             <input type="url" v-model.lazy="restaurant.image" required /><br>
             <span v-if="restaurant.image != ''">Image preview:<br>
@@ -65,10 +67,10 @@ export default {
                 paynow: "",
                 image: "",
                 profile: 'restaurant',
-                menu: {},
-                pickup: {},
-                reservation: {},
-
+                menu: [],
+                pickup: [],
+                reservation: [],
+                type: '',
             },
             user_id: '',
         }
@@ -101,8 +103,30 @@ export default {
                     alert(err.message);
                 }).then(() => {
                     if (this.$root.signup_user_id != '') {
+                        // add to 'restaurants' collection
                         database.collection('restaurants').doc(this.$root.signup_user_id).set(this.restaurant)
                         // this.$router.push('/signup-success')
+                        .then(() => {
+                            // add to 'pickup' collection
+                            database.collection('pickup').doc(this.$root.signup_user_id).set({
+                                address: this.restaurant.address,
+                                away: '-km away',
+                                image: this.restaurant.image,
+                                menu: [],
+                                orders: [],
+                                restaurant_name: this.restaurant.restaurant_name,
+                                type: this.restaurant.type,
+                                open_until: 'Open until -'
+                            })
+                        }).then(() => {
+                            database.collection('reservations').doc(this.$root.signup_user_id).set({
+                                restaurant_name: this.restaurant.restaurant_name,
+                                address: this.restaurant.address,
+                                postal: this.restaurant.postal_code,
+                                slots: [],
+                            })
+                            // add to 'reservations' collection
+                        })
                         .then(()=>location.replace('/signup-success'));
                     }
                 })
@@ -116,7 +140,7 @@ export default {
 
 
 <style scoped>
-/* @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 #signup-rest, button {
     font-family: 'Poppins', sans-serif;
