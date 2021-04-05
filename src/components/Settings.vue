@@ -105,6 +105,8 @@ export default {
 
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 #settings, button {
     font-family: 'Poppins', sans-serif;
     font-style: normal;
@@ -140,7 +142,7 @@ ul {
 
 .loader {
   border: 10px solid #f3f3f3;
-  border-top: 10px solid #3498db;
+  border-top: 10px solid #5bbbfc;
   border-radius: 50%;
   width: 30px;
   height: 30px;

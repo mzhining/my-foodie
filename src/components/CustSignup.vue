@@ -115,6 +115,8 @@ export default {
 
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+
 #signup-cust, button {
     font-family: 'Poppins', sans-serif;
     font-style: normal;
