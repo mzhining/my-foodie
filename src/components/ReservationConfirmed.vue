@@ -33,13 +33,15 @@
                 <p> Your reservation is confirmed for {{this.$route.params.pax}} pax at {{this.$route.params.time}} on {{this.$route.params.date}} at {{this.$route.params.id}} at {{this.$route.params.postal}}. </p>
                 <br>
                 <br>
-                <p> Thank you for making a reservation for {{this.$route.params.id}} with MyFoodie! </p>
+                <p id="shift"> Thank you for making a reservation for {{this.$route.params.id}} with MyFoodie! </p>
                 <br>
                 <br>
                 <button class="special" @click="goToOrder"> Order in advance </button>
                 <br>
                 <br>
                 <button class="special" @click="home"> Back to Homepage </button>
+                <br>
+                <br>
             </div>
         </div>
     </div>
@@ -117,5 +119,9 @@ img {
     font-size: 15px;
     display:inline-block;
     padding:8px;
+}
+
+#shift{
+    margin-left: 12%;
 }
 </style>

@@ -43,12 +43,17 @@
                         </li>
                     </div>
                     <div align = "center" class = "total">
-                        <button class = "special" v-on:click="findTotal()"> Calculate Total </button>
+                        <button id = "special" v-on:click="findTotal()"> Calculate Total </button>
                         <p> <b> Total price: ${{this.subTotal}} </b> </p>
                     </div>
                     <div class = "time" align = "center"> 
                         <p> When will you be picking up? </p>
-                        <select v-model="selected">
+                        <label> Date: </label>
+                        <br>
+                        <input id="datef" type="date" v-model.lazy="selectedDate" required/>
+                        <br>
+                        <br>
+                        <select v-model="selectedTime">
                                 <option disabled value="">Please select one</option>
                                 <option>10.00 AM</option>
                                 <option>11.00 AM</option>
@@ -69,7 +74,7 @@
                 
                 <div class = "bottom" align = "center">
                     <br>
-                    <button class = "special" v-on:click="checkForm(), sendOrder(), findTotal()" > Order! </button>
+                    <button id = "special" v-on:click="checkForm(), sendOrder(), findTotal()" > Order! </button>
                     <br>
                     <br>
                 </div>
@@ -88,14 +93,16 @@ export default {
     name : 'Pickup',
     data(){
         return{
-            selected : '',
+            selectedTime : '',
+            selectedDate: '',
             subTotal : 0, 
             orderList : [],
             datapacket: [],
             itemsSelected:[],
             oneOrder : [],
             pastOrder : [],
-            docId : ''
+            docId : '',
+            mindate: ""
         }
     },
     props : {
@@ -106,16 +113,16 @@ export default {
     components : {
         QuantityCounter
     },
-    created:function(){
+    created() {
         this.fetchItems();
         this.fetchItemsfromCustomer();
     },
     methods:{
         checkForm:function(e) {
-            if(this.selected) 
+            if(this.selectedTime && this.selectedDate) 
                 return true;
-            if(!this.selected) 
-                alert("Please choose your pick up time")
+            if(!this.selectedTime || this.selectedDate) 
+                alert("Please choose your pick up time and date")
             e.preventDefault();
         },
         fetchItemsfromCustomer:function(){
@@ -140,6 +147,19 @@ export default {
                 var data2 = snapshot.data().orders
                 this.orderList = data2
             });
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
+            var yyyy = today.getFullYear();
+            if(dd<10){
+                dd='0'+dd
+            } 
+            if(mm<10){
+                mm='0'+mm
+            } 
+            today = yyyy+'-'+mm+'-'+dd;
+            this.mindate = today;
+            document.getElementById('datef').setAttribute('min', this.mindate);
         }, 
         findTotal : function() {
             var total = 0;
@@ -177,13 +197,15 @@ export default {
                 email : this.$userId, 
                 one_order : this.oneOrder, 
                 total : this.subTotal,
-                time : this.selected
+                time : this.selectedTime,
+                date: this.selectedDate
             })
         },
 
         updatePastOrder : function() {
             this.pastOrder.push({
-                time : this.selected,
+                time : this.selectedTime,
+                date: this.selectedDate,
                 one_order : this.oneOrder,
                 restaurant : this.rname,
                 total : this.subTotal,
@@ -317,7 +339,7 @@ li {
     list-style-type: none;
 }
 
-.special {
+#special {
     background-color: pink; 
     border: 10px;
     color: black;
