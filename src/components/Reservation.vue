@@ -36,7 +36,7 @@
                 <br>
                 <label> Date: </label>
                 <br>
-                <input id="datefield" type="date" v-model.lazy="reservation.date" min="2021-03-14" required/>
+                <input id="datefield" type="date" v-model.lazy="reservation.date" required/>
                 <br>
                 <br>
                 <button class="special" v-on:click="selectDate" id="showSlots"> Show available timeslots </button>
@@ -69,7 +69,8 @@ export default {
             data: {},
             slotNumber: 100,
             orderNumber: 100,
-            datapacket: []
+            datapacket: [],
+            mindate: ""
         }
     },
     methods: {
@@ -91,6 +92,21 @@ export default {
                 this.datapacket = data;
                 console.log(this.datapacket);
             });
+            var today = new Date();
+            var tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1)
+            var dd = tomorrow.getDate();
+            var mm = tomorrow.getMonth()+1; //January is 0!
+            var yyyy = tomorrow.getFullYear();
+            if(dd<10){
+                dd='0'+dd
+            } 
+            if(mm<10){
+                mm='0'+mm
+            } 
+            tomorrow = yyyy+'-'+mm+'-'+dd;
+            this.mindate = tomorrow;
+            document.getElementById('datefield').setAttribute('min', this.mindate);
         },
         book: function(event) {
             let time = event.target.getAttribute("time");
@@ -256,6 +272,9 @@ li {
 }
 
 #showSlots {
+    margin-left: 12%;
+}
+#datefield {
     margin-left: 12%;
 }
 </style>
