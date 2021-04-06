@@ -32,7 +32,7 @@
                         <h1> Choose your order </h1>
                         <br>
                         
-                        <li v-for="item in this.datapacket.menu" v-bind:key="item.name" id="section">
+                        <li v-for="item in items" v-bind:key="item.name" id="section">
                         <br>
                         <p id="food">Name: {{item.name}}    
                             <br> Price: ${{item.price}}
@@ -42,9 +42,17 @@
                         <br> 
                         </li>
                     </div>
-                    <div align = "center" class = "total">
-                        <button id = "special" v-on:click="findTotal()"> Calculate Total </button>
-                        <p> <b> Total price: ${{this.subTotal}} </b> </p>
+                    <div id="basket">
+                    <p>Basket:</p>
+                        <ul id="display">
+                            <li v-for="item in itemsSelected" v-bind:key="item.id">
+                                <p>{{item[0]}} x {{item[1]}} </p>
+                            </li>
+                        </ul>
+                        <br>
+                        <br>
+                        <p> Total: ${{total}}</p>
+                        <br><br>
                     </div>
                     <div class = "time" align = "center"> 
                         <p> When will you be picking up? </p>
@@ -88,6 +96,7 @@
 <script>
 import database from "../firebase.js"
 import QuantityCounter from './QuantityCounter.vue'
+import firebase from 'firebase'
 
 export default {
     name : 'Pickup',
@@ -102,7 +111,9 @@ export default {
             oneOrder : [],
             pastOrder : [],
             docId : '',
-            mindate: ""
+            mindate: "",
+            items: [],
+            total: 0
         }
     },
     props : {
@@ -112,10 +123,6 @@ export default {
     },
     components : {
         QuantityCounter
-    },
-    created() {
-        this.fetchItems();
-        this.fetchItemsfromCustomer();
     },
     methods:{
         checkForm:function(e) {
@@ -147,27 +154,32 @@ export default {
                 var data2 = snapshot.data().orders
                 this.orderList = data2
             });
+            database.collection('restaurants').get().then(querySnapshot => {
+                let item={};
+                querySnapshot.docs.forEach(doc => {
+                    if (doc.data().restaurant_name == this.rname) {
+                        item=doc.data();
+                        item.show=false;
+                        this.items = item["menu"];
+                    }
+                });
+            });
             var today = new Date();
-            var dd = today.getDate();
-            var mm = today.getMonth()+1; //January is 0!
-            var yyyy = today.getFullYear();
+            var tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1)
+            var dd = tomorrow.getDate();
+            var mm = tomorrow.getMonth()+1; //January is 0!
+            var yyyy = tomorrow.getFullYear();
             if(dd<10){
                 dd='0'+dd
             } 
             if(mm<10){
                 mm='0'+mm
             } 
-            today = yyyy+'-'+mm+'-'+dd;
-            this.mindate = today;
+            tomorrow = yyyy+'-'+mm+'-'+dd;
+            this.mindate = tomorrow;
             document.getElementById('datef').setAttribute('min', this.mindate);
         }, 
-        findTotal : function() {
-            var total = 0;
-            for (let i = 0; i < this.itemsSelected.length; i++) {
-            total += (this.itemsSelected[i][1] * this.itemsSelected[i][2]);
-            }
-            this.subTotal = total.toFixed(2); 
-        },
         sendOrder : function() {
             this.getOrder();
             this.sendToUser();
@@ -212,41 +224,85 @@ export default {
                 type : 'pickup'
             })
         },
+        onCounter: function (item, count) {
+            var doneAction = false; 
+            if (this.itemsSelected.length === 0 && count > 0) {
+            //If there is nothing in items selected, push the ORDER in
+                this.itemsSelected.push([item.name, count, item.price]);
+                doneAction = true;
 
-            onCounter: function (item, count) {
-                var doneAction = false; 
-                if (this.itemsSelected.length === 0 && count > 0) {
-                //If there is nothing in items selected, push the ORDER in
-                    this.itemsSelected.push([item.name, count, item.price]);
-                    doneAction = true;
+            } else {
+                // Loop through everything to check what is not in the basket
+                for (let i = 0; i < this.itemsSelected.length; i++) {
+                    const curr_item = this.itemsSelected[i];
+                    const item_name = curr_item[0];
 
-                } else {
-                    // Loop through everything to check what is not in the basket
-                    for (let i = 0; i < this.itemsSelected.length; i++) {
-                        const curr_item = this.itemsSelected[i];
-                        const item_name = curr_item[0];
-
-                        // if item_name is the same as item.name and the count is more than 0, update this.itemsSelected
-                        if (item_name===item.name && count > 0) {
-                            this.itemsSelected.splice(i,1);
-                            this.itemsSelected.push([item.name, count, item.price]);
-                            doneAction = true;
-                            break;
-                        }
-                        
-                        // Next, item_name is the same as item.name and the count is 0, remove it from itemsSelected.
-                        else if (item_name===item.name && count === 0) {
-                            this.itemsSelected.splice(i,1);
-                            doneAction = true;
-                            break;
-                        }
-                    }
-                    // otherwise, if the item is not in itemSelected, add it to itemsSelected by pushing the ORDER in.
-                    if (!(doneAction) && count != 0) {
+                    // if item_name is the same as item.name and the count is more than 0, update this.itemsSelected
+                    if (item_name===item.name && count > 0) {
+                        this.itemsSelected.splice(i,1);
                         this.itemsSelected.push([item.name, count, item.price]);
+                        doneAction = true;
+                        break;
+                    }
+                    
+                    // Next, item_name is the same as item.name and the count is 0, remove it from itemsSelected.
+                    else if (item_name===item.name && count === 0) {
+                        this.itemsSelected.splice(i,1);
+                        doneAction = true;
+                        break;
                     }
                 }
+                // otherwise, if the item is not in itemSelected, add it to itemsSelected by pushing the ORDER in.
+                if (!(doneAction) && count != 0) {
+                    this.itemsSelected.push([item.name, count, item.price]);
+                }
             }
+        }
+    },
+    watch: {
+        itemsSelected: function() {
+            var sub = 0;
+            for (var i = 0; i < this.itemsSelected.length; i++) {
+                sub += this.itemsSelected[i][2] * this.itemsSelected[i][1];
+            }
+            this.total = sub;
+        }
+    },
+    created() {
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.$userUid = user.uid;
+                database.collection('restaurants').doc(this.$userUid).get().then((doc) => {
+                    if (doc.exists) {
+                        this.$userData = doc.data();
+                        this.$userId = this.$userData.email;
+                        this.$userProfile = this.$userData.profile;
+                        // console.log('rest exists', this.$userUid, this.$userId, this.$userProfile, this.$userData);
+                    } else {
+                        // console.log('not restaurant, search customer db');
+                        database.collection('customers').doc(this.$userUid).get().then((doc) => {
+                            console.log(doc.data());
+                            if (doc.exists) {
+                                this.$userData = doc.data();
+                                this.$userId = this.$userData.email;
+                                this.$userProfile = this.$userData.profile;
+                                // console.log('cust exists', this.$userUid, this.$userId, this.$userProfile, this.$userData);
+                            }
+                        })
+                    }
+
+                    // insert functions here
+                    this.fetchItems();
+                    this.fetchItemsfromCustomer();
+                })
+            } else {
+                // console.log('not logged in');
+                this.$userUid = '';
+                this.$userData = '';
+                this.$userId = '';
+                this.$userProfile = '';
+            }
+        })
     }
 }
 </script>
