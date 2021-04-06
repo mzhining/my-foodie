@@ -61,7 +61,7 @@ export default {
     },
     created:function(){
         this.restaurant_name=this.$route.params.restaurantN;
-        alert(this.restaurant_name);
+        //alert(this.restaurant_name);
         this.fetchItems();
     },
     methods:{

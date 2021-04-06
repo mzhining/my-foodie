@@ -30,6 +30,7 @@
                             <span>{{item.count}}x {{item.name}}</span>
                         </ul>
                     </td>
+                    <td><button v-bind:id="oneReser" v-on:click="deleteItem($event)">Delete</button></td>
                 </tr>
                 </tbody>
             </table>
@@ -76,12 +77,34 @@
         <h2>Today's reservation</h2>
         <!-- Assume reservations is one document one resaturant? -->
         <div class="section">
+                <table style="width:100%" >
+                    <tr id="headingReser">
+                        <th><br>customerID<br></th>
+                        <th><br>Time<br></th>
+                        <th><br>Pax<br></th>
+                        <th><br>Order<br></th>
+                    </tr>
+                    <tbody>
+                    <tr v-for="oneReser in reservationComb" v-bind:key="oneReser.id">
+                        <td>{{oneReser.reservedBy}}</td>
+                        <td>{{oneReser.time}}</td>
+                        <td>{{oneReser.pax}}</td>
+                        <td>
+                            <ul v-for="(key, value) in oneReser.orders" v-bind:key="key">
+                                <span>{{key}}x {{value}}</span>
+                            </ul>
+                        </td>
+                        <td><button v-bind:id="oneReser" v-on:click="deleteItem($event)">Delete</button></td>
+                    </tr>
+                    </tbody>
+                </table>
             <!--
             <li v-for="item in reorder" v-bind:key="item.id" id="itemlist">
                 <span>{{item.name}}    {{item.pax}}    {{item.time}}    {{item.order}}</span>
                 <br>
             </li>
             -->
+            <!--
             <div id="container">
                 <div id="name">
                     <p id="heading">Name</p>
@@ -97,7 +120,7 @@
                         <br><br>
                     </li>
                 </div>
-                <!-- How to display time nicely???-->
+                How to display time nicely???
                 <div id="Time">
                     <p id="heading">Time</p>
                     <li v-for="item in time" v-bind:key="item.id" id="itemlist">
@@ -113,6 +136,7 @@
                     </li>        
                 </div>
             </div>
+            -->
         </div>
         <router-link to="/settings" exact><h2>Setting</h2></router-link>
     </div>
@@ -140,7 +164,8 @@ export default {
             nameP:[],
             itemsP:[],
             timeP:[],
-            pickupComb:[]
+            pickupComb:[],
+            reservationComb:[]
         }
     },
     methods:{
@@ -153,11 +178,21 @@ export default {
                         for (var i = 0; i < doc.data()["slots"].length; i++) {
                             var oneSlot=doc.data()["slots"][i];
                             for (var j = 0; j < oneSlot.reservedBy.length; j++) {
-                                var dt=oneSlot.date + " "+oneSlot.time; 
-                                this.time.push(dt);
-                                this.reservationorder.push(oneSlot.orders[j]);
-                                this.pax.push(oneSlot.pax[j]);
-                                this.name.push(oneSlot.reservedBy[j]);
+                                //var dt=oneSlot.date + " "+oneSlot.time; 
+                                var oneReser={};
+                                oneReser["time"]=oneSlot.date + " "+oneSlot.time;
+                                //alert(oneReser["time"]);
+                                oneReser["orders"]=oneSlot.orders[j];
+                                //alert(oneReser["orders"]);
+                                oneReser["pax"]=oneSlot.pax[j];
+                                //alert(oneReser["pax"]);
+                                oneReser["reservedBy"]=oneSlot.reservedBy[j];
+                                //alert(oneReser["reservedBy"]);
+                                this.reservationComb.push(oneReser);
+                                //this.time.push(dt);
+                                //this.reservationorder.push(oneSlot.orders[j]);
+                                //this.pax.push(oneSlot.pax[j]);
+                                //this.name.push(oneSlot.reservedBy[j]);
                             }
                         }
                         //for (var key of Object.keys(doc.data())) {
@@ -320,24 +355,26 @@ h2 {
     margin-left: 10%;
 
 }
-table {
-    border-collapse: collapse;
-    border-style: hidden;
-    border-left: none;
-    border-right: none;
-}
-table td {
-    border-left: none;
-    border-right: none;
-    border: 1px solid black;
+#headingReser{
+    font-size:20px;
+    list-style-type: none;
+    text-align: left;
+    font-weight: bold;
+    margin-left: 2%;
 }
 #headingPickup{
     font-size:20px;
+    list-style-type: none;
+    text-align: left;
     font-weight: bold;
+    margin-left: 2%;
 }
 tbody {
     font-size:20px;
+    text-align: left;
+    margin-left:3px;
 }
+
 #header {
     font-size:20px;
     list-style-type: none;
@@ -417,6 +454,8 @@ tbody {
     float: left;
     width: 40%;
 }
-
+button {
+    font-size:15px;
+}
 </style>
 
