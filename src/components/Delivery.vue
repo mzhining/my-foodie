@@ -28,7 +28,7 @@
             </div>
             <div id="menu">
                 <li v-for="item in menu" v-bind:key="item.name" id="section">
-                    <br>
+                    <img v-bind:src="item.image"/> 
                     <p id="food">Name: {{item.name}}    Price: {{item.price}}</p> 
                     <br> 
                     <hr id="separate">
