@@ -88,13 +88,15 @@ export default {
         },
         fetchItems:function(){
             this.items = this.$route.params.itemsSelected;
-            database.collection('pickup')
-            .doc(this.$route.params.id)
+            database.collection('restaurants')
             .get()
-            .then(snapshot => {
-                var data = snapshot.data()
-                this.datapacket = data
-                console.log(this.datapacket)
+            .then(querySnapshot => {
+                querySnapshot.docs.forEach(doc => {
+                    if (doc.data().restaurant_name == this.$route.params.id) {
+                        var datap = doc.data();
+                        this.datapacket = datap;
+                    }
+                });
             });
         }
     }
