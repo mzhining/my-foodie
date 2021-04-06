@@ -17,7 +17,7 @@ export default {
                         } else {
                             // console.log('not restaurant, search customer db');
                             database.collection('customers').doc(this.$userUid).get().then((doc) => {
-                                console.log(doc.data());
+                                // console.log(doc.data());
                                 if (doc.exists) {
                                     Vue.prototype.$userData = doc.data();
                                     Vue.prototype.$userId = this.$userData.email;

@@ -169,14 +169,5 @@ li {
     /* border: 1px solid #222;  */
 }
 
-.special {
-    background-color: pink; 
-    border: 10px;
-    color: black;
-    border-radius: 10px;
-    text-align: center;
-    font-size: 15px;
-    display:inline-block;
-    padding:8px;
-}
+
 </style>

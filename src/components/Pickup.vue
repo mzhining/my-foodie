@@ -43,12 +43,17 @@
                         </li>
                     </div>
                     <div align = "center" class = "total">
-                        <button class = "special" v-on:click="findTotal()"> Calculate Total </button>
+                        <button id = "special" v-on:click="findTotal()"> Calculate Total </button>
                         <p> <b> Total price: ${{this.subTotal}} </b> </p>
                     </div>
                     <div class = "time" align = "center"> 
                         <p> When will you be picking up? </p>
-                        <select v-model="selected">
+                        <label> Date: </label>
+                        <br>
+                        <input id="datef" type="date" v-model.lazy="selectedDate" required/>
+                        <br>
+                        <br>
+                        <select v-model="selectedTime">
                                 <option disabled value="">Please select one</option>
                                 <option>10.00 AM</option>
                                 <option>11.00 AM</option>
@@ -69,7 +74,7 @@
                 
                 <div class = "bottom" align = "center">
                     <br>
-                    <button class = "special" v-on:click="checkForm(), sendOrder(), findTotal()" > Order! </button>
+                    <button id = "special" v-on:click="checkForm(), sendOrder(), findTotal()" > Order! </button>
                     <br>
                     <br>
                 </div>
@@ -88,12 +93,16 @@ export default {
     name : 'Pickup',
     data(){
         return{
-            selected : '',
+            selectedTime : '',
+            selectedDate: '',
             subTotal : 0, 
             orderList : [],
             datapacket: [],
             itemsSelected:[],
-            oneOrder : []
+            oneOrder : [],
+            pastOrder : [],
+            docId : '',
+            mindate: ""
         }
     },
     props : {
@@ -104,17 +113,30 @@ export default {
     components : {
         QuantityCounter
     },
-    created:function(){
+    created() {
         this.fetchItems();
+        this.fetchItemsfromCustomer();
     },
     methods:{
         checkForm:function(e) {
-            if(this.selected) 
+            if(this.selectedTime && this.selectedDate) 
                 return true;
-            if(!this.selected) 
-                alert("Please choose your pick up time")
+            if(!this.selectedTime || this.selectedDate) 
+                alert("Please choose your pick up time and date")
             e.preventDefault();
         },
+        fetchItemsfromCustomer:function(){
+            database.collection('customers')
+            .get()
+            .then((querySnapShot) => {
+                querySnapShot.forEach(doc => {
+                    if (doc.data().email == this.$userId){
+                        this.pastOrder = doc.data().cart;
+                        this.docId = doc.id;
+                    }
+                })
+            })
+        }, 
         fetchItems:function(){
             database.collection('pickup')
             .doc(this.rname)
@@ -125,6 +147,19 @@ export default {
                 var data2 = snapshot.data().orders
                 this.orderList = data2
             });
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth()+1; //January is 0!
+            var yyyy = today.getFullYear();
+            if(dd<10){
+                dd='0'+dd
+            } 
+            if(mm<10){
+                mm='0'+mm
+            } 
+            today = yyyy+'-'+mm+'-'+dd;
+            this.mindate = today;
+            document.getElementById('datef').setAttribute('min', this.mindate);
         }, 
         findTotal : function() {
             var total = 0;
@@ -135,11 +170,18 @@ export default {
         },
         sendOrder : function() {
             this.getOrder();
-            console.log(this.orderList);
+            this.sendToUser();
+
             database.collection('pickup')
             .doc(this.rname)
-            .update({orders : this.orderList })
+            .update({orders : this.orderList})
             .then(()=>{this.$router.push({ name: 'pickup-payment', params : {total : this.subTotal, rname : this.rname, time : this.selected}})});
+        },
+
+        sendToUser : function() {
+            database.collection('customers')
+            .doc(this.docId)
+            .update({cart : this.pastOrder});
         },
 
         getOrder : function() {
@@ -150,19 +192,32 @@ export default {
                     price : this.itemsSelected[i][2]
                 })
             }
+            this.updatePastOrder();
             this.orderList.push({
                 email : this.$userId, 
                 one_order : this.oneOrder, 
-                total : this.subTotal
+                total : this.subTotal,
+                time : this.selectedTime,
+                date: this.selectedDate
             })
-            },
+        },
+
+        updatePastOrder : function() {
+            this.pastOrder.push({
+                time : this.selectedTime,
+                date: this.selectedDate,
+                one_order : this.oneOrder,
+                restaurant : this.rname,
+                total : this.subTotal,
+                type : 'pickup'
+            })
+        },
 
             onCounter: function (item, count) {
                 var doneAction = false; 
                 if (this.itemsSelected.length === 0 && count > 0) {
                 //If there is nothing in items selected, push the ORDER in
                     this.itemsSelected.push([item.name, count, item.price]);
-                    console.log(this.itemsSelected[0]);
                     doneAction = true;
 
                 } else {
@@ -176,7 +231,6 @@ export default {
                             this.itemsSelected.splice(i,1);
                             this.itemsSelected.push([item.name, count, item.price]);
                             doneAction = true;
-                            console.log(this.itemsSelected[0]);
                             break;
                         }
                         
@@ -285,7 +339,7 @@ li {
     list-style-type: none;
 }
 
-.special {
+#special {
     background-color: pink; 
     border: 10px;
     color: black;
