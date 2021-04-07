@@ -148,6 +148,7 @@ export default {
 
 img {
     height: 15rem;
+    max-width: 100%;
 }
 
 #pic {

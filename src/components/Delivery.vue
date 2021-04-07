@@ -11,6 +11,7 @@
                 <p>Contact Email:  {{restaurant_whole.contact_email}}</p>
                 <p>Contact Number:  {{restaurant_whole.contact_num}}</p>
                 <p>Postal Code:  {{restaurant_whole.postal_code}}</p>
+                <button v-on:click="addFav()">Add to favourite</button>
             </div>
         </div>
         <br>
@@ -36,7 +37,7 @@
                 <div id="compare">
                     <br>
                     <li v-for="item in price" v-bind:key="item.name" id="compareli">
-                        <p id="food">Platform {{item.name}}    Delivery Price: {{item.price}}</p> 
+                        <pre id="food">Platform: <a v-bind:href="item.web">{{item.name}}</a>    Delivery Price: {{item.price}}</pre> 
                     </li>
                 </div>
             </div>
@@ -65,6 +66,16 @@ export default {
         this.fetchItems();
     },
     methods:{
+        addFav:function(){
+            var fav=this.$userData["favourites"];
+            if (!fav.includes(this.restaurant_name)){
+                fav.push(this.restaurant_name);
+            }
+            database.collection('customers').doc(this.$userUid).update({
+                favourites: fav
+            }).then(() => {location.reload()});
+                
+        },
       fetchItems:function(){
         database.collection("restaurants").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
@@ -95,7 +106,9 @@ export default {
 }
 img {
     height: 15rem;
+    max-width: 100%;
 }
+
 #logo {
     width: 100%;
     overflow: hidden;
@@ -155,6 +168,10 @@ ul {
 #compareli {
     list-style-type: none;
     font-family: "Times New Roman", Times, serif;
+}
+button {
+    background-color: blanchedalmond;
+    font-size:15px;
 }
 
 </style>
