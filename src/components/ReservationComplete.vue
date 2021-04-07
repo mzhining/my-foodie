@@ -1,12 +1,12 @@
 <template>
     <div>
-        <p> Your reservation and order for {{this.$route.params.id}} at {{this.$route.params.postal}} is complete. </p>
+        <p> Your reservation and order for {{this.$route.params.name}} at {{this.$route.params.postal}} is complete. </p>
         <br>
         <br>
         <p> Your food will be ready at {{this.$route.params.time}} on {{this.$route.params.date}} </p>
         <br>
         <br>
-        <p> Thank you for making a reservation for {{this.$route.params.id}} with MyFoodie! </p>
+        <p> Thank you for making a reservation for {{this.$route.params.name}} with MyFoodie! </p>
         <br>
         <br>
         <button @click="home"> Back to Homepage </button>

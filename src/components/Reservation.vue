@@ -19,16 +19,16 @@
         <div id="container">
             <div id="navigationbar">
                 <ul>
-                    <li><router-link to="/delivery" exact>Delivery </router-link></li>
+                    <li><router-link to="/ordertoDelivery" exact>Delivery </router-link></li>
                     <br><br>
-                    <li><router-link to="/reservation" exact>Reservation </router-link></li>
+                    <li><router-link to="/ordertoReservation" exact>Reservation </router-link></li>
                     <br><br>
                     <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
                 </ul>
             </div>
             <div>
 
-                <h1> Make a reservation for {{this.$route.params.id}} at {{this.data.postal}} </h1>
+                <h1> Make a reservation for {{this.$route.params.name}} at {{this.data.postal}} </h1>
                 <label> Number of pax: </label>
                 <br>
                 <input type="number" min="1" max="8" v-model.lazy="reservation.pax" required/>
@@ -70,7 +70,8 @@ export default {
             slotNumber: 100,
             orderNumber: 100,
             datapacket: [],
-            mindate: ""
+            mindate: "",
+            doc_id: ""
         }
     },
     methods: {
@@ -78,9 +79,10 @@ export default {
             let item = {};
             database.collection('reservations').get().then((querySnapShot)=>{
                 querySnapShot.forEach(doc=>{
-                    if (doc.id == this.$route.params.id) {
+                    if (doc.data().restaurant_name == this.$route.params.name) {
                         item = doc.data();
                         this.data = item;
+                        this.doc_id = doc.id;
                     }
                 });
             });
@@ -88,7 +90,7 @@ export default {
             .get()
             .then(querySnapshot => {
                 querySnapshot.docs.forEach(doc => {
-                    if (doc.data().restaurant_name == this.$route.params.id) {
+                    if (doc.data().restaurant_name == this.$route.params.name) {
                         var datap = doc.data();
                         this.datapacket = datap;
                     }
@@ -124,8 +126,8 @@ export default {
                     this.data.slots[i]["avail"]--;
                 }
             }
-            database.collection('reservations').doc(this.$route.params.id).update(this.data).then(
-                this.$router.push({ name: 'reservationConfirmed', params: {id: this.$route.params.id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.data.postal, data: this.data, slotNumber: this.slotNumber, orderNumber: this.orderNumber}}));
+            database.collection('reservations').doc(this.doc_id).update(this.data).then(
+                this.$router.push({ name: 'reservationConfirmed', params: {name: this.$route.params.name, id: this.doc_id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.data.postal, data: this.data, slotNumber: this.slotNumber, orderNumber: this.orderNumber}}));
         },
         selectDate: function() {
             this.reservation.date = this.reservation.date.toString();
@@ -177,39 +179,6 @@ export default {
         })
     }
 }
-
-//note to zhenghao : 
-//sorry! it can't run if i didnt comment this part, so i commented it. 
-//you can fix and uncomment ! thank you ! 
-
-// var today = new Date();
-// var tomorrow = new Date(today);
-// tomorrow.setDate(tomorrow.getDate() + 1)
-// var maxday = new Date(tomorrow);
-// maxday.setDate(maxday.getDate() + 7)
-// var dd = tomorrow.getDate();
-// var mm = tomorrow.getMonth()+1; //January is 0!
-// var yyyy = tomorrow.getFullYear();
-// if(dd<10){
-//     dd='0'+dd
-// } 
-// if(mm<10){
-//     mm='0'+mm
-// } 
-// tomorrow = yyyy+'-'+mm+'-'+dd;
-// document.getElementById("datefield").setAttribute("min", tomorrow);
-// var maxdd = maxday.getDate();
-// var maxmm = maxday.getMonth()+1; //January is 0!
-// var maxyyyy = maxday.getFullYear();
-// if(maxdd<10){
-//     maxdd='0'+maxdd
-// } 
-// if(maxmm<10){
-//     maxmm='0'+maxmm
-// } 
-// maxday = maxyyyy+'-'+maxmm+'-'+maxdd;
-
-// document.getElementById("datefield").setAttribute("max", maxday);
 
 </script>
 

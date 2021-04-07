@@ -19,9 +19,9 @@
         <div id="container">
             <div id="navigationbar">
                 <ul>
-                    <li><router-link to="/delivery" exact>Delivery </router-link></li>
+                    <li><router-link to="/ordertoDelivery" exact>Delivery </router-link></li>
                     <br><br>
-                    <li><router-link to="/reservation" exact>Reservation </router-link></li>
+                    <li><router-link to="/ordertoReservation" exact>Reservation </router-link></li>
                     <br><br>
                     <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
                 </ul>
@@ -84,7 +84,7 @@ export default {
     },
     methods:{
         route:function() {
-            this.$router.push({ name: 'reservationComplete', params: {id: this.$route.params.id, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal}})
+            this.$router.push({ name: 'reservationComplete', params: {name: this.$route.params.name, id: this.$route.params.id, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal}})
         },
         fetchItems:function(){
             this.items = this.$route.params.itemsSelected;
@@ -92,7 +92,7 @@ export default {
             .get()
             .then(querySnapshot => {
                 querySnapshot.docs.forEach(doc => {
-                    if (doc.data().restaurant_name == this.$route.params.id) {
+                    if (doc.data().restaurant_name == this.$route.params.name) {
                         var datap = doc.data();
                         this.datapacket = datap;
                     }
