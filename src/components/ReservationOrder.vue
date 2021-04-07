@@ -19,15 +19,15 @@
         <div>
             <div id="navigationbar">
                 <ul>
-                    <li><router-link to="/delivery" exact>Delivery </router-link></li>
+                    <li><router-link to="/ordertoDelivery" exact>Delivery </router-link></li>
                     <br><br>
-                    <li><router-link to="/reservation" exact>Reservation </router-link></li>
+                    <li><router-link to="/ordertoReservation" exact>Reservation </router-link></li>
                     <br><br>
                     <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
                 </ul>
             </div>
             <div>
-                <p> Ordering for your reservation for {{this.$route.params.pax}} pax at {{this.$route.params.time}} on {{this.$route.params.date}} at {{this.$route.params.id}} at {{this.$route.params.postal}}. </p>
+                <p> Ordering for your reservation for {{this.$route.params.pax}} pax at {{this.$route.params.time}} on {{this.$route.params.date}} at {{this.$route.params.name}} at {{this.$route.params.postal}}. </p>
                 <ul id="menu">
                     <li v-for="item in items" v-bind:key="item.id" id="menu">
                         <p id="itemName">{{item.name}}</p>
@@ -126,7 +126,7 @@
                 this.data.slots[this.slotNumber]["orders"][this.$route.params.orderNumber] = newOrder;
                 //add order to database
                 database.collection('restaurants').doc(this.rdoc_id).update(this.datapacket);
-                database.collection('reservations').doc(this.doc_id).update(this.data).then(this.$router.push({ name: 'reservationPayment', params: {id: this.$route.params.id, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal, data: this.data, slotNumber: this.$route.params.slotNumber, orderNumber: this.$route.params.orderNumber, total: this.total, itemsSelected: this.itemsSelected}}));
+                database.collection('reservations').doc(this.doc_id).update(this.data).then(this.$router.push({ name: 'reservationPayment', params: {name: this.$route.params.name, id: this.$route.params.id, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal, data: this.data, slotNumber: this.$route.params.slotNumber, orderNumber: this.$route.params.orderNumber, total: this.total, itemsSelected: this.itemsSelected}}));
                 console.log("Order sent!");
             },
             fetchItems: function() {
@@ -134,7 +134,7 @@
                 .get()
                 .then(querySnapshot => {
                     querySnapshot.docs.forEach(doc => {
-                        if (doc.data().restaurant_name == this.$route.params.id) {
+                        if (doc.data().restaurant_name == this.$route.params.name) {
                             var datap = doc.data();
                             this.datapacket = datap;
                             this.rdoc_id = doc.id;
@@ -147,7 +147,7 @@
                 database.collection('restaurants').get().then(querySnapshot => {
                     let item={};
                     querySnapshot.docs.forEach(doc => {
-                        if (doc.data().restaurant_name == this.$route.params.id) {
+                        if (doc.data().restaurant_name == this.$route.params.name) {
                             item=doc.data();
                             item.show=false;
                             this.items = item["menu"];
@@ -156,12 +156,6 @@
                 });
             }
         },
-//        computed: {
-//           grandtotal: function() {
-//                var rounding = this.subtotal * 1.07;
-//                return rounding.toFixed(2);
-//            }
-//        },
         watch: {
             itemsSelected: function() {
                 var sub = 0;

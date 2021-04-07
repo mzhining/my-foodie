@@ -52,7 +52,7 @@ export default {
         route:function(event){
             let restaurant_name = event.target.getAttribute("id");
             let postal_code=event.target.getAttribute("postal");
-            this.$router.push({name:'reservation', params:{id:restaurant_name, postal: postal_code}});
+            this.$router.push({name:'reservation', params:{name:restaurant_name, postal: postal_code}});
             //I set this name as pickup!!
         },
         fetchItems: function() {

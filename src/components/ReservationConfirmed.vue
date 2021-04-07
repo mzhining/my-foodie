@@ -19,9 +19,9 @@
         <div id="container">
             <div id="navigationbar">
                 <ul>
-                    <li><router-link to="/delivery" exact>Delivery </router-link></li>
+                    <li><router-link to="/ordertoDelivery" exact>Delivery </router-link></li>
                     <br><br>
-                    <li><router-link to="/reservation" exact>Reservation </router-link></li>
+                    <li><router-link to="/ordertoReservation" exact>Reservation </router-link></li>
                     <br><br>
                     <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
                 </ul>
@@ -30,10 +30,10 @@
                 <p> Reservation Confirmed! </p>
                 <br>
                 <br>
-                <p> Your reservation is confirmed for {{this.$route.params.pax}} pax at {{this.$route.params.time}} on {{this.$route.params.date}} at {{this.$route.params.id}} at {{this.$route.params.postal}}. </p>
+                <p> Your reservation is confirmed for {{this.$route.params.pax}} pax at {{this.$route.params.time}} on {{this.$route.params.date}} at {{this.$route.params.name}} at {{this.$route.params.postal}}. </p>
                 <br>
                 <br>
-                <p id="shift"> Thank you for making a reservation for {{this.$route.params.id}} with MyFoodie! </p>
+                <p id="shift"> Thank you for making a reservation for {{this.$route.params.name}} with MyFoodie! </p>
                 <br>
                 <br>
                 <button class="special" @click="goToOrder"> Order in advance </button>
@@ -57,7 +57,7 @@ export default {
     },
     methods: {
         goToOrder: function() {
-            this.$router.push({ name: 'reservationOrder', params: {id: this.$route.params.id, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal, data: this.$route.params.data, slotNumber: this.$route.params.slotNumber, orderNumber: this.$route.params.orderNumber, itemsSelected: this.itemsSelected}});
+            this.$router.push({ name: 'reservationOrder', params: {id: this.$route.params.id, name: this.$route.params.name, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal, data: this.$route.params.data, slotNumber: this.$route.params.slotNumber, orderNumber: this.$route.params.orderNumber, itemsSelected: this.itemsSelected}});
         },
         home: function() {
             this.$router.push('/');
@@ -67,7 +67,7 @@ export default {
             .get()
             .then(querySnapshot => {
                 querySnapshot.docs.forEach(doc => {
-                    if (doc.data().restaurant_name == this.$route.params.id) {
+                    if (doc.data().restaurant_name == this.$route.params.name) {
                         var datap = doc.data();
                         this.datapacket = datap;
                     }
