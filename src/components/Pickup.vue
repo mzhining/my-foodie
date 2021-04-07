@@ -12,6 +12,7 @@
                 <p> {{this.datapacket.open_until}} </p>
                 <p> {{this.datapacket.away}} </p>
                 <p> {{this.datapacket.address}} </p>
+                <button v-on:click="addFav()" id="addToFav">Add to favourite</button>
             </div>
         
         </div>
@@ -125,6 +126,17 @@ export default {
         QuantityCounter
     },
     methods:{
+        addFav:function(){
+            var fav=this.$userData["favourites"];
+            //alert(this.rname);
+            if (!fav.includes(this.rname)){
+                fav.push(this.rname);
+            }
+            database.collection('customers').doc(this.$userUid).update({
+                favourites: fav
+            }).then(() => {location.reload()});
+                
+        },
         checkForm:function(e) {
             if(this.selectedTime && this.selectedDate) 
                 return true;
@@ -405,5 +417,8 @@ li {
     display:inline-block;
     padding:8px;
 }
-
+#addToFav {
+    background-color: blanchedalmond;
+    font-size:15px;
+}
 </style>

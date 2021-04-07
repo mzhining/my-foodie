@@ -12,6 +12,7 @@
                 <p> {{this.datapacket.open_until}} </p>
                 <p> {{this.datapacket.away}} </p>
                 <p> {{this.datapacket.address}} </p>
+                <button v-on:click="addFav()" id="addToFav">Add to favourite</button>
             </div>
     
         </div>
@@ -75,6 +76,17 @@ export default {
         }
     },
     methods: {
+        addFav:function(){
+            var fav=this.$userData["favourites"];
+            //alert(this.$route.params.name);
+            if (!fav.includes(this.$route.params.name)){
+                fav.push(this.$route.params.name);
+            }
+            database.collection('customers').doc(this.$userUid).update({
+                favourites: fav
+            }).then(() => {location.reload()});
+                
+        },
         fetchItems: function() {
             let item = {};
             database.collection('reservations').get().then((querySnapShot)=>{
@@ -247,5 +259,9 @@ li {
 }
 #datefield {
     margin-left: 12%;
+}
+#addToFav {
+    background-color: blanchedalmond;
+    font-size:15px;
 }
 </style>

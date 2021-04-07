@@ -145,8 +145,7 @@ export default {
                                 restaurant_name: this.restaurant.restaurant_name,
                                 price: this.pricearray,
                             })
-                        })
-                        .then(()=>location.replace('/signup-success'));
+                        }).then(()=>location.replace('/signup-success'));
                     }
                 })
             } else {
