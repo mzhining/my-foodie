@@ -20,9 +20,11 @@
                     <label>Contact Number: +65 </label>
                     <input type="tel" v-model="datapacket.contact_num[2]" pattern="[0-9]{8}" v-bind:placeholder="datapacket.contact_num[1]" /><br>
                     <label>Address: </label>
-                    <textarea v-model="datapacket.address[2]" cols="30" rows="2" v-bind:placeholder="datapacket.address[1]" /><br>
+                    <textarea v-model="datapacket.address[2]" cols="40" rows="2" v-bind:placeholder="datapacket.address[1]" /><br>
                     <label>Postal Code: </label>
                     <input type="tel" v-model="datapacket.postal_code[2]" pattern="[0-9]{6}" v-bind:placeholder="datapacket.postal_code[1]" /><br>
+                    <label>Tags/Labels for Restaurant: </label>
+                    <input type="text" v-model="datapacket.type[2]" v-bind:placeholder="datapacket.type[1]" /><br>
                     <label>Restaurant Logo (image URL): </label>
                     <input type="url" v-model.lazy="datapacket.image[2]" v-bind:placeholder="datapacket.image[1]" /><br>
                     <span v-if="datapacket.image[2] != ''">Image preview:<br><img v-bind:src="datapacket.image[2]" alt="Not found"></span><br>
@@ -44,16 +46,6 @@
                 </p>
 
                 <!-- view/display menu from database -->
-                <!-- <div v-show="updateAction=='view'" id="view-item">
-                    <h3>My Menu</h3>
-                    <p>You have {{numItems}} item(s) in your menu.</p>
-                    <ul v-for="item of menu" v-bind:key="item.name">
-                        <li>
-                        &#9660; {{item.name}}: ${{item.price}}<br>
-                        <img v-bind:src="item.image" alt="No image" style="height:50px;">
-                        </li>
-                    </ul>
-                </div> -->
                 <div v-show="updateAction=='view'" id="view-item">
                     <h3>My Menu</h3>
                     <p>You have {{numItems}} item(s) in your menu.</p>
@@ -126,6 +118,7 @@ export default {
                 address: ['Address', '', ''],
                 postal_code: ['Postal Code', '', ''],
                 paynow: ['PayNow', '', ''],
+                type: ['Tags/Labels for Restaurant', '', '']
                 },
             menu: [],
             itemToAdd: {
@@ -170,18 +163,39 @@ export default {
                     updateFields.push(data);
                 }
             }
+
             let updateData = {};
+            let updatePickupData = {};
+            let updateReserveData = {};
+
             for (let field of updateFields) {
                 updateData[field] = this.datapacket[field][2];
+                if (field == 'address' || field == 'image' || field == 'restaurant_name' || field == 'postal_code' || field == 'type') {
+                    updatePickupData[field] = this.datapacket[field][2];
+                }
+                if (field == 'restaurant_name') {
+                    updateReserveData[field] = this.datapacket[field][2];
+                } else if (field == 'postal_code') {
+                    updateReserveData['postal'] = this.datapacket[field][2];
+                }
             }
-            
+
             database.collection('restaurants').doc(this.$userUid).update(updateData).then(() => {
-                alert("Information updated successfully!");
-                location.reload();
-            },
-            err => {
-                alert(err.message);
-            });
+                database.collection('pickup').doc(this.$userUid).update(updatePickupData).then(() => {
+                    database.collection('reservations').doc(this.$userUid).update(updateReserveData).then(() => {
+                        alert("Information updated successfully!");
+                        location.reload();
+                    }, err => {alert(err.message)})
+                }, err => {alert(err.message)})
+            }, err => {alert(err.message)})
+
+            // database.collection('restaurants').doc(this.$userUid).update(updateData).then(() => {
+            //     alert("Information updated successfully!");
+            //     location.reload();
+            // },
+            // err => {
+            //     alert(err.message);
+            // });
         },
         fetchMenu: function() {
             database.collection('restaurants').doc(this.$userUid).get().then((doc) => {
@@ -222,16 +236,23 @@ export default {
             // console.log('addData: ', addData);
             // console.log('menu: ', this.menu);
 
-            database.collection('restaurants').doc(this.$userUid).update({menu: this.menu}, {merge: true})
-            .then(() => {
-                alert('Item added/modified successfully!');
-                this.itemToAdd.name = '';
-                this.itemToAdd.price = '';
-                this.itemToAdd.image = '';
-                location.reload();
-            }, err => {
-                alert(err.message)
-            })
+            database.collection('restaurants').doc(this.$userUid).update({menu: this.menu}, {merge: true}).then(() => {
+                database.collection('pickup').doc(this.$userUid).update({menu: this.menu}, {merge: true}).then(() => {
+                    alert("Item added/modified successfully!");
+                    location.reload();
+                }, err => {alert(err.message)})
+            }, err => {alert(err.message)})
+
+            // database.collection('restaurants').doc(this.$userUid).update({menu: this.menu}, {merge: true})
+            // .then(() => {
+            //     alert('Item added/modified successfully!');
+            //     this.itemToAdd.name = '';
+            //     this.itemToAdd.price = '';
+            //     this.itemToAdd.image = '';
+            //     location.reload();
+            // }, err => {
+            //     alert(err.message)
+            // })
         },
         removeItem: function() {
             let exists = false;
@@ -248,13 +269,20 @@ export default {
             if (exists) {
                 // item exists, delete it
                 this.menu.splice(itemIndex, 1);
-                database.collection('restaurants').doc(this.$userUid).update({menu: this.menu}, {merge: true})
-                .then(() => {
-                    alert(this.itemToRemove + ' removed successfully!');
-                    location.reload();
-                }, err => {
-                    alert(err.message);
-                })
+                database.collection('restaurants').doc(this.$userUid).update({menu: this.menu}, {merge: true}).then(() => {
+                    database.collection('pickup').doc(this.$userUid).update({menu: this.menu}, {merge: true}).then(() => {
+                        alert(this.itemToRemove + ' removed successfully!');
+                        location.reload();
+                    }, err => {alert(err.message)})
+                }, err => {alert(err.message)})
+                
+                // database.collection('restaurants').doc(this.$userUid).update({menu: this.menu}, {merge: true})
+                // .then(() => {
+                //     alert(this.itemToRemove + ' removed successfully!');
+                //     location.reload();
+                // }, err => {
+                //     alert(err.message);
+                // })
             } else {
                 // error
                 alert(this.itemToRemove + ' does not exist!');
