@@ -54,7 +54,6 @@ export default {
             cfmPwd: "",
             pwdText: "",
             restaurant: {
-                // username: "",
                 restaurant_name: "",
                 first_name: "",
                 last_name: "",
@@ -68,11 +67,14 @@ export default {
                 image: "",
                 profile: 'restaurant',
                 menu: [],
-                pickup: [],
                 reservation: [],
-                type: '',
+                pickup: [],
+                order_counts: {},
+                // for pickup collection
+                type: "",
+                away: "0km away",
+                open_until: "Open until 22.00",
             },
-            user_id: '',
         }
     },
     methods: {
@@ -110,22 +112,23 @@ export default {
                             // add to 'pickup' collection
                             database.collection('pickup').doc(this.$root.signup_user_id).set({
                                 address: this.restaurant.address,
-                                away: '-km away',
+                                away: this.restaurant.away,
                                 image: this.restaurant.image,
                                 menu: [],
                                 orders: [],
+                                postal_code: this.restaurant.postal_code,
                                 restaurant_name: this.restaurant.restaurant_name,
                                 type: this.restaurant.type,
-                                open_until: 'Open until -'
+                                open_until: this.restaurant.open_until
                             })
                         }).then(() => {
                             database.collection('reservations').doc(this.$root.signup_user_id).set({
+                                // add to 'reservations' collection
                                 restaurant_name: this.restaurant.restaurant_name,
                                 address: this.restaurant.address,
                                 postal: this.restaurant.postal_code,
                                 slots: [],
                             })
-                            // add to 'reservations' collection
                         })
                         .then(()=>location.replace('/signup-success'));
                     }
