@@ -36,7 +36,7 @@
                 <div id="compare">
                     <br>
                     <li v-for="item in price" v-bind:key="item.name" id="compareli">
-                        <p id="food">Platform {{item.name}}    Delivery Price: {{item.price}}</p> 
+                        <pre id="food">Platform: <a v-bind:href="item.web">{{item.name}}</a>    Delivery Price: {{item.price}}</pre> 
                     </li>
                 </div>
             </div>
@@ -95,7 +95,9 @@ export default {
 }
 img {
     height: 15rem;
+    max-width: 100%;
 }
+
 #logo {
     width: 100%;
     overflow: hidden;
