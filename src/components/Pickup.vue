@@ -28,41 +28,61 @@
             </div>
             <aside id="picture">
                 <div class="content" align = "left">
-                    <div>
-                        <p> Please confirm your order and make a payment </p>
+                    <div class = "menu">
+                        <h1> Choose your order </h1>
                         <br>
-                        <table id="firstTable">
-                            <thead>
-                                <tr>
-                                <th>Item</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(row,i) in this.datapacket.order" :key="i">
-                                    <td>{{row.name}}</td>
-                                    <td>{{row.quantity}}</td>
-                                    <td>${{row.price}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        
+                        <li v-for="item in items" v-bind:key="item.name" id="section">
                         <br>
-                        <p> Payment methods </p>
-                           <select v-model="selected">
-                            <option disabled value="">Please select one</option>
-                            <option>Card A</option>
-                            <option>Card B</option>
-                            <option>Paylah!</option>
-                            <option>Add Card</option>
-                            </select>
-                            <br>
+                        <p id="food">Name: {{item.name}}    
+                            <br> Price: ${{item.price}}
+                            </p> 
+                            <img v-bind:src="item.image" id = "menupic"/>  
+                            <QuantityCounter v-bind:item="item" v-on:counter="onCounter"> </QuantityCounter> 
+                        <br> 
+                        </li>
+                    </div>
+                    <div id="basket">
+                    <p>Basket:</p>
+                        <ul id="display">
+                            <li v-for="item in itemsSelected" v-bind:key="item.id">
+                                <p>{{item[0]}} x {{item[1]}} </p>
+                            </li>
+                        </ul>
+                        <br>
+                        <br>
+                        <p> Total: ${{total}}</p>
+                        <br><br>
+                    </div>
+                    <div class = "time" align = "center"> 
+                        <p> When will you be picking up? </p>
+                        <label> Date: </label>
+                        <br>
+                        <input id="datef" type="date" v-model.lazy="selectedDate" required/>
+                        <br>
+                        <br>
+                        <select v-model="selectedTime">
+                                <option disabled value="">Please select one</option>
+                                <option>10.00 AM</option>
+                                <option>11.00 AM</option>
+                                <option>12.00 AM</option>
+                                <option>01.00 PM</option>
+                                <option>02.00 PM</option>
+                                <option>03.00 PM</option>
+                                <option>04.00 PM</option>
+                                <option>05.00 PM</option>
+                                <option>06.00 PM</option>
+                                <option>07.00 PM</option>
+                                <option>08.00 PM</option>
+                                </select>
+                                <br>
+                                <br>
                     </div>
                 </div>
+                
                 <div class = "bottom" align = "center">
                     <br>
-                    <br>
-                    <button v-on:click="route()"> Make Payment </button>
+                    <button id = "special" v-on:click="checkForm(), sendOrder(), findTotal()" > Order! </button>
                     <br>
                     <br>
                 </div>
@@ -75,79 +95,231 @@
 
 <script>
 import database from "../firebase.js"
+import QuantityCounter from './QuantityCounter.vue'
+import firebase from 'firebase'
+
 export default {
     name : 'Pickup',
     data(){
         return{
-          datapacket:[],
-          rname:'Jollibee'
+            selectedTime : '',
+            selectedDate: '',
+            subTotal : 0, 
+            orderList : [],
+            datapacket: [],
+            itemsSelected:[],
+            oneOrder : [],
+            pastOrder : [],
+            docId : '',
+            mindate: "",
+            items: [],
+            total: 0
         }
     },
     props : {
-      id : {
+      rname : {
           type : String
       }
     },
-    created:function(){
-        this.fetchItems();
+    components : {
+        QuantityCounter
     },
     methods:{
-        route:function() {
-            this.$router.push({ name: 'pickup-confirmation'})
+        checkForm:function(e) {
+            if(this.selectedTime && this.selectedDate) 
+                return true;
+            if(!this.selectedTime || this.selectedDate) 
+                alert("Please choose your pick up time and date")
+            e.preventDefault();
         },
-      fetchItems:function(){
-        database.collection('pickup')
-        .doc(this.rname)
-        .get()
-        .then(snapshot => {
-            var data = snapshot.data()
-            this.datapacket = data
-            console.log(this.datapacket)
-        });
-      }
+        fetchItemsfromCustomer:function(){
+            database.collection('customers')
+            .get()
+            .then((querySnapShot) => {
+                querySnapShot.forEach(doc => {
+                    if (doc.data().email == this.$userId){
+                        this.pastOrder = doc.data().cart;
+                        this.docId = doc.id;
+                    }
+                })
+            })
+        }, 
+        fetchItems:function(){
+            database.collection('pickup')
+            .doc(this.rname)
+            .get()
+            .then(snapshot => {
+                var data = snapshot.data()
+                this.datapacket = data
+                var data2 = snapshot.data().orders
+                this.orderList = data2
+            });
+            database.collection('restaurants').get().then(querySnapshot => {
+                let item={};
+                querySnapshot.docs.forEach(doc => {
+                    if (doc.data().restaurant_name == this.rname) {
+                        item=doc.data();
+                        item.show=false;
+                        this.items = item["menu"];
+                    }
+                });
+            });
+            var today = new Date();
+            var tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1)
+            var dd = tomorrow.getDate();
+            var mm = tomorrow.getMonth()+1; //January is 0!
+            var yyyy = tomorrow.getFullYear();
+            if(dd<10){
+                dd='0'+dd
+            } 
+            if(mm<10){
+                mm='0'+mm
+            } 
+            tomorrow = yyyy+'-'+mm+'-'+dd;
+            this.mindate = tomorrow;
+            document.getElementById('datef').setAttribute('min', this.mindate);
+        }, 
+        sendOrder : function() {
+            this.getOrder();
+            this.sendToUser();
+
+            database.collection('pickup')
+            .doc(this.rname)
+            .update({orders : this.orderList})
+            .then(()=>{this.$router.push({ name: 'pickup-payment', params : {total : this.subTotal, rname : this.rname, time : this.selected}})});
+        },
+
+        sendToUser : function() {
+            database.collection('customers')
+            .doc(this.docId)
+            .update({cart : this.pastOrder});
+        },
+
+        getOrder : function() {
+            for (let i = 0; i < this.itemsSelected.length; i++) {
+                this.oneOrder.push({
+                    name : this.itemsSelected[i][0], 
+                    count : this.itemsSelected[i][1], 
+                    price : this.itemsSelected[i][2]
+                })
+            }
+            this.updatePastOrder();
+            this.orderList.push({
+                email : this.$userId, 
+                one_order : this.oneOrder, 
+                total : this.subTotal,
+                time : this.selectedTime,
+                date: this.selectedDate
+            })
+        },
+
+        updatePastOrder : function() {
+            this.pastOrder.push({
+                time : this.selectedTime,
+                date: this.selectedDate,
+                one_order : this.oneOrder,
+                restaurant : this.rname,
+                total : this.subTotal,
+                type : 'pickup'
+            })
+        },
+        onCounter: function (item, count) {
+            var doneAction = false; 
+            if (this.itemsSelected.length === 0 && count > 0) {
+            //If there is nothing in items selected, push the ORDER in
+                this.itemsSelected.push([item.name, count, item.price]);
+                doneAction = true;
+
+            } else {
+                // Loop through everything to check what is not in the basket
+                for (let i = 0; i < this.itemsSelected.length; i++) {
+                    const curr_item = this.itemsSelected[i];
+                    const item_name = curr_item[0];
+
+                    // if item_name is the same as item.name and the count is more than 0, update this.itemsSelected
+                    if (item_name===item.name && count > 0) {
+                        this.itemsSelected.splice(i,1);
+                        this.itemsSelected.push([item.name, count, item.price]);
+                        doneAction = true;
+                        break;
+                    }
+                    
+                    // Next, item_name is the same as item.name and the count is 0, remove it from itemsSelected.
+                    else if (item_name===item.name && count === 0) {
+                        this.itemsSelected.splice(i,1);
+                        doneAction = true;
+                        break;
+                    }
+                }
+                // otherwise, if the item is not in itemSelected, add it to itemsSelected by pushing the ORDER in.
+                if (!(doneAction) && count != 0) {
+                    this.itemsSelected.push([item.name, count, item.price]);
+                }
+            }
+        }
+    },
+    watch: {
+        itemsSelected: function() {
+            var sub = 0;
+            for (var i = 0; i < this.itemsSelected.length; i++) {
+                sub += this.itemsSelected[i][2] * this.itemsSelected[i][1];
+            }
+            this.total = sub;
+        }
+    },
+    created() {
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.$userUid = user.uid;
+                database.collection('restaurants').doc(this.$userUid).get().then((doc) => {
+                    if (doc.exists) {
+                        this.$userData = doc.data();
+                        this.$userId = this.$userData.email;
+                        this.$userProfile = this.$userData.profile;
+                        // console.log('rest exists', this.$userUid, this.$userId, this.$userProfile, this.$userData);
+                    } else {
+                        // console.log('not restaurant, search customer db');
+                        database.collection('customers').doc(this.$userUid).get().then((doc) => {
+                            console.log(doc.data());
+                            if (doc.exists) {
+                                this.$userData = doc.data();
+                                this.$userId = this.$userData.email;
+                                this.$userProfile = this.$userData.profile;
+                                // console.log('cust exists', this.$userUid, this.$userId, this.$userProfile, this.$userData);
+                            }
+                        })
+                    }
+
+                    // insert functions here
+                    this.fetchItems();
+                    this.fetchItemsfromCustomer();
+                })
+            } else {
+                // console.log('not logged in');
+                this.$userUid = '';
+                this.$userData = '';
+                this.$userId = '';
+                this.$userProfile = '';
+            }
+        })
     }
 }
 </script>
 
 <style scoped>
-table {
-  font-family: 'Open Sans', sans-serif;
-  width: 750px;
-  border-collapse: collapse;
-  border: 3px solid #44475C;
-  margin: 10px 10px 0 10px;
-}
-
-table th {
-  text-transform: uppercase;
-  text-align: left;
-  background: #44475C;
-  color: #FFF;
-  padding: 8px;
-  min-width: 30px;
-}
-
-table td {
-  text-align: left;
-  padding: 8px;
-  border-right: 2px solid #7D82A8;
-}
-table td:last-child {
-  border-right: none;
-}
-table tbody tr:nth-child(2n) td {
-  background: #D4D8F9;
-}
-
-
 img {
     height: 10rem;
+}
+
+#menupic {
+    height: 5rem;
 }
 
 .content {
     width: calc(100% - 8rem);
     margin: auto;
-    display: flex;
+    /* display: flex; */
     align-items: left;
     font-size: 15px;
 }
@@ -170,6 +342,12 @@ img {
 #line {
     border: 3px dashed #90141C;
 }
+
+.time {
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
 #container {
     width: 100%;
     overflow: hidden;
@@ -201,4 +379,31 @@ li {
 #pink-box {
     background-color: pink;
 }
+#food {
+    font-size:15px;
+    font-weight: bold;
+    margin-left: 15px;
+}
+/* 
+#menu {
+    float: left;
+} */
+#section {
+    background-color:rgb(255, 237, 188);
+    margin-bottom: 20px;
+    border-radius: 10px;
+    list-style-type: none;
+}
+
+#special {
+    background-color: pink; 
+    border: 10px;
+    color: black;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    display:inline-block;
+    padding:8px;
+}
+
 </style>

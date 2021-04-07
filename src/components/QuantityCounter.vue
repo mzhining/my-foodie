@@ -1,8 +1,8 @@
 <template>
     <div id="app">
-        <button @click="decrement"> - </button>
+        <button @click="decrement" class = "buttoncount"> - </button>
         <label for="count"> {{counter}} </label>
-        <button @click="increment"> + </button>
+        <button @click="increment" class = "buttoncount"> + </button>
     </div>
 </template>
 
@@ -40,5 +40,14 @@
 
 <style>
 
+  .buttoncount {
+    background-color: pink; 
+    border: 10px;
+    color: black;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 20px;
+    display:inline-block;
+  }
 
 </style>

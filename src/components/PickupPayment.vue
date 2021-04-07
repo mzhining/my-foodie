@@ -28,11 +28,44 @@
             </div>
             <aside id="picture">
                 <div class="content" align = "left">
-                    <p> Your order for {{this.datapacket.restaurant_name}} for {{this.$userData.postal_code}} is complete. <br>
-                        Your food will be ready for pick-up at {{this.time}}. <br>
-                        Thank you for ordering {{this.datapacket.restaurant_name}} with MyFoodie!</p>
+                    <div>
+                        <h1> Confirm and make your payment </h1>
                         <br>
-                        
+                        <table id="firstTable">
+                            <thead>
+                                <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(row,i) in this.datapacket.orders[this.datapacket.orders.length - 1].one_order" :key="i">
+                                    <td>{{row.name}}</td>
+                                    <td>{{row.count}}</td>
+                                    <td>${{row.price}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p> Total price: ${{this.datapacket.orders[this.datapacket.orders.length - 1].total}}</p>
+                        <p> This order is for <b> pickup </b> at {{this.time}}</p>
+                        <br>
+                        <p> Payment method </p>
+                           <select v-model="selected">
+                            <option disabled value="">Please select one</option>
+                            <option>Card A</option>
+                            <option>Card B</option>
+                            <option>Paylah!</option>
+                            <option>Add Card</option>
+                            </select>
+                            <br>
+                    </div>
+                </div>
+                <div class = "bottom" align = "center">
+                    <br>
+                    <br>
+                    <button class = "special" v-on:click="route()"> Make Payment </button>
+                    <br>
                     <br>
                 </div>
             </aside>
@@ -45,16 +78,19 @@
 <script>
 import database from "../firebase.js"
 export default {
-    name : 'PickupConfirmation',
+    name : 'Pickup',
     data(){
         return{
-          datapacket:[],
+          datapacket:[]
         }
     },
     props : {
-      rname : {
+      total : {
           type : String
       }, 
+      rname : {
+          type : String
+      },
       time : {
           type : String
       }
@@ -64,18 +100,18 @@ export default {
     },
     methods:{
         route:function() {
-            this.$router.push({ name: 'account'})
+            this.$router.push({ name: 'pickup-confirmation', params : {rname : this.rname, time : this.time}})
         },
-      fetchItems:function(){
-        database.collection('pickup')
-        .doc(this.rname)
-        .get()
-        .then(snapshot => {
-            var data = snapshot.data()
-            this.datapacket = data
-            console.log(this.datapacket)
-        });
-      }
+        fetchItems:function(){
+            database.collection('pickup')
+            .doc(this.rname)
+            .get()
+            .then(snapshot => {
+                var data = snapshot.data()
+                this.datapacket = data
+                console.log(this.datapacket)
+            });
+        }
     }
 }
 </script>
@@ -85,14 +121,14 @@ table {
   font-family: 'Open Sans', sans-serif;
   width: 750px;
   border-collapse: collapse;
-  border: 3px solid #44475C;
+  border: 3px solid #90141C;
   margin: 10px 10px 0 10px;
 }
 
 table th {
   text-transform: uppercase;
-  text-align: left;
-  background: #44475C;
+  text-align: center;
+  background: #90141C;
   color: #FFF;
   padding: 8px;
   min-width: 30px;
@@ -101,13 +137,13 @@ table th {
 table td {
   text-align: left;
   padding: 8px;
-  border-right: 2px solid #7D82A8;
+  border-right: 2px solid #90141C;
 }
 table td:last-child {
   border-right: none;
 }
 table tbody tr:nth-child(2n) td {
-  background: #D4D8F9;
+  background: #f4c2c2;
 }
 
 
@@ -169,5 +205,14 @@ li {
     /* border: 1px solid #222;  */
 }
 
-
+.special {
+    background-color: pink; 
+    border: 10px;
+    color: black;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    display:inline-block;
+    padding:8px;
+}
 </style>
