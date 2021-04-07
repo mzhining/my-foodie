@@ -74,6 +74,16 @@ export default {
                 type: "",
                 away: "0km away",
                 open_until: "Open until 22.00",
+                //for delivery
+                pricearray:[{
+                    name:"Grab",
+                    price:6,
+                    web:"https://www.grab.com/sg/",
+                },{
+                    name:"Foodpanda",
+                    price:5,
+                    web:"https://www.foodpanda.sg/city/singapore",
+                }],
             },
         }
     },
@@ -128,6 +138,12 @@ export default {
                                 address: this.restaurant.address,
                                 postal: this.restaurant.postal_code,
                                 slots: [],
+                            })
+                        }).then(() => {
+                            database.collection('delivery').doc(this.$root.signup_user_id).set({
+                                // add to 'delivery' collection
+                                restaurant_name: this.restaurant.restaurant_name,
+                                price: this.pricearray,
                             })
                         })
                         .then(()=>location.replace('/signup-success'));
