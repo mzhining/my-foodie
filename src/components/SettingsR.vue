@@ -3,8 +3,8 @@
         <div id="settingsRest">
             <h1>Account Settings</h1>
             <!-- update restaurant information -->
-            <h2 v-on:click="updateInfo=!updateInfo" v-show="!updateInfo"><a>&#9654; Update Restaurant Information</a></h2>
-            <h2 v-on:click="updateInfo=!updateInfo" v-show="updateInfo"><a>&#9660; Update Restaurant Information</a></h2>
+            <h2 v-on:click="updateInfo=!updateInfo" v-show="!updateInfo"><a>&#9654; Restaurant Information</a></h2>
+            <h2 v-on:click="updateInfo=!updateInfo" v-show="updateInfo"><a>&#9660; Restaurant Information</a></h2>
             <div v-show="updateInfo">
                 <form id="edit-data" v-on:submit.prevent="modifyData()">
                     <img v-bind:src="datapacket.image[1]" alt="Not found"><br>
@@ -35,8 +35,8 @@
             </div>
 
             <!-- update restaurant menu -->
-            <h2 v-on:click="updateMenu=!updateMenu" v-show="!updateMenu"><a>&#9654; Update Menu</a></h2>
-            <h2 v-on:click="updateMenu=!updateMenu" v-show="updateMenu"><a>&#9660; Update Menu</a></h2>
+            <h2 v-on:click="updateMenu=!updateMenu" v-show="!updateMenu"><a>&#9654; Menu Settings</a></h2>
+            <h2 v-on:click="updateMenu=!updateMenu" v-show="updateMenu"><a>&#9660; Menu Settings</a></h2>
             <div v-show="updateMenu">
                 <!-- action buttons -->
                 <p>Choose an action below:<br>
@@ -92,6 +92,36 @@
                     </form>
                 </div>
             </div>
+            <!-- add reservation slots -->
+            <h2 v-on:click="updateReserv=!updateReserv" v-show="!updateReserv"><a>&#9654; Reservation Settings</a></h2>
+            <h2 v-on:click="updateReserv=!updateReserv" v-show="updateReserv"><a>&#9660; Reservation Settings</a></h2>
+            <div v-show="updateReserv">
+                <p>Choose an action below:<br>
+                <button class="view" v-on:click="updateAction='viewReserv'">View</button> or 
+                <button class="add" v-on:click="updateAction='addReserv'">Add</button></p>
+
+                <div v-show="updateAction=='viewReserv'">
+                    <h3>Current reservation slots for today</h3>
+                    <p>Date: {{slotInfo.date}}<br>
+                    Number of slots: {{numSlots}}</p>
+                    <!-- <ul v-for="slot in slots" v-bind:key="slot.index">
+                        <li>{{slot.time}}</li>
+                    </ul> -->
+                    Timeslots:<br>
+                    <span v-for="slot in slots" v-bind:key="slot.index">{{slot.time}}<br></span>
+                </div>
+
+                <div v-show="updateAction=='addReserv'">
+                    <h3>Add reservation slots for today</h3>
+                    Date: {{slotInfo.date}}<br>
+                    <form v-on:submit.prevent="addSlot()">
+                        <label>Time: </label>
+                        <input type="time" id="time" required/>
+                        <p><button type="submit" class="add">Add slot</button></p>
+                    </form>
+                </div>
+
+            </div>
         </div>
     </div>
 </template>
@@ -106,6 +136,7 @@ export default {
         return {
             updateInfo: false,
             updateMenu: false,
+            updateReserv: false,
             updateAction: "",
             // [field name, current value, new value]
             datapacket: {
@@ -129,6 +160,15 @@ export default {
             itemToRemove: '',
             profile: '',
             numItems: 0,
+            slots: [],
+            slotInfo: {
+                date: '',
+                time: '',
+                orders: [],
+                pax: [],
+                reservedBy: [],
+            },
+            numSlots: 0,
         }
     },
     methods: {
@@ -151,7 +191,17 @@ export default {
                 }
                 // console.log(this.datapacket);
                 // console.log(this.datapacket['restaurant_name'])
-            })
+            }, err=>{alert(err.message)});
+
+            database.collection('reservations').doc(this.$userUid).get().then((doc) => {
+                let storedResv = doc.data();
+                this.slots = storedResv.slots
+
+                for (let slot1 in storedResv.slots) {
+                    slot1;
+                    this.numSlots++;
+                }
+            }, err=>{alert(err.message)})
             // console.log('fetchInfo: ', this.userId, this.userProfile, this.userData);
         },
         modifyData: function() {
@@ -314,6 +364,19 @@ export default {
                 alert(this.itemToRemove + ' does not exist!');
             } */
         },
+        addSlot: function() {
+            this.slotInfo.time = document.getElementById("time").value
+            this.slots.push(this.slotInfo);
+            // console.log(this.slots);
+            database.collection('reservations').doc(this.$userUid).update({slots: this.slots}, {merge:true}).then(() => {
+                alert('Slot added successfully!');
+                location.reload();
+            }, err=>{alert(err.message)})
+
+        },
+        viewSlots: function() {
+            //
+        }
     },
     created() {
         firebase.auth().onAuthStateChanged((user) => {
@@ -339,6 +402,8 @@ export default {
                 this.$userProfile = '';
             }
         })
+        this.slotInfo.date = new Date().toISOString().substr(0, 10);
+
     }
 }
 </script>
@@ -402,4 +467,5 @@ tr:nth-child(odd) {
 th {
     background-color:papayawhip;
 }
+
 </style>
