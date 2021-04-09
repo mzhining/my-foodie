@@ -143,7 +143,7 @@ export default {
                             database.collection('delivery').doc(this.$root.signup_user_id).set({
                                 // add to 'delivery' collection
                                 restaurant_name: this.restaurant.restaurant_name,
-                                price: this.pricearray,
+                                price: this.restaurant.pricearray,
                             })
                         }).then(()=>location.replace('/signup-success'));
                     }
