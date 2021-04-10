@@ -271,6 +271,7 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
 .home {
     display: flex;
@@ -312,7 +313,7 @@ export default {
 }
 
 #slogan {
-    font-family: Carosello;
+    font-family: 'Pacifico', cursive;
     font-size: 40px;
     color: white;
     margin: 0;

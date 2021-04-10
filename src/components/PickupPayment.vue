@@ -18,12 +18,10 @@
         <hr id="line">
         <div id="container">
             <div id="navigationbar">
-                <ul>
-                    <li><router-link to="/delivery" exact>Delivery </router-link></li>
-                    <br><br>
-                    <li><router-link to="/reservation" exact>Reservation </router-link></li>
-                    <br><br>
-                    <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
+                <ul class="naviBar">
+                    <li><router-link to="/ordertoDelivery" exact><p>Delivery</p></router-link></li>
+                    <li><router-link to="/ordertoReservation" exact><p>Reservation</p></router-link></li>
+                    <li id = "current"><router-link to="/ordertoPickup" exact><p>Pick up</p></router-link></li>
                 </ul>
             </div>
             <aside id="picture">
@@ -93,6 +91,9 @@ export default {
       },
       time : {
           type : String
+      }, 
+      docIdRes : {
+          type : String
       }
     },
     created:function(){
@@ -100,11 +101,11 @@ export default {
     },
     methods:{
         route:function() {
-            this.$router.push({ name: 'pickup-confirmation', params : {rname : this.rname, time : this.time}})
+            this.$router.push({ name: 'pickup-confirmation', params : {rname : this.rname, time : this.time, docIdRes : this.docIdRes}})
         },
         fetchItems:function(){
             database.collection('pickup')
-            .doc(this.rname)
+            .doc(this.docIdRes)
             .get()
             .then(snapshot => {
                 var data = snapshot.data()
@@ -139,13 +140,14 @@ table td {
   padding: 8px;
   border-right: 2px solid #90141C;
 }
+
 table td:last-child {
   border-right: none;
 }
+
 table tbody tr:nth-child(2n) td {
   background: #f4c2c2;
 }
-
 
 img {
     height: 10rem;
@@ -187,6 +189,10 @@ img {
     float: left;
     width: 10%;
 }
+#current p{
+    font-weight: bold;
+    background-color: rgba(224, 116, 114, 0.64);
+}
 #picture {
     float: left;
     width: 80%;
@@ -204,7 +210,6 @@ li {
     text-align: center;
     /* border: 1px solid #222;  */
 }
-
 .special {
     background-color: pink; 
     border: 10px;
@@ -215,4 +220,33 @@ li {
     display:inline-block;
     padding:8px;
 }
+
+.naviBar li {
+    list-style-type: none;
+    padding: 0;
+    text-decoration: none;
+    text-align:left;
+}
+
+#navigationbar {
+    /* text-align: left; */
+    font-size: 20px;
+    margin-left: 5%;
+    float: left;
+    width: 10%;
+}
+
+a {
+    text-decoration: none;
+}
+
+.naviBar p{
+    color:black;
+}
+
+.naviBar p:hover {
+    background-color:#90141C;
+    color:white;
+}
+
 </style>

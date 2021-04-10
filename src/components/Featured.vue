@@ -19,7 +19,7 @@
             <br>
 
             <div id="content">
-                <div class="card">
+                <div class="card" v-on:click="route()">
                     <div>
                     <img src="@/assets/jollibee.jpeg" alt="Jollibee" height=15rem>
                     </div>
@@ -28,7 +28,7 @@
 
                 <br>
 
-                <div class="card">
+                <div class="card" v-on:click="route()">
                     <div>
                     <img src="@/assets/starbucks.jpeg" alt="Starbucks" height=15rem>
                     </div>
@@ -56,6 +56,9 @@ export default {
   }, 
   
   methods : {
+    route:function(){
+        this.$router.push({name:'order-to-delivery'});
+    },
     fetchItems:function(){
       database.collection('toprated').get().then((querySnapShot)=>{
         let item={}
@@ -73,6 +76,8 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
 
 #itemsList {
     width: 100%;
@@ -140,7 +145,7 @@ li {
 }
 
 #slogan {
-    font-family: Carosello;
+    font-family: 'Pacifico', cursive;
     font-size: 40px;
     color: white;
     margin: 0;

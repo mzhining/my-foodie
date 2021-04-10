@@ -8,6 +8,7 @@
             </div>
             
             <div class="side-bar" align="left">
+                <br>
                 <p> {{this.datapacket.type}} </p>
                 <p> {{this.datapacket.open_until}} </p>
                 <p> {{this.datapacket.away}} </p>
@@ -19,12 +20,10 @@
         <hr id="line">
         <div id="container">
             <div id="navigationbar">
-                <ul>
-                    <li><router-link to="/delivery" exact>Delivery </router-link></li>
-                    <br><br>
-                    <li><router-link to="/reservation" exact>Reservation </router-link></li>
-                    <br><br>
-                    <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
+                <ul class="naviBar">
+                    <li><router-link to="/ordertoDelivery" exact><p>Delivery</p></router-link></li>
+                    <li><router-link to="/ordertoReservation" exact><p>Reservation</p></router-link></li>
+                    <li id = "current"><router-link to="/ordertoPickup" exact><p>Pick up</p></router-link></li>
                 </ul>
             </div>
             <aside id="picture">
@@ -34,7 +33,7 @@
                         <br>
                         
                         <li v-for="item in items" v-bind:key="item.name" id="section">
-                        <br>
+                        
                         <p id="food">Name: {{item.name}}    
                             <br> Price: ${{item.price}}
                             </p> 
@@ -43,8 +42,9 @@
                         <br> 
                         </li>
                     </div>
+
                     <div id="basket">
-                    <p>Basket:</p>
+                    <p><b>Basket:</b></p>
                         <ul id="display">
                             <li v-for="item in itemsSelected" v-bind:key="item.id">
                                 <p>{{item[0]}} x {{item[1]}} </p>
@@ -52,7 +52,7 @@
                         </ul>
                         <br>
                         <br>
-                        <p> Total: ${{total}}</p>
+                        <p> <b>Total: ${{total}}</b></p>
                         <br><br>
                     </div>
                     <div class = "time" align = "center"> 
@@ -83,7 +83,7 @@
                 
                 <div class = "bottom" align = "center">
                     <br>
-                    <button id = "special" v-on:click="checkForm(), sendOrder(), findTotal()" > Order! </button>
+                    <button id = "special" v-on:click="checkForm(), sendOrder()" > Order! </button>
                     <br>
                     <br>
                 </div>
@@ -105,13 +105,13 @@ export default {
         return{
             selectedTime : '',
             selectedDate: '',
-            subTotal : 0, 
             orderList : [],
             datapacket: [],
             itemsSelected:[],
             oneOrder : [],
             pastOrder : [],
             docId : '',
+            docIdRes : '',
             mindate: "",
             items: [],
             total: 0
@@ -144,6 +144,7 @@ export default {
                 alert("Please choose your pick up time and date")
             e.preventDefault();
         },
+
         fetchItemsfromCustomer:function(){
             database.collection('customers')
             .get()
@@ -156,16 +157,22 @@ export default {
                 })
             })
         }, 
+
         fetchItems:function(){
             database.collection('pickup')
-            .doc(this.rname)
             .get()
-            .then(snapshot => {
-                var data = snapshot.data()
-                this.datapacket = data
-                var data2 = snapshot.data().orders
-                this.orderList = data2
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    if (doc.data()["restaurant_name"] == this.rname) {
+                        var data = doc.data()
+                        this.datapacket = data
+                        var data2 = doc.data().orders
+                        this.orderList = data2
+                        this.docIdRes = doc.id;
+                    }
+                })
             });
+            
             database.collection('restaurants').get().then(querySnapshot => {
                 let item={};
                 querySnapshot.docs.forEach(doc => {
@@ -197,9 +204,9 @@ export default {
             this.sendToUser();
 
             database.collection('pickup')
-            .doc(this.rname)
+            .doc(this.docIdRes)
             .update({orders : this.orderList})
-            .then(()=>{this.$router.push({ name: 'pickup-payment', params : {total : this.subTotal, rname : this.rname, time : this.selected}})});
+            .then(()=>{this.$router.push({ name: 'pickup-payment', params : {total : this.total, rname : this.rname, time : this.selectedTime, docIdRes : this.docIdRes}})});
         },
 
         sendToUser : function() {
@@ -216,11 +223,12 @@ export default {
                     price : this.itemsSelected[i][2]
                 })
             }
+            
             this.updatePastOrder();
             this.orderList.push({
                 email : this.$userId, 
                 one_order : this.oneOrder, 
-                total : this.subTotal,
+                total : this.total,
                 time : this.selectedTime,
                 date: this.selectedDate
             })
@@ -232,7 +240,7 @@ export default {
                 date: this.selectedDate,
                 one_order : this.oneOrder,
                 restaurant : this.rname,
-                total : this.subTotal,
+                total : this.total,
                 type : 'pickup'
             })
         },
@@ -336,6 +344,12 @@ img {
     font-size: 15px;
 }
 
+#basket {
+    margin-left: 5%;
+    margin-right: 5%;
+    text-align:center;
+}
+
 .main-bar, .side-bar {
     position: relative;
     margin: 0;
@@ -385,26 +399,28 @@ li {
     flex-grow: 1;
     flex-basis: 100px;
     text-align: center;
-    /* border: 1px solid #222;  */
 }
 
-#pink-box {
-    background-color: pink;
+
+
+#current p{
+    font-weight: bold;
+    background-color: rgba(224, 116, 114, 0.64);
 }
+
 #food {
     font-size:15px;
     font-weight: bold;
     margin-left: 15px;
 }
-/* 
-#menu {
-    float: left;
-} */
+
 #section {
     background-color:rgb(255, 237, 188);
     margin-bottom: 20px;
     border-radius: 10px;
     list-style-type: none;
+    padding-bottom:10px;
+    padding-top:10px;
 }
 
 #special {
@@ -421,4 +437,32 @@ li {
     background-color: blanchedalmond;
     font-size:15px;
 }
+.naviBar li {
+    list-style-type: none;
+    padding: 0;
+    text-decoration: none;
+    text-align:left;
+}
+
+#navigationbar {
+    /* text-align: left; */
+    font-size: 20px;
+    margin-left: 5%;
+    float: left;
+    width: 10%;
+}
+
+a {
+    text-decoration: none;
+}
+
+.naviBar p{
+    color:black;
+}
+
+.naviBar p:hover {
+    background-color:#90141C;
+    color:white;
+}
+
 </style>

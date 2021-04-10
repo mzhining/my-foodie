@@ -19,8 +19,8 @@
             <br>
 
              <ul id = "itemsList">
-                <li v-for="item in items" v-bind:key="item.name" >
-                    <img v-bind:src="item.imageURL"/>   
+                <li v-for="item in items" v-bind:key="item.name" v-on:click="route()">
+                    <img v-bind:src="item.imageURL" />   
                     <br> 
                     <p id = "itemName">{{item.name}} <br> ⭐️ {{item.rating}}</p>
                 </li>
@@ -31,6 +31,7 @@
 
 <script>
 import database from '../firebase.js'
+
 export default {
   name: 'TopRated',
   data () {
@@ -46,6 +47,10 @@ export default {
   }, 
   
   methods : {
+    route:function(){
+        this.$router.push({name:'order-to-delivery'});
+    },
+
     fetchItems:function(){
       database.collection('toprated').get().then((querySnapShot)=>{
         let item={}
@@ -63,6 +68,7 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
 #itemsList {
     width: 100%;
@@ -84,7 +90,6 @@ li {
     flex-basis: 200px;
     text-align: center;
     padding: 1px;
-    /* border: 1px solid #222; */
     margin: 2px;
 }
 
@@ -130,7 +135,7 @@ li {
 }
 
 #slogan {
-    font-family: Carosello;
+    font-family: 'Pacifico', cursive;
     font-size: 40px;
     color: white;
     margin: 0;
