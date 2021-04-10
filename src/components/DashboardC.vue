@@ -36,16 +36,16 @@
                         <th><br>Total<br></th>
                     </tr>
                     <tbody>
-                    <tr v-for="oneOrder in orders" v-bind:key="oneOrder.id">
-                        <td>{{oneOrder.restaurant}}</td>
-                        <td>{{oneOrder.time}}</td>
+                    <tr v-for="oneOrder in pickups" v-bind:key="oneOrder.id">
+                        <td>{{oneOrder.restaurant_name}}</td>
+                        <td>{{oneOrder.date}} {{oneOrder.time}}</td>
                         <td>
                             <ul v-for="item in oneOrder.one_order" v-bind:key="item.name">
                                 <span>{{item.count}}x {{item.name}}</span>
                             </ul>
                         </td>
                         <td>${{oneOrder.total}}</td>
-                        <td><button v-bind:id="oneOrder" v-on:click="deleteItem($event)">Delete</button></td>
+                        <td><button v-bind:id="oneOrder.doc_id"  v-on:click="deleteItemPickUp($event, oneOrder.order_index, oneOrder.total_orders)">Delete</button></td>
                     </tr>
                     </tbody>
                 </table>
@@ -124,10 +124,28 @@ export default {
             //For pickup, it is stored in cart attribute in the document
             reservation_order:{},
             reservation_orders:[],//store muptiple order information for reservations
-            userEmail:""
+            userEmail:"",
+            pickups:[]
         }
     },
     methods:{
+        deleteItemPickUp:function(event, orderIndex, orders){
+            alert(orderIndex);
+            let Rest_id = event.target.getAttribute("id");
+            alert(Rest_id);
+            var updatedPU=[];
+            alert(orders.length);
+            for (let i = 0; i <orders.length; i++) {
+                //alert((i!=parseInt(orderIndex)));
+                if(i!=parseInt(orderIndex)){
+                    updatedPU.push(orders[i]);
+                }
+                alert(updatedPU.length);
+            }
+            database.collection('pickup').doc(Rest_id).update({
+                orders: updatedPU
+            }).then(() => {location.reload()});
+        },
         deleteItem:function(event){
             let thisReser = event.target.getAttribute("id");
             //for (var key in thisReser) {
@@ -173,15 +191,6 @@ export default {
             //database.collection('orders').doc(thisReser.doc_id).delete().then(() => {location.reload()});
         },
         fetchItems: function() {
-            //database.collection('customers').where("email", "==", this.$userId).get().then(doc =>{
-                //this.customer=doc.data();
-                //this.reservation=doc.data()['reservation'];
-                //this.pickup=doc.data()['pickup'];
-                //this.fav=doc.data()['favourites'];
-            //}).catch((error) => {
-                //alert("Error ");
-                //console.log("Error getting documents: ", error);
-            //});
             database.collection("customers").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     ///////////////////////////////////////////////////////////////////////
@@ -191,7 +200,7 @@ export default {
                     if (doc.data()["email"] == this.$userId){
                         this.customer=doc.data();
                         this.fav=doc.data()['favourites'];
-                        this.orders=doc.data()['cart'];//store multiple pickup
+                        //this.orders=doc.data()['cart'];//store multiple pickup
                         this.reservations=doc.data()['reservation'];//store multiple reservations
                         for (let i = 0; i < this.fav.length; i++) {
                             database.collection("restaurants").get().then((querySnapshot) => {
@@ -202,6 +211,28 @@ export default {
                                 }); 
                             });
                         }
+                        this.pickups=[];
+                            database.collection("pickup").get().then((querySnapshot) => {
+                                querySnapshot.forEach((doc) => {
+                                    var thisRestaurant=doc.data();
+                                    for (let j = 0; j <doc.data()["orders"].length; j++) {
+                                        var thisPU=doc.data()["orders"][j];
+                                        if (this.$userId==thisPU["email"]){
+                                            var onePU={};
+                                            onePU["doc_id"]=doc.id;
+                                            onePU["order_index"]=j;
+                                            onePU["restaurant_name"]=thisRestaurant.restaurant_name;
+                                            onePU["date"]=thisPU["date"];
+                                            onePU["time"]=thisPU["time"];
+                                            onePU["total"]=thisPU["total"];
+                                            onePU["total_orders"]=doc.data()["orders"];
+                                            //oneReser["time"]=thisSlot["date"]+" "+thisSlot["time"];
+                                            onePU["one_order"]=thisPU["one_order"];
+                                            this.pickups.push(onePU);
+                                        }
+                                    }
+                                }); 
+                            });
                         this.reservations=[];
                             database.collection("reservations").get().then((querySnapshot) => {
                                 querySnapshot.forEach((doc) => {
