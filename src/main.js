@@ -71,7 +71,7 @@ const myRouter = new VueRouter({
     { name:'reservationPayment', path: '/reservationPayment', component: ReservationPayment, props:true, meta: {requiresAuth: true}},
     { name:'reservationComplete', path: '/reservationComplete', component: ReservationComplete, props:true, meta: {requiresAuth: true}},
     { name:'pickup', path: '/pickup', component: Pickup, props:true, meta: {requiresAuth: true}},
-    { path: '/ordertoDelivery', component: OrdertoDelivery, meta: {requiresAuth: true}},
+    { path: '/ordertoDelivery', component: OrdertoDelivery, name : 'order-to-delivery', meta: {requiresAuth: true}},
     { path: '/ordertoPickup', component: OrdertoPickup},
     { path: '/ordertoReservation', component: OrdertoReservation, meta: {requiresAuth: true}},
     { path: '/settings', component: Settings, meta: {requiresAuth: true}}

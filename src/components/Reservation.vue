@@ -19,15 +19,13 @@
         <hr id="line">
         <div id="container">
             <div id="navigationbar">
-                <ul>
-                    <li><router-link to="/ordertoDelivery" exact>Delivery </router-link></li>
-                    <br><br>
-                    <li><router-link to="/ordertoReservation" exact>Reservation </router-link></li>
-                    <br><br>
-                    <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
+                <ul class="naviBar">
+                    <li><router-link to="/ordertoDelivery" exact><p>Delivery</p></router-link></li>
+                    <li id = "current"><router-link to="/ordertoReservation" exact><p>Reservation</p></router-link></li>
+                    <li><router-link to="/ordertoPickup" exact><p>Pick up</p></router-link></li>
                 </ul>
             </div>
-            <div>
+            <div class = "content" align = "center">
 
                 <h1> Make a reservation for {{this.$route.params.name}} at {{this.data.postal}} </h1>
                 <label> Number of pax: </label>
@@ -35,10 +33,14 @@
                 <input type="number" min="1" max="8" v-model.lazy="reservation.pax" required/>
                 <br>
                 <br>
-                <label> Date: </label>
-                <br>
-                <input id="datefield" type="date" v-model.lazy="reservation.date" required/>
-                <br>
+                <div id = "dateDiv">
+                    <label> Date: </label>
+                    <br>
+                    <div id="dateInput">
+                        <input id="datefield" type="date" v-model.lazy="reservation.date" required/>
+                    </div>
+                    <br>
+                </div>
                 <br>
                 <button class="special" v-on:click="selectDate" id="showSlots"> Show available timeslots </button>
                 <br>
@@ -199,6 +201,154 @@ img {
     height: 10rem;
 }
 
+#menupic {
+    height: 5rem;
+}
+
+.content {
+    width: calc(100% - 8rem);
+    margin: auto;
+    align-items: center;
+    font-size: 15px;
+}
+
+#basket {
+    margin-left: 5%;
+    margin-right: 5%;
+    text-align:center;
+}
+
+.main-bar, .side-bar {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    display: inline-block;
+    border: none;
+}
+.main-bar {
+    width: 30%;
+}
+.side-bar {
+    width: 70%;
+    bottom: 20px;
+}
+#line {
+    border: 3px dashed #90141C;
+}
+
+.time {
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+#container {
+    width: 100%;
+    overflow: hidden;
+}
+#navigationbar {
+    font-size:20px;
+    margin-left:2%;
+    float: left;
+    width: 10%;
+}
+#picture {
+    float: left;
+    width: 80%;
+}
+#dateInput{
+    text-align:center;
+}
+ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    flex-grow: 1;
+    flex-basis: 100px;
+    text-align: center;
+}
+
+#current p{
+    font-weight: bold;
+    background-color: rgba(224, 116, 114, 0.64);
+}
+
+#food {
+    font-size:15px;
+    font-weight: bold;
+    margin-left: 15px;
+}
+
+#section {
+    background-color:rgb(255, 237, 188);
+    margin-bottom: 20px;
+    border-radius: 10px;
+    list-style-type: none;
+    padding-bottom:10px;
+    padding-top:10px;
+}
+
+#special {
+    background-color: pink; 
+    border: 10px;
+    color: black;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    display:inline-block;
+    padding:8px;
+}
+#addToFav {
+    background-color: blanchedalmond;
+    font-size:15px;
+}
+.naviBar li {
+    list-style-type: none;
+    padding: 0;
+    text-decoration: none;
+    text-align:left;
+}
+
+#navigationbar {
+    /* text-align: left; */
+    font-size: 20px;
+    margin-left: 5%;
+    float: left;
+    width: 10%;
+}
+
+a {
+    text-decoration: none;
+}
+
+.naviBar p{
+    color:black;
+}
+
+.naviBar p:hover {
+    background-color:#90141C;
+    color:white;
+}
+
+#timeslots {
+    margin-left: 12%;
+}
+
+#showSlots {
+    margin-left: 12%;
+}
+
+#datefield {
+    margin-left: 12%;
+}
+/* img {
+    height: 10rem;
+}
+
 .main-bar, .side-bar {
     position: relative;
     margin: 0;
@@ -236,7 +386,6 @@ li {
     flex-grow: 1;
     flex-basis: 100px;
     text-align: center;
-    /* border: 1px solid #222;  */
 }
 
 #special {
@@ -263,5 +412,5 @@ li {
 #addToFav {
     background-color: blanchedalmond;
     font-size:15px;
-}
+} */
 </style>

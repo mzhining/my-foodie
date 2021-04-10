@@ -14,22 +14,20 @@
         <hr id="line">
         <div id="container">
             <div id="navigationbar">
-                <ul id="naviBar">
-                    <li><router-link to="/ordertoDelivery" exact>Delivery </router-link></li>
-                    <br><br>
-                    <li><router-link to="/ordertoReservation" exact>Reservation </router-link></li>
-                    <br><br>
-                    <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
+                <ul class="naviBar">
+                    <li><router-link to="/ordertoDelivery" exact><p>Delivery</p></router-link></li>
+                    <li><router-link to="/ordertoReservation" exact><p>Reservation</p></router-link></li>
+                    <li id = "current"><router-link to="/ordertoPickup" exact><p>Pick up</p></router-link></li>
                 </ul>
             </div>
             <aside id="picture">
                 <div class="content">
                     <ul id = "itemsList">
-                        <li v-for="item in restaurants" v-bind:key="item.restaurant_name" id="picture_display" v-on:click="route($event)">
+                        <li v-for="item in restaurants" v-bind:key="item.restaurant_name" id="picture_display">
                             <!--first direct them to delivery page -->
                             <img v-bind:src="item.image" class = "icon"/>  
                             <br> 
-                            <p v-bind:id="item.restaurant_name" >{{item.restaurant_name}} </p>
+                            <p v-bind:id="item.restaurant_name" v-on:click="route($event)">{{item.restaurant_name}} </p>
                         </li>
                     </ul>
                 </div>
@@ -72,6 +70,7 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
 #itemsList {
     width: 100%;
@@ -89,12 +88,15 @@ export default {
     flex-grow: 1;
     flex-basis: 200px;
     text-align: center;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
     padding-top: 30px;
-    background-color:rgb(255, 237, 188);
+    background-color:white;
     margin-bottom: 20px;
     border-radius: 10px;
+    border : 1px solid;
+    border-style: solid;
+    border-color:#90141C;
 }
 
 .home {
@@ -130,6 +132,11 @@ export default {
     border-color: rgba(224, 116, 114, 0.64) transparent transparent rgba(224, 116, 114, 0.64);
 }
 
+#current p{
+    font-weight: bold;
+    background-color: rgba(224, 116, 114, 0.64);
+}
+
 .penyot {
     position: absolute;
     overflow: hidden;
@@ -139,7 +146,7 @@ export default {
 }
 
 #slogan {
-    font-family: Carosello;
+    font-family: 'Pacifico', cursive;
     font-size: 40px;
     color: white;
     margin: 0;
@@ -149,9 +156,9 @@ export default {
     top: 30%;
 }
 
-#icon {
-    height: 15rem;
-    weight: 15rem;
+.icon {
+    object-fit: cover;
+    border-radius: 8px;
 }
 
 #pic {
@@ -160,6 +167,10 @@ export default {
     z-index: 69;
     right: 8%;
     top: 8%;
+}
+
+ul{
+    text-decoration: none;
 }
 
 #line {
@@ -207,17 +218,26 @@ export default {
 }
 
 #navigationbar {
-    text-align: left;
-    font-size:20px;
-    margin-left:5%;
+    /* text-align: left; */
+    font-size: 20px;
+    margin-left: 5%;
     float: left;
     width: 10%;
+}
 
+a {
+    text-decoration: none;
 }
-#naviBar {
-    list-style-type: none;
-    padding: 0;
+
+.naviBar p{
+    color:black;
 }
+
+.naviBar p:hover {
+    background-color:#90141C;
+    color:white;
+}
+
 #picture {
     float: left;
     width: 80%;
@@ -225,6 +245,13 @@ export default {
 .content p:hover {
     background-color:#90141C;
     color:white;
+}
+
+li {
+    list-style-type: none;
+    padding: 0;
+    text-decoration: none;
+    text-align:left;
 }
 
 </style>

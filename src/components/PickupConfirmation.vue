@@ -18,12 +18,10 @@
         <hr id="line">
         <div id="container">
             <div id="navigationbar">
-                <ul>
-                    <li><router-link to="/delivery" exact>Delivery </router-link></li>
-                    <br><br>
-                    <li><router-link to="/reservation" exact>Reservation </router-link></li>
-                    <br><br>
-                    <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
+                <ul class="naviBar">
+                    <li><router-link to="/ordertoDelivery" exact><p>Delivery</p></router-link></li>
+                    <li><router-link to="/ordertoReservation" exact><p>Reservation</p></router-link></li>
+                    <li id = "current"><router-link to="/ordertoPickup" exact><p>Pick up</p></router-link></li>
                 </ul>
             </div>
             <aside id="picture">
@@ -32,8 +30,10 @@
                         Your food will be ready for pick-up at {{this.time}}. <br>
                         Thank you for ordering {{this.datapacket.restaurant_name}} with MyFoodie!</p>
                         <br>
-                        
-                    <br>
+                        <br>
+                </div>
+                <div class="buttonHome">
+                    <button v-on:click="route()">Back to Home</button>
                 </div>
             </aside>
         </div>
@@ -57,6 +57,9 @@ export default {
       }, 
       time : {
           type : String
+      },
+      docIdRes : {
+          type : String
       }
     },
     created:function(){
@@ -64,11 +67,11 @@ export default {
     },
     methods:{
         route:function() {
-            this.$router.push({ name: 'account'})
+            this.$router.push({name: 'account'})
         },
       fetchItems:function(){
         database.collection('pickup')
-        .doc(this.rname)
+        .doc(this.docIdRes)
         .get()
         .then(snapshot => {
             var data = snapshot.data()
@@ -166,7 +169,38 @@ li {
     flex-grow: 1;
     flex-basis: 100px;
     text-align: center;
-    /* border: 1px solid #222;  */
+}
+
+.naviBar li {
+    list-style-type: none;
+    padding: 0;
+    text-decoration: none;
+    text-align:left;
+}
+
+#current p{
+    font-weight: bold;
+    background-color: rgba(224, 116, 114, 0.64);
+}
+
+#navigationbar {
+    font-size: 20px;
+    margin-left: 5%;
+    float: left;
+    width: 10%;
+}
+
+a {
+    text-decoration: none;
+}
+
+.naviBar p{
+    color:black;
+}
+
+.naviBar p:hover {
+    background-color:#90141C;
+    color:white;
 }
 
 

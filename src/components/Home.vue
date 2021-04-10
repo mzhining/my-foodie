@@ -15,17 +15,17 @@
         <hr id="line">
 
         <div class="content">
-            <p id="new"> What's new? </p>
+            <p id="new"> What's new?</p>
 
             <div id="content">
-                <div class="card">
+                <div class="card" v-on:click="route()" >
                     <div>
                     <img src="@/assets/collins.jpeg" alt="Collins" height=15rem>
                     </div>
                     <p>GREAT DEAL : 1-FOR-1 Mains in Collins</p>
                 </div>
 
-                <div class="card">
+                <div class="card" v-on:click="route()">
                     <div>
                     <img src="@/assets/coffeebean.png" alt="Coffeebean" height=15rem>
                     </div>
@@ -38,12 +38,18 @@
 
 <script>
 export default {
-    name: "Home"
+    name: "Home",
+    methods: {
+        route:function(){
+            this.$router.push({name:'order-to-delivery'});
+        },
+    }
 }
 </script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
 .home {
     display: flex;
@@ -87,7 +93,7 @@ export default {
 }
 
 #slogan {
-    font-family: Carosello;
+    font-family: 'Pacifico', cursive;
     font-size: 40px;
     color: white;
     margin: 0;
