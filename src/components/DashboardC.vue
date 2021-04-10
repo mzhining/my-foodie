@@ -130,17 +130,12 @@ export default {
     },
     methods:{
         deleteItemPickUp:function(event, orderIndex, orders){
-            alert(orderIndex);
             let Rest_id = event.target.getAttribute("id");
-            alert(Rest_id);
             var updatedPU=[];
-            alert(orders.length);
             for (let i = 0; i <orders.length; i++) {
-                //alert((i!=parseInt(orderIndex)));
                 if(i!=parseInt(orderIndex)){
                     updatedPU.push(orders[i]);
                 }
-                alert(updatedPU.length);
             }
             database.collection('pickup').doc(Rest_id).update({
                 orders: updatedPU
