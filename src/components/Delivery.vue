@@ -27,6 +27,7 @@
                     <li><router-link to="/ordertoPickup" exact><p>Pick up</p></router-link></li>
                 </ul>
             </div>
+
             <aside id="picture">
                 <div class="content" align = "left"> 
                     <div id="menu">
@@ -45,6 +46,8 @@
                             <pre id="food">Platform: <a v-bind:href="item.web">{{item.name}}</a>    Delivery Price: {{item.price}}</pre> 
                         </li>
                     </div>
+
+
                 </div>
             </aside>
         </div>
