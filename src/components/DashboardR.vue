@@ -25,13 +25,14 @@
                 <tbody>
                 <tr v-for="oneOrder in pickupComb" v-bind:key="oneOrder.email">
                     <td>{{oneOrder.name}}</td>
-                    <td>{{oneOrder.time}}</td>
+                    <td>{{oneOrder.date}} {{oneOrder.time}}</td>
                     <td>
                         <ul v-for="item in oneOrder.orderinfo" v-bind:key="item.name">
                             <span>{{item.count}}x {{item.name}}</span>
                         </ul>
                     </td>
-                    <td><button v-bind:id="oneReser" v-on:click="deleteItem($event)">Delete</button></td>
+                    <td>${{oneOrder.total}}</td>
+                    <td><button v-bind:id="oneOrder.doc_id" v-on:click="deleteItemPickUp($event, oneOrder.order_index, oneOrder.total_orders)">Delete</button></td>
                 </tr>
                 </tbody>
             </table>
@@ -96,7 +97,7 @@
                                 <span>{{key}}x {{value}}</span>
                             </ul>
                         </td>
-                        <td><button v-bind:id="oneReser" v-on:click="deleteItem($event)">Delete</button></td>
+                        <td><button v-bind:id="oneReser.doc_id" v-on:click="deleteItemRes($event, oneReser.slot_index, oneReser.order_index, oneReser.slots_array)">Delete</button></td>
                     </tr>
                     </tbody>
                 </table>
@@ -171,25 +172,66 @@ export default {
         }
     },
     methods:{
+        deleteItemPickUp:function(event, orderIndex, orders){
+            let Rest_id = event.target.getAttribute("id");
+            var updatedPU=[];
+            for (let i = 0; i <orders.length; i++) {
+                if(i!=parseInt(orderIndex)){
+                    updatedPU.push(orders[i]);
+                }
+            }
+            database.collection('pickup').doc(Rest_id).update({
+                orders: updatedPU
+            }).then(() => {location.reload()});
+        },
+        deleteItemRes:function(event, slot_index, order_index, slot_array){
+            let thisReser = event.target.getAttribute("id");
+            var updatedslots=[];
+            for (let i = 0; i <slot_array.length; i++) {
+                if(i!=parseInt(slot_index)){
+                    updatedslots.push(slot_array[i]);
+                } 
+                if(i==parseInt(slot_index)){
+                    var updatedS={};
+                    updatedS["avail"]=slot_array[i]["avail"];
+                    updatedS["date"]=slot_array[i]["date"];
+                    updatedS["orders"]=[];
+                    updatedS["pax"]=[];
+                    updatedS["reservedBy"]=[];
+                    updatedS["time"]=slot_array[i]["time"];
+                    for (let j = 0; j <slot_array[i].length; j++) {
+                        if(j!=parseInt(order_index)){
+                            updatedS["orders"].push(slot_array[i]["orders"][j]);
+                            updatedS["pax"].push(slot_array[i]["pax"][j]);
+                            updatedS["reservedBy"].push(slot_array[i]["reservedBy"][j]);
+                        }
+                    }
+                    updatedslots.push(updatedS);
+                    alert(updatedS["pax"].length);
+                }
+            }
+            database.collection('reservations').doc(thisReser).update({
+                slots: updatedslots
+            }).then(() => {location.reload()});
+        },
         fetchItems: function() {
             database.collection("reservations").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => { 
-                    
+                querySnapshot.forEach((doc) => {
                     if (doc.data()["restaurant_name"] == this.thisRestaurant["restaurant_name"]){
                         this.restaurantR=doc.data();
                         for (var i = 0; i < doc.data()["slots"].length; i++) {
                             var oneSlot=doc.data()["slots"][i];
                             for (var j = 0; j < oneSlot.reservedBy.length; j++) {
-                                //var dt=oneSlot.date + " "+oneSlot.time; 
                                 var oneReser={};
                                 oneReser["time"]=oneSlot.date + " "+oneSlot.time;
-                                //alert(oneReser["time"]);
                                 oneReser["orders"]=oneSlot.orders[j];
-                                //alert(oneReser["orders"]);
                                 oneReser["pax"]=oneSlot.pax[j];
-                                //alert(oneReser["pax"]);
                                 oneReser["reservedBy"]=oneSlot.reservedBy[j];
-                                //alert(oneReser["reservedBy"]);
+                                oneReser["pax"]=oneSlot.pax[j];
+                                oneReser["doc_id"]=doc.id;
+                                oneReser["slots_array"]=doc.data()["slots"];
+                                oneReser["slot_index"]=i;
+                                oneReser["order_index"]=j;
                                 this.reservationComb.push(oneReser);
                                 //this.time.push(dt);
                                 //this.reservationorder.push(oneSlot.orders[j]);
@@ -255,7 +297,13 @@ export default {
                             var onepickup = {};
                             onepickup["name"]=pickupOrders[i].email;
                             onepickup["orderinfo"]=pickupOrders[i].one_order;
-                            onepickup["time"]="dummy time";
+                            onepickup["time"]=pickupOrders[i]["time"];
+                            onepickup["date"]=pickupOrders[i]["date"];
+                            onepickup["doc_id"]=doc.id;
+                            onepickup["order_index"]=i;
+                            //onepickup["restaurant_name"]=thisRestaurant.restaurant_name;
+                            onepickup["total"]=pickupOrders[i]["total"];
+                            onepickup["total_orders"]=doc.data()["orders"];
                             this.pickupComb.push(onepickup);
                         }
                     }

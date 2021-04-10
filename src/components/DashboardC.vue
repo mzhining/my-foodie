@@ -83,7 +83,7 @@
                                 <span>{{key}}x {{value}}</span>
                             </ul>
                         </td>
-                        <td><button v-bind:id="oneReser" v-on:click="deleteItem($event)">Delete</button></td>
+                        <td><button v-bind:id="oneReser.doc_id" v-on:click="deleteItemRes($event, oneReser.slot_index, oneReser.order_index, oneReser.slots_array)">Delete</button></td>
                     </tr>
                     </tbody>
                 </table>
@@ -135,65 +135,45 @@ export default {
             this.$router.push({name:'order-to-delivery'});
         },
         deleteItemPickUp:function(event, orderIndex, orders){
-            alert(orderIndex);
             let Rest_id = event.target.getAttribute("id");
-            alert(Rest_id);
             var updatedPU=[];
-            alert(orders.length);
             for (let i = 0; i <orders.length; i++) {
-                //alert((i!=parseInt(orderIndex)));
                 if(i!=parseInt(orderIndex)){
                     updatedPU.push(orders[i]);
                 }
-                alert(updatedPU.length);
             }
             database.collection('pickup').doc(Rest_id).update({
                 orders: updatedPU
             }).then(() => {location.reload()});
         },
-        deleteItem:function(event){
+        deleteItemRes:function(event, slot_index, order_index, slot_array){
             let thisReser = event.target.getAttribute("id");
-            //for (var key in thisReser) {
-            //    alert(key);
-            //    alert(thisReser[key]);
-            //}
-            //alert(thisReser);
-            //alert(thisReser["slot_index"]);
-            //alert(thisReser["doc_id"]);
-            var si=parseInt(thisReser["slot_index"]);
-            var oi=parseInt(thisReser["order_index"]);
-            //alert(si);
-            //alert(oi);
-            var updatedslots=thisReser["slots_array"];
-            delete updatedslots[si]["orders"][oi];
-            delete updatedslots[si]["pax"][oi];
-            delete updatedslots[si]["reservedBy"][oi];
-            //alert(updatedslots[si]["orders"].length);
-            //var resultslots=[];
-            //for (let j = 0; j <updatedslots.length; j++) {
-                //var thisSlot=updatedslots[j];
-                //var emptyObj={};
-                //emptyObj["avail"]=thisSlot["avail"];
-                //emptyObj["date"]=thisSlot["date"];
-                //emptyObj["time"]=thisSlot["time"];
-                //emptyObj["orders"]=[];
-                //emptyObj["pax"]=[];
-                //emptyObj["reservedBy"]=[];
-                //resultslots.push(emptyObj);
-                //if (thisSlot["date"]==thisReser["date"] && thisSlot["time"]==thisReser["time"]){
-                //    for (let z=0;z<thisSlot["orders"].length;z++){
-                //        if (thisSlot["orders"][z]==thisReser["orders"]){
-                //            delete updatedslots[j]["orders"][z];
-                //            delete updatedslots[j]["pax"][z];
-                //            delete updatedslots[j]["reservedBy"][z];//dont know whether it works
-                //        } 
-                //    }
-                //}
-            //}
-            database.collection('reservations').doc(thisReser.doc_id).update({
+            var updatedslots=[];
+            for (let i = 0; i <slot_array.length; i++) {
+                if(i!=parseInt(slot_index)){
+                    updatedslots.push(slot_array[i]);
+                } 
+                if(i==parseInt(slot_index)){
+                    var updatedS={};
+                    updatedS["avail"]=slot_array[i]["avail"];
+                    updatedS["date"]=slot_array[i]["date"];
+                    updatedS["orders"]=[];
+                    updatedS["pax"]=[];
+                    updatedS["reservedBy"]=[];
+                    updatedS["time"]=slot_array[i]["time"];
+                    for (let j = 0; j <slot_array[i].length; j++) {
+                        if(j!=parseInt(order_index)){
+                            updatedS["orders"].push(slot_array[i]["orders"][j]);
+                            updatedS["pax"].push(slot_array[i]["pax"][j]);
+                            updatedS["reservedBy"].push(slot_array[i]["reservedBy"][j]);
+                        }
+                    }
+                    updatedslots.push(updatedS);
+                }
+            }
+            database.collection('reservations').doc(thisReser).update({
                 slots: updatedslots
             }).then(() => {location.reload()});
-            //database.collection('orders').doc(thisReser.doc_id).delete().then(() => {location.reload()});
         },
         fetchItems: function() {
             database.collection("customers").get().then((querySnapshot) => {
