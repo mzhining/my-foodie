@@ -27,6 +27,7 @@
                     <li><router-link to="/ordertoPickup" exact><p>Pick up</p></router-link></li>
                 </ul>
             </div>
+
             <aside id="picture">
                 <div class="content" align = "left"> 
                     <div id="menu">
@@ -49,6 +50,8 @@
                             </li>
                         </ul>
                     </div>
+
+
                 </div>
             </aside>
         </div>
