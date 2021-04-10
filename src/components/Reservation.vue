@@ -293,7 +293,7 @@ li {
 }
 
 #special {
-    background-color: pink; 
+    background-color: #EBA4A4; 
     border: 10px;
     color: black;
     border-radius: 10px;
@@ -305,6 +305,14 @@ li {
 #addToFav {
     background-color: blanchedalmond;
     font-size:15px;
+    border:none;
+    border-radius: 5px;
+    padding: 8px;
+}
+#addToFav:hover {
+    background-color:#EBA4A4;
+    font-size:15px;
+    color:white;
 }
 .naviBar li {
     list-style-type: none;
@@ -340,6 +348,11 @@ a {
 
 #showSlots {
     margin-left: 12%;
+}
+
+#showSlots:hover {
+    background-color:#90141C;
+    color:white;
 }
 
 #datefield {

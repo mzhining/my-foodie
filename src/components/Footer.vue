@@ -2,7 +2,7 @@
    <footer id="footer">
 
         <router-link to="/aboutus" exact>ABOUT US</router-link>
-        <router-link to="/privacypolicy" exact>PRIVACY POLICY</router-link>
+        <router-link to="/settings" exact>SETTINGS</router-link>
         <router-link to="/contactus" exact>CONTACT US</router-link>
 
       <br>

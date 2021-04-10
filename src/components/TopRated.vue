@@ -20,7 +20,7 @@
 
              <ul id = "itemsList">
                 <li v-for="item in items" v-bind:key="item.name" v-on:click="route()">
-                    <img v-bind:src="item.imageURL" />   
+                    <img v-bind:src="item.imageURL" class="pic"/>   
                     <br> 
                     <p id = "itemName">{{item.name}} <br> ⭐️ {{item.rating}}</p>
                 </li>
@@ -146,7 +146,8 @@ li {
 }
 
 img {
-    height: 15rem;
+    height: 16rem;
+    border-radius:10px;
 }
 
 #pic {
@@ -179,6 +180,13 @@ img {
     flex-direction: column;
     align-items: center;
     font-size: 20px;
+}
+
+li {
+    padding-top:10px;
+    padding-bottom:10px;
+    padding-right:10px;
+    padding-left:10px;
 }
 
 .card {

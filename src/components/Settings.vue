@@ -4,13 +4,13 @@
 
         <div v-else-if="profile=='restaurant' && rendered">
             <settings-r></settings-r>
-            <p><button class="save" v-on:click="refresh()">Refresh with new changes</button>&nbsp;
+            <p><button class="save-ref" v-on:click="refresh()">Refresh with new changes</button>&nbsp;
             <button class="done" v-on:click="returnDash()">Return to dashboard</button></p>
         </div>
         
         <div v-else-if="profile=='customer' && rendered">
             <settings-c></settings-c>
-            <p><button class="save" v-on:click="refresh()">Refresh with new changes</button>&nbsp;
+            <p><button class="save-ref" v-on:click="refresh()">Refresh with new changes</button>&nbsp;
             <button class="done" v-on:click="returnDash()">Return to dashboard</button></p>
         </div>
 
@@ -106,6 +106,7 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
 
 #settings, button {
     font-family: 'Poppins', sans-serif;
@@ -114,13 +115,35 @@ export default {
     /* padding-left: 300px; */
 }
 
-button {
+/* button {
     cursor: pointer;
-    /* background: #FCDDEC; */
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
     padding: 5px 15px;
     border-radius: 20px;
     border: none;
+} */
+
+.save-ref, .done {
+    /* font-family: 'Poppins', sans-serif;
+    font-style: normal; */
+    /* padding: 10px 20px; */
+    background-color: white; 
+    color: black; 
+    border: 3px solid #FFEBCD;
+    /* background: #FFEBCD; */
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    margin-left:10px;
+    width: 150px;
+    font-size:15px;
+    
+}
+.save-ref:hover {
+    background-color: #FFEBCD;
+}
+
+.done:hover {
+    background-color: #FFEBCD;
 }
 
 a:hover {
@@ -132,13 +155,13 @@ ul {
     list-style-type: none;
 }
 
-.save {
+/* .save {
     background: rgb(255, 255, 217);
 }
 
 .done {
     background: rgb(254, 222, 255);
-}
+} */
 
 .loader {
   border: 10px solid #f3f3f3;

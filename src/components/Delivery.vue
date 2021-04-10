@@ -30,20 +30,24 @@
             <aside id="picture">
                 <div class="content" align = "left"> 
                     <div id="menu">
-                        <li v-for="item in menu" v-bind:key="item.name" id="section">
-                            
-                            <p id="food">Name: {{item.name}}    
-                                    <br> Price: ${{item.price}}
-                            </p> 
-                            <img v-bind:src="item.image" id = "menupic"/>  
-                            <br> 
-                        </li>
+                        <ul id="itemsList">
+                            <li v-for="item in menu" v-bind:key="item.name" id="section">
+                                
+                                <p id="food">{{item.name}}    
+                                        <br>${{item.price}}
+                                </p> 
+                                <img v-bind:src="item.image" id = "menupic"/>  
+                                <br> 
+                            </li>
+                        </ul>
                     </div>
                     <div id="compare">
                         <br>
-                        <li v-for="item in price" v-bind:key="item.name" id="compareli">
-                            <pre id="food">Platform: <a v-bind:href="item.web">{{item.name}}</a>    Delivery Price: {{item.price}}</pre> 
-                        </li>
+                        <ul id="price-platform">
+                            <li v-for="item in price" v-bind:key="item.name" id="compareli">
+                                <pre id="food">Platform: <a v-bind:href="item.web">{{item.name}}</a><br>Delivery Price: ${{item.price}}</pre> 
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </aside>
@@ -107,6 +111,57 @@ export default {
 </script>
 
 <style scoped>
+body {
+    font-family: Inter, sans-serif;
+}
+
+#itemsList {
+    width: 100%;
+    max-width: 100%;
+    margin: 0px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+}
+
+#price-platform {
+    font-family: Inter, sans-serif;
+}
+
+#section {
+    background-color:white;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border : 2px solid;
+    border-style: solid;
+    border-color:#90141C;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    list-style-type: none;
+    padding-bottom:10px;
+    padding-top:10px;
+}
+
+#compareli {
+    font-family: Inter, sans-serif;
+    font-size: 14pt;
+    background-color:blanchedalmond;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    list-style-type: none;
+    display: inline-block;
+}
 
 img {
     height: 10rem;
@@ -185,20 +240,11 @@ li {
     background-color: rgba(224, 116, 114, 0.64);
 }
 
-#food {
+/* #food {
     font-size:15px;
     font-weight: bold;
     margin-left: 15px;
-}
-
-#section {
-    background-color:rgb(255, 237, 188);
-    margin-bottom: 20px;
-    border-radius: 10px;
-    list-style-type: none;
-    padding-bottom:10px;
-    padding-top:10px;
-}
+} */
 
 #special {
     background-color: pink; 
@@ -241,6 +287,18 @@ a {
     background-color:#90141C;
     color:white;
 }
+
+#compare {
+    text-align: center;
+    font-size:20px;
+}
+
+/* #compareli {
+    font-family: Inter, sans-serif;
+    font-size: 14pt;
+    list-style-type: none;
+} */
+
 /* #line {
     border: 3px dashed #90141C;
 }
@@ -316,10 +374,7 @@ ul {
     margin-left:10%;
     font-size:20px;
 }
-#compareli {
-    list-style-type: none;
-    font-family: "Times New Roman", Times, serif;
-}
+
 button {
     background-color: blanchedalmond;
     font-size:15px;

@@ -32,9 +32,7 @@
                         <br>
                         <br>
                 </div>
-                <div class="buttonHome">
-                    <button v-on:click="route()">Back to Home</button>
-                </div>
+                <button class="buttonHome" v-on:click="route()">Back to Home</button>
             </aside>
         </div>
         
@@ -84,7 +82,7 @@ export default {
 </script>
 
 <style scoped>
-table {
+/* table {
   font-family: 'Open Sans', sans-serif;
   width: 750px;
   border-collapse: collapse;
@@ -111,8 +109,7 @@ table td:last-child {
 }
 table tbody tr:nth-child(2n) td {
   background: #D4D8F9;
-}
-
+} */
 
 img {
     height: 10rem;
@@ -199,6 +196,22 @@ a {
 }
 
 .naviBar p:hover {
+    background-color:#90141C;
+    color:white;
+}
+
+.buttonHome {
+    background-color: #EBA4A4;
+    border: 10px;
+    color: black;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 15px;
+    display:inline-block;
+    padding:8px;
+}
+
+.buttonHome:hover {
     background-color:#90141C;
     color:white;
 }

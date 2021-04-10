@@ -31,16 +31,18 @@
                     <div class = "menu">
                         <h1> Choose your order </h1>
                         <br>
-                        
-                        <li v-for="item in items" v-bind:key="item.name" id="section">
-                        
-                        <p id="food">Name: {{item.name}}    
-                            <br> Price: ${{item.price}}
-                            </p> 
-                            <img v-bind:src="item.image" id = "menupic"/>  
-                            <QuantityCounter v-bind:item="item" v-on:counter="onCounter"> </QuantityCounter> 
-                        <br> 
-                        </li>
+                        <ul id = "itemsList">
+                            <li v-for="item in items" v-bind:key="item.name" id="section">
+                            <p id="food">{{item.name}}    
+                                <br> ${{item.price}}
+                                </p> 
+                                <img v-bind:src="item.image" id = "menupic"/>  
+                                <br>
+                                <br>
+                                <QuantityCounter v-bind:item="item" v-on:counter="onCounter"> </QuantityCounter> 
+                            <br> 
+                            </li>
+                        </ul>
                     </div>
 
                     <div id="basket">
@@ -51,16 +53,17 @@
                             </li>
                         </ul>
                         <br>
-                        <br>
                         <p> <b>Total: ${{total}}</b></p>
-                        <br><br>
+                        <br>
                     </div>
                     <div class = "time" align = "center"> 
-                        <p> When will you be picking up? </p>
+                        <h1> When will you be picking up? </h1>
                         <label> Date: </label>
                         <br>
                         <input id="datef" type="date" v-model.lazy="selectedDate" required/>
                         <br>
+                        <br>
+                        <label> Time: </label>
                         <br>
                         <select v-model="selectedTime">
                                 <option disabled value="">Please select one</option>
@@ -82,7 +85,6 @@
                 </div>
                 
                 <div class = "bottom" align = "center">
-                    <br>
                     <button id = "special" v-on:click="checkForm(), sendOrder()" > Order! </button>
                     <br>
                     <br>
@@ -145,18 +147,18 @@ export default {
             e.preventDefault();
         },
 
-        fetchItemsfromCustomer:function(){
-            database.collection('customers')
-            .get()
-            .then((querySnapShot) => {
-                querySnapShot.forEach(doc => {
-                    if (doc.data().email == this.$userId){
-                        this.pastOrder = doc.data().cart;
-                        this.docId = doc.id;
-                    }
-                })
-            })
-        }, 
+        // fetchItemsfromCustomer:function(){
+        //     database.collection('customers')
+        //     .get()
+        //     .then((querySnapShot) => {
+        //         querySnapShot.forEach(doc => {
+        //             if (doc.data().email == this.$userId){
+        //                 this.pastOrder = doc.data().cart;
+        //                 this.docId = doc.id;
+        //             }
+        //         })
+        //     })
+        // }, 
 
         fetchItems:function(){
             database.collection('pickup')
@@ -201,7 +203,7 @@ export default {
         }, 
         sendOrder : function() {
             this.getOrder();
-            this.sendToUser();
+            // this.sendToUser();
 
             database.collection('pickup')
             .doc(this.docIdRes)
@@ -209,11 +211,11 @@ export default {
             .then(()=>{this.$router.push({ name: 'pickup-payment', params : {total : this.total, rname : this.rname, time : this.selectedTime, docIdRes : this.docIdRes}})});
         },
 
-        sendToUser : function() {
-            database.collection('customers')
-            .doc(this.docId)
-            .update({cart : this.pastOrder});
-        },
+        // sendToUser : function() {
+        //     database.collection('customers')
+        //     .doc(this.docId)
+        //     .update({cart : this.pastOrder});
+        // },
 
         getOrder : function() {
             for (let i = 0; i < this.itemsSelected.length; i++) {
@@ -313,7 +315,7 @@ export default {
 
                     // insert functions here
                     this.fetchItems();
-                    this.fetchItemsfromCustomer();
+                    //this.fetchItemsfromCustomer();
                 })
             } else {
                 // console.log('not logged in');
@@ -330,6 +332,18 @@ export default {
 <style scoped>
 img {
     height: 10rem;
+}
+
+#itemsList {
+    width: 100%;
+    max-width: 100%;
+    margin: 0px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
 }
 
 #menupic {
@@ -370,8 +384,12 @@ img {
 }
 
 .time {
-    border: 1px solid black;
+    background-color:blanchedalmond;
+    margin-bottom: 20px;
     border-radius: 10px;
+    border:none;
+    padding-top:10px;
+    padding-bottom:10px;
 }
 
 #container {
@@ -401,8 +419,6 @@ li {
     text-align: center;
 }
 
-
-
 #current p{
     font-weight: bold;
     background-color: rgba(224, 116, 114, 0.64);
@@ -415,8 +431,17 @@ li {
 }
 
 #section {
-    background-color:rgb(255, 237, 188);
+    background-color:white;
     margin-bottom: 20px;
+    border-radius: 10px;
+    border : 2px solid;
+    border-style: solid;
+    border-color:#90141C;
+    /* background-color:#FFEBCD; */
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
     border-radius: 10px;
     list-style-type: none;
     padding-bottom:10px;
@@ -436,7 +461,23 @@ li {
 #addToFav {
     background-color: blanchedalmond;
     font-size:15px;
+    border:none;
+    border-radius: 5px;
+    padding: 8px;
 }
+
+#addToFav:hover {
+    background-color:#EBA4A4;
+    font-size:15px;
+    color:white;
+}
+
+#special:hover {
+    background-color:#90141C;
+    font-size:15px;
+    color:white;
+}
+
 .naviBar li {
     list-style-type: none;
     padding: 0;

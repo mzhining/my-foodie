@@ -15,13 +15,13 @@
         <h1>My Profile</h1>
         <h2>Favourite Restaurant</h2>
         <div id="fav">
-            <li v-for="item in fav" v-bind:key="item.id" class="box">
+            <!-- <li v-for="item in fav" v-bind:key="item.id" class="box">
                 <span>{{item}}</span>
-            </li>
-            <br><br>
+            </li> -->
+            <!-- <br><br> -->
             <!-- how to disply picture using a fr loop, now the array fav_img has all element as the weblink-->
-            <li v-for="item in fav_img" v-bind:key="item.id" class="box"> 
-                <img v-bind:src="item" alt="error"/> 
+            <li v-for="item in fav_img" v-bind:key="item.id" class="box" v-on:click="route()"> 
+                <img v-bind:src="item" alt="error" class="box-pic" /> 
                 <span>     </span>
             </li>
         </div>
@@ -30,10 +30,11 @@
             <div id="multi_pickup">
                 <table style="width:100%" >
                     <tr id="headingPickup">
-                        <th><br>Restaurant<br></th>
-                        <th><br>Time<br></th>
-                        <th><br>Order<br></th>
-                        <th><br>Total<br></th>
+                        <th>Restaurant<br></th>
+                        <th>Time<br></th>
+                        <th>Order<br></th>
+                        <th>Total<br></th>
+                        <th>Edit<br></th>
                     </tr>
                     <tbody>
                     <tr v-for="oneOrder in orders" v-bind:key="oneOrder.id">
@@ -66,10 +67,11 @@
             <div id="multi_reservations">
                 <table style="width:100%" >
                     <tr id="headingReser">
-                        <th><br>Restaurant<br></th>
-                        <th>Time</th>
-                        <th><br>Pax<br></th>
-                        <th><br>Order<br></th>
+                        <th>Restaurant<br></th>
+                        <th>Time<br></th>
+                        <th>Pax<br></th>
+                        <th>Order<br></th>
+                        <th>Edit<br></th>
                     </tr>
                     <tbody>
                     <tr v-for="oneReser in reservations" v-bind:key="oneReser.id">
@@ -128,6 +130,9 @@ export default {
         }
     },
     methods:{
+        route:function(){
+            this.$router.push({name:'order-to-delivery'});
+        },
         deleteItem:function(event){
             let thisReser = event.target.getAttribute("id");
             //for (var key in thisReser) {
@@ -273,6 +278,38 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
+table {
+  font-family: 'Open Sans', sans-serif;
+  width: 750px;
+  border-collapse: collapse;
+  border: 3px solid #90141C;
+  margin: 10px 10px 0 10px;
+}
+
+table th {
+  text-transform: uppercase;
+  text-align: center;
+  background: #90141C;
+  color: #FFF;
+  padding: 8px;
+  min-width: 30px;
+  font-size: 15px;
+}
+
+table td {
+  text-align: left;
+  padding: 8px;
+  border-right: 2px solid #90141C;
+}
+
+table td:last-child {
+  border-right: none;
+}
+
+table tbody tr:nth-child(2n) td {
+  background: #f4c2c2;
+}
+
 .home {
     display: flex;
     flex-direction: column;
@@ -354,7 +391,6 @@ h2 {
     list-style-type: none;
     text-align: left;
     margin-left: 10%;
-
 }
 
 #header {
@@ -380,13 +416,14 @@ h2 {
     font-weight: bold;
     margin-left: 2%;
 }
+
 tbody {
-    font-size:20px;
+    font-size:15px;
     text-align: left;
     margin-left:3px;
 }
 #itemlist {
-    font-size:20px;
+    font-size:15px;
     list-style-type: none;
     text-align: left;
     margin-left: 2%;
@@ -396,13 +433,13 @@ tbody {
 }
 
 .section {
-    background-color:rgb(198, 204, 204);
+    /* background-color:rgb(198, 204, 204); */
     margin-left: 10%;
     margin-right: 10%;
     border-radius: 10px;
 }
 #block {
-    font-size:20px;
+    font-size:15px;
     list-style-type: none;
     text-align: left;
     margin-left: 2%;
@@ -412,8 +449,11 @@ tbody {
 }
 .box { 
     display: inline; 
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+.box-pic { 
+    height:80px;
 }
 button {
     font-size:15px;

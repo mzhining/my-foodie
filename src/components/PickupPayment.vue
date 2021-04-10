@@ -28,7 +28,6 @@
                 <div class="content" align = "left">
                     <div>
                         <h1> Confirm and make your payment </h1>
-                        <br>
                         <table id="firstTable">
                             <thead>
                                 <tr>
@@ -51,10 +50,9 @@
                         <p> Payment method </p>
                            <select v-model="selected">
                             <option disabled value="">Please select one</option>
-                            <option>Card A</option>
-                            <option>Card B</option>
+                            <option>Debit Card</option>
+                            <option>Credit Card</option>
                             <option>Paylah!</option>
-                            <option>Add Card</option>
                             </select>
                             <br>
                     </div>
@@ -211,7 +209,7 @@ li {
     /* border: 1px solid #222;  */
 }
 .special {
-    background-color: pink; 
+    background-color: #EBA4A4;
     border: 10px;
     color: black;
     border-radius: 10px;
@@ -219,6 +217,12 @@ li {
     font-size: 15px;
     display:inline-block;
     padding:8px;
+}
+
+.special:hover {
+    background-color:#90141C;
+    font-size:15px;
+    color:white;
 }
 
 .naviBar li {

@@ -5,7 +5,7 @@
             <!-- update restaurant information -->
             <h2 v-on:click="updateInfo=!updateInfo" v-show="!updateInfo"><a>&#9654; Restaurant Information</a></h2>
             <h2 v-on:click="updateInfo=!updateInfo" v-show="updateInfo"><a>&#9660; Restaurant Information</a></h2>
-            <div v-show="updateInfo">
+            <div class="update-data" v-show="updateInfo">
                 <form id="edit-data" v-on:submit.prevent="modifyData()">
                     <img v-bind:src="datapacket.image[1]" alt="Not found"><br>
                     Login Email: {{this.$userId}}<br>
@@ -37,7 +37,7 @@
             <!-- update restaurant menu -->
             <h2 v-on:click="updateMenu=!updateMenu" v-show="!updateMenu"><a>&#9654; Menu Settings</a></h2>
             <h2 v-on:click="updateMenu=!updateMenu" v-show="updateMenu"><a>&#9660; Menu Settings</a></h2>
-            <div v-show="updateMenu">
+            <div class="update-data" v-show="updateMenu">
                 <!-- action buttons -->
                 <p>Choose an action below:<br>
                 <button class="view" v-on:click="updateAction='view'">View</button>&nbsp;or
@@ -95,7 +95,7 @@
             <!-- add reservation slots -->
             <h2 v-on:click="updateReserv=!updateReserv" v-show="!updateReserv"><a>&#9654; Reservation Settings</a></h2>
             <h2 v-on:click="updateReserv=!updateReserv" v-show="updateReserv"><a>&#9660; Reservation Settings</a></h2>
-            <div v-show="updateReserv">
+            <div class="update-data" v-show="updateReserv">
                 <p>Choose an action below:<br>
                 <button class="view" v-on:click="updateAction='viewReserv'">View</button> or 
                 <button class="add" v-on:click="updateAction='addReserv'">Add</button></p>
@@ -410,11 +410,20 @@ export default {
 
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
 
-#settingsR, button {
-    font-family: 'Poppins', sans-serif;
-    font-style: normal;
+body {
+   font-size: 13pt; 
+}
+.update-data {
+    font-family: Inter, sans-serif;
+    font-size: 13pt;
+}
+
+#settingsR{
+    /* font-family: 'Poppins', sans-serif;
+    font-style: normal; */
+    font-family: Nunito;
     /* text-align: left; */
     /* padding-left: 300px; */
 }
@@ -429,7 +438,8 @@ button {
 }
 
 a:hover {
-    color: rgb(121, 123, 255);
+    background-color: #EBA4A4;
+    color:white;
     cursor: pointer;
 }
 
@@ -450,7 +460,13 @@ ul {
 }
 
 .save {
-    background: rgb(255, 255, 217);
+    background:#EBA4A4;
+    border:none;
+}
+
+.save:hover {
+    background:#90141C;
+    color:white;
 }
 
 table {
