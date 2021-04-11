@@ -25,7 +25,7 @@
                     <ul id = "itemsList">
                         <li v-for="item in restaurants" v-bind:key="item.restaurant_name" id="picture_display">
                             <!--first direct them to delivery page -->
-                            <img v-bind:src="item.image"/>  
+                            <img v-bind:src="item.image" class = "icon"/>  
                             <br> 
                             <p v-bind:id="item.restaurant_name" v-bind:postal="item.postal_code" v-on:click="route($event)">{{item.restaurant_name}} </p>
                         </li>
@@ -73,6 +73,11 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+.icon {
+    object-fit: cover;
+    border-radius: 8px;
+}
 
 #itemsList {
     width: 100%;

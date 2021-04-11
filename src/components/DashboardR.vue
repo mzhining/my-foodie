@@ -20,6 +20,7 @@
                     <th>Name<br></th>
                     <th>Time<br></th>
                     <th>Order<br></th>
+                    <th>Total<br></th>
                     <th>Edit<br></th>
                 </tr>
                 <tbody>
@@ -411,7 +412,6 @@ table tbody tr:nth-child(2n) td {
     z-index: 69;
     right: 8%;
     top: 8%;
-    height: 15rem;
 }
 #line {
     border: 3px dashed #90141C;
@@ -537,7 +537,20 @@ tbody {
     width: 40%;
 }
 button {
+    font-family: Inter, sans-serif;
+    font-weight: normal;
+    cursor: pointer;
+    background: #FFEBCD;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    padding: 5px 15px;
+    border-radius: 10px;
+    border: none;
     font-size:15px;
+}
+
+button:hover {
+    background-color: #EBA4A4;
+    color: white;
 }
 
 

@@ -49,11 +49,10 @@ Vue.mixin(loadData)
 const myRouter = new VueRouter({
 // let myRouter = new VueRouter({
   routes: [
-    { path: '/', component: Home },
+    { path: '/', component: Home, name : 'home'},
     { path: '/toprated', component: TopRated },
     { path: '/featured', component: Featured },
     { path: '/contactus', component: ContactUs },
-
     { path: '/pickup-payment', component: PickupPayment, name : 'pickup-payment', props : true },
     { path: '/reservation', component: Reservation, meta: {requiresAuth: true}},
     { path: '/signup-cust', component: CustSignup, meta: {requiresGuest: true}},

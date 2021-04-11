@@ -344,6 +344,7 @@ img {
     flex-wrap: wrap;
     list-style-type: none;
     padding: 0;
+    
 }
 
 #menupic {
@@ -431,8 +432,9 @@ li {
 }
 
 #section {
+    width: 50px;
+    float: left;
     background-color:white;
-    margin-bottom: 20px;
     border-radius: 10px;
     border : 2px solid;
     border-style: solid;

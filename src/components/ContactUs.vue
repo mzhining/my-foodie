@@ -52,9 +52,11 @@ export default {
 
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+
 #contact-us{
-    font-family: Poppins;
-    font-style: normal;
+    font-family: Nunito;
+    font-style: bold;
     text-align: left; 
     /* padding-left: 300px; */
 }
@@ -64,12 +66,19 @@ export default {
 }
 
 button {
+    font-family: Inter, sans-serif;
+    font-weight: normal;
     cursor: pointer;
-    background: #FCDDEC;
+    background: #FFEBCD;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
     padding: 5px 15px;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
+}
+
+button:hover {
+    background-color: #EBA4A4;
+    color: white;
 }
 
 #content {

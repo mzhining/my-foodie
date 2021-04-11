@@ -26,9 +26,7 @@ header{
     background: #90141C;
     font-size:15px;
 }
-h1{
-    color:ivory
-}
+
 a{
     color: #fff;
     text-decoration: none;
@@ -40,6 +38,19 @@ a{
     background: #eee;
     color: #444;
 } */
+
+/* .router-link-active{
+    background: white;
+    color: black;
+    border-radius:10px;
+    font-weight: bold;
+} */
+
+a:hover {
+  background-color: white;
+  color: black;
+  border-radius:8px;
+}
 
 #footer {
   background: #90141C;
