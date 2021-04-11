@@ -30,22 +30,22 @@
                 <div class="content" align = "left">
                     <div class = "menu">
                         <h1> Choose your order </h1>
-                        <br>
-                        <ul id = "itemsList">
-                            <li v-for="item in items" v-bind:key="item.name" id="section">
-                            <p id="food">{{item.name}}    
-                                <br> ${{item.price}}
-                                </p> 
-                                <img v-bind:src="item.image" id = "menupic"/>  
-                                <br>
-                                <br>
-                                <QuantityCounter v-bind:item="item" v-on:counter="onCounter"> </QuantityCounter> 
-                            <br> 
-                            </li>
-                        </ul>
+                        <div class = "product-container">
+                            <ul id = "itemsList">
+                                <li v-for="item in items" v-bind:key="item.name" id="section">
+                                <p id="food">{{item.name}}    
+                                    <br> ${{item.price}}
+                                    </p> 
+                                    <img v-bind:src="item.image" id = "menupic"/> <br>
+                                    <QuantityCounter v-bind:item="item" v-on:counter="onCounter"> </QuantityCounter> 
+                                </li>
+                            </ul>
+                        </div>
                     </div>
+                </div>
 
-                    <div id="basket">
+            <div class="content2" align = "left">
+                <div id="basket">
                     <p><b>Basket:</b></p>
                         <ul id="display">
                             <li v-for="item in itemsSelected" v-bind:key="item.id">
@@ -55,8 +55,9 @@
                         <br>
                         <p> <b>Total: ${{total}}</b></p>
                         <br>
-                    </div>
-                    <div class = "time" align = "center"> 
+                </div>
+
+                <div class = "time" align = "center"> 
                         <h1> When will you be picking up? </h1>
                         <label> Date: </label>
                         <br>
@@ -81,18 +82,18 @@
                                 </select>
                                 <br>
                                 <br>
-                    </div>
                 </div>
+                
                 
                 <div class = "bottom" align = "center">
                     <button id = "special" v-on:click="checkForm(), sendOrder()" > Order! </button>
                     <br>
                     <br>
                 </div>
+            </div>
+                
             </aside>
-        </div>
-        
-        
+        </div> 
     </div>
 </template>
 
@@ -344,18 +345,50 @@ img {
     flex-wrap: wrap;
     list-style-type: none;
     padding: 0;
-    
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
+#section {
+    /* width: 50px; */
+    float: left;
+    background-color:white;
+    border-radius: 10px;
+    border : 2px solid;
+    border-color:#90141C;
+    /* background-color:#FFEBCD; */
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    list-style-type: none;
+    padding:10px 10px 10px 10px;
+    display: grid; 
+    grid-template-rows: 1fr 1fr;
+    text-align:center;
+}
 #menupic {
     height: 5rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto
 }
 
 .content {
     width: calc(100% - 8rem);
-    margin: auto;
+    margin: 0px;
     /* display: flex; */
-    align-items: left;
+    /* align-items: right; */
+    font-size: 15px;
+}
+
+.content2 {
+    /* width: calc(100% - 16rem); */
+    margin-left: 12%;
+    margin-right: 10%;
+    /* display: flex; */
+    /* align-items: right; */
     font-size: 15px;
 }
 
@@ -429,26 +462,10 @@ li {
     font-size:15px;
     font-weight: bold;
     margin-left: 15px;
+    
 }
 
-#section {
-    width: 50px;
-    float: left;
-    background-color:white;
-    border-radius: 10px;
-    border : 2px solid;
-    border-style: solid;
-    border-color:#90141C;
-    /* background-color:#FFEBCD; */
-    margin-bottom: 10px;
-    margin-top: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
-    border-radius: 10px;
-    list-style-type: none;
-    padding-bottom:10px;
-    padding-top:10px;
-}
+
 
 #special {
     background-color: pink; 
@@ -507,5 +524,10 @@ a {
     background-color:#90141C;
     color:white;
 }
+
+/* .product-container {
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr;
+} */
 
 </style>

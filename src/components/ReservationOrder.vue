@@ -3,7 +3,7 @@
         <div class="restaurant_info">
 
             <div class="main-bar">
-                <h1> {{this.$route.params.id}} </h1>
+                <h1> {{this.name}} </h1>
                 <img v-bind:src="this.datapacket.image" class = "icon"/>  
             </div>
             
@@ -16,41 +16,76 @@
     
         </div>
         <hr id="line">
-        <div>
+        <div id="container">
             <div id="navigationbar">
-                <ul>
-                    <li><router-link to="/ordertoDelivery" exact>Delivery </router-link></li>
-                    <br><br>
-                    <li><router-link to="/ordertoReservation" exact>Reservation </router-link></li>
-                    <br><br>
-                    <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
+                <ul class="naviBar">
+                    <li><router-link to="/ordertoDelivery" exact><p>Delivery</p></router-link></li>
+                    <li id = "current"><router-link to="/ordertoReservation" exact><p>Reservation</p></router-link></li>
+                    <li><router-link to="/ordertoPickup" exact><p>Pick up</p></router-link></li>
                 </ul>
             </div>
-            <div>
-                <p> Ordering for your reservation for {{this.$route.params.pax}} pax at {{this.$route.params.time}} on {{this.$route.params.date}} at {{this.$route.params.name}} at {{this.$route.params.postal}}. </p>
-                <ul id="menu">
-                    <li v-for="item in items" v-bind:key="item.id" id="menu">
-                        <p id="itemName">{{item.name}}</p>
-                        <br>
-                        <p id="price">${{item.price}}</p>
-                        <img v-bind:src="item.image"/>
+
+            <aside id="picture">
+                <div class="content" align = "left">
+                    <div class = "menu">
+                        <h3> Ordering for your reservation for {{this.$route.params.pax}} pax at {{this.$route.params.time}} on {{this.$route.params.date}} at {{this.$route.params.name}} at {{this.$route.params.postal}}.</h3>
+                        <div class = "product-container">
+                            <ul id = "itemsList">
+                                <li v-for="item in items" v-bind:key="item.name" id="section">
+                                <p id="food">{{item.name}}    
+                                    <br> ${{item.price}}
+                                    </p> 
+                                    <img v-bind:src="item.image" id = "menupic"/> <br>
+                                    <QuantityCounter v-bind:item="item" v-on:counter="onCounter"> </QuantityCounter> 
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content2" align = "left">
+                    <div id="basket">
+                        <p><b>Basket:</b></p>
+                            <ul id="display">
+                                <li v-for="item in itemsSelected" v-bind:key="item.id">
+                                    <p>{{item[0]}} x {{item[1]}} </p>
+                                </li>
+                            </ul>
+                            <br>
+                            <p> <b>Total: ${{total}}</b></p>
+                            <br>
+                            <button class="special" v-on:click="sendOrder"> Send Order </button>
+                    </div>
+                </div>
+                
+            </aside>
+
+            <!-- <aside id = "picture"> -->
+            <!-- <div class = "menu">
+                <h3> Ordering for your reservation for {{this.$route.params.pax}} pax at {{this.$route.params.time}} on {{this.$route.params.date}} at {{this.$route.params.name}} at {{this.$route.params.postal}}. </h3>
+                
+                <ul id="itemsList">
+                    <li v-for="item in items" v-bind:key="item.id" id="section">
+                        <p id="food">{{item.name}}
+                        <br> ${{item.price}}</p>
+                        <img v-bind:src="item.image" id="menupic"/><br>
                         <QuantityCounter v-on:counter="onCounter" v-bind:item = "item"></QuantityCounter>
                     </li>
                 </ul>
+
                 <div id="basket">
-                    <p>Basket:</p>
+                    <p><b>Basket:</b></p>
                     <ul id="display">
                         <li v-for="item in itemsSelected" v-bind:key="item.id">
                             <p>{{item[0]}} x {{item[1]}} </p>
                         </li>
                     </ul>
                     <br>
+                    <p> <b>Total: ${{total}}</b></p>
                     <br>
-                    <p> Total: ${{total}}</p>
-                    <br><br>
+                    <button class="special" v-on:click="sendOrder"> Send Order </button>
                 </div>
-                <button class="special" v-on:click="sendOrder"> Send Order </button>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -74,6 +109,11 @@
         },
         components: {
             QuantityCounter
+        },
+        props: {
+            name : {
+                type : String
+            }
         },
         methods: {
             onCounter: function (item, count) {
@@ -172,6 +212,57 @@
 </script>
 
 <style>
+
+#itemsList {
+    width: 100%;
+    max-width: 100%;
+    margin: 0px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+#section {
+    /* width: 50px; */
+    float: left;
+    background-color:white;
+    border-radius: 10px;
+    border : 2px solid;
+    border-color:#90141C;
+    /* background-color:#FFEBCD; */
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    list-style-type: none;
+    padding:10px 10px 10px 10px;
+    display: grid; 
+    grid-template-rows: 1fr 1fr;
+    text-align:center;
+}
+
+#menupic {
+    height: 5rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+
+.menu {
+    width: calc(100% - 8rem);
+    margin: auto;
+    margin-left: 15%;
+    /* display: flex; */
+    align-items: left;
+    font-size: 15px;
+}
+
 img {
     height: 10rem;
 }

@@ -3,7 +3,7 @@
         <div class="restaurant_info">
 
             <div class="main-bar">
-                <h1> {{this.$route.params.id}} </h1>
+                <h1> {{this.name}} </h1>
                 <img v-bind:src="this.datapacket.image" class = "icon"/>  
             </div>
             
@@ -18,27 +18,20 @@
         <hr id="line">
         <div id="container">
             <div id="navigationbar">
-                <ul>
-                    <li><router-link to="/ordertoDelivery" exact>Delivery </router-link></li>
-                    <br><br>
-                    <li><router-link to="/ordertoReservation" exact>Reservation </router-link></li>
-                    <br><br>
-                    <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
+                <ul class="naviBar">
+                    <li><router-link to="/ordertoDelivery" exact><p>Delivery</p></router-link></li>
+                    <li id = "current"><router-link to="/ordertoReservation" exact><p>Reservation</p></router-link></li>
+                    <li><router-link to="/ordertoPickup" exact><p>Pick up</p></router-link></li>
                 </ul>
             </div>
             <div>
-                <p> Reservation Confirmed! </p>
-                <br>
+                <h1> Reservation Confirmed! </h1>
                 <br>
                 <p> Your reservation is confirmed for {{this.$route.params.pax}} pax at {{this.$route.params.time}} on {{this.$route.params.date}} at {{this.$route.params.name}} at {{this.$route.params.postal}}. </p>
                 <br>
-                <br>
                 <p id="shift"> Thank you for making a reservation for {{this.$route.params.name}} with MyFoodie! </p>
                 <br>
-                <br>
                 <button class="special" @click="goToOrder"> Order in advance </button>
-                <br>
-                <br>
                 <button class="special" @click="home"> Back to Homepage </button>
                 <br>
                 <br>
@@ -53,6 +46,11 @@ export default {
     data() {
         return {
             datapacket: []
+        }
+    },
+    props: {
+        name:{
+            type: String
         }
     },
     methods: {
@@ -117,10 +115,16 @@ img {
     color: black;
     border-radius: 10px;
     text-align: center;
-    margin-left: 12%;
     font-size: 15px;
     display:inline-block;
     padding:8px;
+    margin: 10px 10px 10px 10px;
+}
+
+.special:hover {
+    background-color:#90141C;
+    font-size:15px;
+    color:white;
 }
 
 #shift{

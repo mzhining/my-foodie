@@ -153,9 +153,10 @@ img {
 
 .content {
     width: calc(100% - 8rem);
-    margin: auto;
+    margin: 0px;
+    /* margin: auto;
     display: flex;
-    align-items: left;
+    align-items: left; */
     font-size: 15px;
 }
 
@@ -192,8 +193,8 @@ img {
     background-color: rgba(224, 116, 114, 0.64);
 }
 #picture {
-    float: left;
-    width: 80%;
+    float: right;
+    width: 75%;
 }
 ul {
     display: flex;

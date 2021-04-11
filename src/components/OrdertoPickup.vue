@@ -82,6 +82,8 @@ export default {
     flex-wrap: wrap;
     list-style-type: none;
     padding: 0;
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 #picture_display {

@@ -22,18 +22,25 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 div, button {
-    font-family: 'Poppins', sans-serif;
-    font-style: normal;
+    font-family: Inter, sans-serif;
+    font-weight: normal;
     /* text-align: left; */
     /* padding-left: 300px; */
 }
 
 button {
+    font-family: Inter, sans-serif;
+    font-weight: normal;
     cursor: pointer;
-    background: #bbffca;
+    background: #FFEBCD;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
     padding: 5px 15px;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
+}
+
+button:hover {
+    background-color: #EBA4A4;
+    color: white;
 }
 </style>

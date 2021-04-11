@@ -3,7 +3,7 @@
         <div class="restaurant_info">
 
             <div class="main-bar">
-                <h1> {{this.$route.params.id}} </h1>
+                <h1> {{this.name}} </h1>
                 <img v-bind:src="this.datapacket.image" class = "icon"/>  
             </div>
             
@@ -18,15 +18,15 @@
         <hr id="line">
         <div id="container">
             <div id="navigationbar">
-                <ul>
-                    <li><router-link to="/ordertoDelivery" exact>Delivery </router-link></li>
-                    <br><br>
-                    <li><router-link to="/ordertoReservation" exact>Reservation </router-link></li>
-                    <br><br>
-                    <li><router-link to="/ordertoPickup" exact>Pick up </router-link></li>
+                <ul class="naviBar">
+                    <li><router-link to="/ordertoDelivery" exact><p>Delivery</p></router-link></li>
+                    <li id = "current"><router-link to="/ordertoReservation" exact><p>Reservation</p></router-link></li>
+                    <li><router-link to="/ordertoPickup" exact><p>Pick up</p></router-link></li>
                 </ul>
             </div>
-            <div>
+            <aside id="picture">
+            <div class="content" align = "left">
+                <div> 
                 <h1 align="left"> Confirm and make your payment </h1>
                 <br>
                 <table id="firstTable">
@@ -45,28 +45,26 @@
                         </tr>
                     </tbody>
                 </table>
-                <p> Total price: ${{this.$route.params.total}}</p>
-                <br>
+                <p> <b>Total price: ${{this.$route.params.total}}</b></p>
                 <p> Payment method </p>
                     <select v-model="selected">
                     <option disabled value="">Please select one</option>
-                    <option>Card A</option>
-                    <option>Card B</option>
+                    <option>Debit Card</option>
+                    <option>Credit Card</option>
                     <option>Paylah!</option>
-                    <option>Add Card</option>
                     </select>
                     <br>
+            </div>
             </div>
             <div class = "bottom" align = "center">
                 <br>
                 <br>
-                <button id="special" v-on:click="route()"> Make Payment </button>
+                <button class="special" v-on:click="route()"> Make Payment </button>
                 <br>
                 <br>
             </div>
+        </aside>
         </div>
-        
-        
     </div>
 </template>
 
@@ -77,6 +75,11 @@ export default {
         return{
           datapacket:[],
           items: []
+        }
+    },
+    props : {
+        name : {
+            type : String
         }
     },
     created() {
@@ -126,17 +129,27 @@ table td {
   padding: 8px;
   border-right: 2px solid #90141C;
 }
+
 table td:last-child {
   border-right: none;
 }
+
 table tbody tr:nth-child(2n) td {
   background: #f4c2c2;
 }
 
-
 img {
     height: 10rem;
 }
+
+.content {
+    width: calc(100% - 8rem);
+    margin: auto;
+    display: flex;
+    align-items: left;
+    font-size: 15px;
+}
+
 .main-bar, .side-bar {
     position: relative;
     margin: 0;
@@ -155,15 +168,39 @@ img {
 #line {
     border: 3px dashed #90141C;
 }
-
+#container {
+    width: 100%;
+    overflow: hidden;
+}
 #navigationbar {
     font-size:20px;
     margin-left:2%;
     float: left;
     width: 10%;
 }
-#special {
-    background-color: pink; 
+#current p{
+    font-weight: bold;
+    background-color: rgba(224, 116, 114, 0.64);
+}
+#picture {
+    float: left;
+    width: 80%;
+}
+ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    flex-grow: 1;
+    flex-basis: 100px;
+    text-align: center;
+    /* border: 1px solid #222;  */
+}
+.special {
+    background-color: #EBA4A4;
     border: 10px;
     color: black;
     border-radius: 10px;
@@ -171,5 +208,39 @@ img {
     font-size: 15px;
     display:inline-block;
     padding:8px;
+}
+
+.special:hover {
+    background-color:#90141C;
+    font-size:15px;
+    color:white;
+}
+
+.naviBar li {
+    list-style-type: none;
+    padding: 0;
+    text-decoration: none;
+    text-align:left;
+}
+
+#navigationbar {
+    /* text-align: left; */
+    font-size: 20px;
+    margin-left: 5%;
+    float: left;
+    width: 10%;
+}
+
+a {
+    text-decoration: none;
+}
+
+.naviBar p{
+    color:black;
+}
+
+.naviBar p:hover {
+    background-color:#90141C;
+    color:white;
 }
 </style>

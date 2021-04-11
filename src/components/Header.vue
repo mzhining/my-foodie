@@ -113,7 +113,7 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  width: 70%;
+  width: 65%;
   align-content: center;
 }
 

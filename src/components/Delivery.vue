@@ -42,16 +42,15 @@
                             </li>
                         </ul>
                     </div>
-                    <div id="compare">
-                        <br>
-                        <ul id="price-platform">
-                            <li v-for="item in price" v-bind:key="item.name" id="compareli">
-                                <pre id="food">Platform: <a v-bind:href="item.web">{{item.name}}</a><br>Delivery Price: ${{item.price}}</pre> 
-                            </li>
-                        </ul>
-                    </div>
-
-
+                </div>
+                <div id="compare">
+                    <br>
+                    <ul id="price-platform">
+                        <li v-for="item in price" v-bind:key="item.name" id="compareli">
+                            <pre id="food">Platform: <a v-bind:href="item.web">{{item.name}}</a>
+                            <br>Delivery Price: ${{item.price}}</pre> 
+                        </li>
+                    </ul>
                 </div>
             </aside>
         </div>
@@ -128,6 +127,8 @@ body {
     flex-wrap: wrap;
     list-style-type: none;
     padding: 0;
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 #price-platform {
@@ -174,10 +175,14 @@ img {
     height: 5rem;
 }
 
+#menu {
+    margin:auto;
+}
+
 .content {
     width: calc(100% - 8rem);
     margin: auto;
-    align-items: left;
+    align-items: center;
     font-size: 15px;
 }
 
@@ -222,8 +227,8 @@ img {
     width: 10%;
 }
 #picture {
-    float: left;
-    width: 80%;
+    float: right;
+    width: 85%;
 }
 ul {
     display: flex;
@@ -292,135 +297,13 @@ a {
 }
 
 #compare {
-    text-align: center;
-    font-size:20px;
-}
-
-/* #compareli {
-    font-family: Inter, sans-serif;
-    font-size: 14pt;
-    list-style-type: none;
-} */
-
-/* #line {
-    border: 3px dashed #90141C;
-}
-img {
-    height: 15rem;
-    max-width: 100%;
-}
-
-#menupic {
-    height: 5rem;
-}
-
-li {
-    flex-grow: 1;
-    flex-basis: 100px;
-    text-align: center;
-}
-
-#logo {
-    width: 100%;
-    overflow: hidden;
-}
-#pic {
-    margin-left:5%;
-    float: left;
-    width: 20%;
-}
-#briefIntro {
-    float: left;
-    width: 70%;
-    text-align: left;
-    font-size:20px;
-    color:black;
-}
-
-#section {
-    background-color:rgb(255, 237, 188);
-    margin-bottom: 20px;
-    border-radius: 10px;
-    list-style-type: none;
-}
-
-#food {
-    font-size:15px;
-    font-weight: bold;
-    margin-left: 15px;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-
-#container {
-    width: 100%;
-    overflow: hidden;
-}
-#navigationbar {
-    font-size:30px;
-    margin-left:5%;
-    float: left;
-    width: 15%;
-    text-align: left;
-}
-#menu {
-    float: left;
-    width: 80%;
-}
-
-#compare {
-    text-align: left;
-    margin-left:10%;
-    font-size:20px;
-}
-
-button {
-    background-color: blanchedalmond;
-    font-size:15px;
-}
-
-.naviBar li {
-    list-style-type: none;
-    padding: 0;
-    text-decoration: none;
-    text-align:left;
-}
-
-#navigationbar {
-    font-size: 20px;
-    margin-left: 5%;
-    float: left;
-    width: 10%;
-}
-
-a {
-    text-decoration: none;
-}
-
-.naviBar p{
-    color:black;
-}
-
-.naviBar p:hover {
-    background-color:#90141C;
-    color:white;
-}
-
-#current p{
-    font-weight: bold;
-    background-color: rgba(224, 116, 114, 0.64);
-}
-
-.content {
-    width: calc(100% - 8rem);
+    /* text-align: center;
+    font-size:20px; */
+    width: calc(100% - 15rem);
     margin: auto;
     align-items: left;
     font-size: 15px;
-} */
+}
 
 
 </style>

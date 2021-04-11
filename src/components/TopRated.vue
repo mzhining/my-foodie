@@ -19,9 +19,8 @@
             <br>
 
              <ul id = "itemsList">
-                <li v-for="item in items" v-bind:key="item.name" v-on:click="route()">
+                <li v-for="item in items" v-bind:key="item.name" v-on:click="route()" id="section">
                     <img v-bind:src="item.imageURL" class="pic"/>   
-                    <br> 
                     <p id = "itemName">{{item.name}} <br> ⭐️ {{item.rating}}</p>
                 </li>
             </ul>
@@ -70,12 +69,33 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
+#section {
+    float: left;
+    background-color:white;
+    border-radius: 10px;
+    border : 2px solid white; 
+    list-style-type: none;
+    display: grid; 
+    text-align:center;
+    display: block;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
 #itemsList {
     width: 100%;
     max-width: 100%;
     margin: 0px;
     padding: 0 5px;
     box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr;
 }
   
 ul {
@@ -156,6 +176,10 @@ img {
     z-index: 69;
     right: 8%;
     top: 8%;
+}
+
+.pic {
+    height: 15rem;
 }
 
 #line {
