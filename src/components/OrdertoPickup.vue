@@ -82,6 +82,8 @@ export default {
     flex-wrap: wrap;
     list-style-type: none;
     padding: 0;
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 #picture_display {
@@ -94,7 +96,7 @@ export default {
     background-color:white;
     margin-bottom: 20px;
     border-radius: 10px;
-    border : 1px solid;
+    border : 2px solid;
     border-style: solid;
     border-color:#90141C;
 }

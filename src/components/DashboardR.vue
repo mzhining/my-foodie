@@ -13,13 +13,15 @@
         </div>
         <hr id="line">
         <h1>Restaurant Overview</h1>
-        <h2>My current order</h2>
+        <h2>My Current Order</h2>
         <div class="section">
             <table style="width:100%" >
                 <tr id="headingPickup">
-                    <th><br>Name<br></th>
-                    <th><br>Time<br></th>
-                    <th><br>Order<br></th>
+                    <th>Name<br></th>
+                    <th>Time<br></th>
+                    <th>Order<br></th>
+                    <th>Total<br></th>
+                    <th>Edit<br></th>
                 </tr>
                 <tbody>
                 <tr v-for="oneOrder in pickupComb" v-bind:key="oneOrder.email">
@@ -75,15 +77,16 @@
             -->
             
         </div>
-        <h2>Today's reservation</h2>
+        <h2>Today's Reservation</h2>
         <!-- Assume reservations is one document one resaturant? -->
         <div class="section">
                 <table style="width:100%" >
                     <tr id="headingReser">
-                        <th><br>customerID<br></th>
-                        <th><br>Time<br></th>
-                        <th><br>Pax<br></th>
-                        <th><br>Order<br></th>
+                        <th>customer ID<br></th>
+                        <th>Time<br></th>
+                        <th>Pax<br></th>
+                        <th>Order<br></th>
+                        <th>Edit<br></th>
                     </tr>
                     <tbody>
                     <tr v-for="oneReser in reservationComb" v-bind:key="oneReser.id">
@@ -139,7 +142,7 @@
             </div>
             -->
         </div>
-        <router-link to="/settings" exact><h2>Setting</h2></router-link>
+        <br>
     </div>
 </template>
 
@@ -321,6 +324,38 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
+table {
+  font-family: 'Open Sans', sans-serif;
+  width: 750px;
+  border-collapse: collapse;
+  border: 3px solid #90141C;
+  margin: 10px 10px 0 10px;
+}
+
+table th {
+  text-transform: uppercase;
+  text-align: center;
+  background: #90141C;
+  color: #FFF;
+  padding: 8px;
+  min-width: 30px;
+  font-size: 15px;
+}
+
+table td {
+  text-align: left;
+  padding: 8px;
+  border-right: 2px solid #90141C;
+}
+
+table td:last-child {
+  border-right: none;
+}
+
+table tbody tr:nth-child(2n) td {
+  background: #f4c2c2;
+}
+
 .home {
     display: flex;
     flex-direction: column;
@@ -377,7 +412,6 @@ export default {
     z-index: 69;
     right: 8%;
     top: 8%;
-    height: 15rem;
 }
 #line {
     border: 3px dashed #90141C;
@@ -419,7 +453,7 @@ h2 {
     margin-left: 2%;
 }
 tbody {
-    font-size:20px;
+    font-size:15px;
     text-align: left;
     margin-left:3px;
 }
@@ -433,20 +467,19 @@ tbody {
 }
 
 #itemlist {
-    font-size:20px;
+    font-size:15px;
     list-style-type: none;
     text-align: left;
     margin-left: 2%;
 }
 
 .section {
-    background-color:rgb(198, 204, 204);
     margin-left: 10%;
     margin-right: 10%;
     border-radius: 10px;
 }
 #block {
-    font-size:20px;
+    font-size:15px;
     list-style-type: none;
     text-align: left;
     margin-left: 2%;
@@ -456,8 +489,8 @@ tbody {
 }
 .box { 
     display: inline; 
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
 #heading {
@@ -504,7 +537,22 @@ tbody {
     width: 40%;
 }
 button {
+    font-family: Inter, sans-serif;
+    font-weight: normal;
+    cursor: pointer;
+    background: #FFEBCD;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    padding: 5px 15px;
+    border-radius: 10px;
+    border: none;
     font-size:15px;
 }
+
+button:hover {
+    background-color: #EBA4A4;
+    color: white;
+}
+
+
 </style>
 

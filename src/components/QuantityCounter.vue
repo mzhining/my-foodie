@@ -48,6 +48,14 @@
     text-align: center;
     font-size: 20px;
     display:inline-block;
+    width: 25px;
+    margin-left:5px;
+    margin-right:5px;
+  }
+
+  .buttoncount:hover {
+      background-color: #90141C;
+      color: white;
   }
 
 </style>

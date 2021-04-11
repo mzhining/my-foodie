@@ -31,23 +31,26 @@
             <aside id="picture">
                 <div class="content" align = "left"> 
                     <div id="menu">
-                        <li v-for="item in menu" v-bind:key="item.name" id="section">
-                            
-                            <p id="food">Name: {{item.name}}    
-                                    <br> Price: ${{item.price}}
-                            </p> 
-                            <img v-bind:src="item.image" id = "menupic"/>  
-                            <br> 
-                        </li>
+                        <ul id="itemsList">
+                            <li v-for="item in menu" v-bind:key="item.name" id="section">
+                                
+                                <p id="food">{{item.name}}    
+                                        <br>${{item.price}}
+                                </p> 
+                                <img v-bind:src="item.image" id = "menupic"/>  
+                                <br> 
+                            </li>
+                        </ul>
                     </div>
-                    <div id="compare">
-                        <br>
+                </div>
+                <div id="compare">
+                    <br>
+                    <ul id="price-platform">
                         <li v-for="item in price" v-bind:key="item.name" id="compareli">
-                            <pre id="food">Platform: <a v-bind:href="item.web">{{item.name}}</a>    Delivery Price: {{item.price}}</pre> 
+                            <pre id="food">Platform: <a v-bind:href="item.web">{{item.name}}</a>
+                            <br>Delivery Price: ${{item.price}}</pre> 
                         </li>
-                    </div>
-
-
+                    </ul>
                 </div>
             </aside>
         </div>
@@ -110,6 +113,59 @@ export default {
 </script>
 
 <style scoped>
+body {
+    font-family: Inter, sans-serif;
+}
+
+#itemsList {
+    width: 100%;
+    max-width: 100%;
+    margin: 0px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+#price-platform {
+    font-family: Inter, sans-serif;
+}
+
+#section {
+    background-color:white;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border : 2px solid;
+    border-style: solid;
+    border-color:#90141C;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    list-style-type: none;
+    padding-bottom:10px;
+    padding-top:10px;
+}
+
+#compareli {
+    font-family: Inter, sans-serif;
+    font-size: 14pt;
+    background-color:blanchedalmond;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    list-style-type: none;
+    display: inline-block;
+}
 
 img {
     height: 10rem;
@@ -119,10 +175,14 @@ img {
     height: 5rem;
 }
 
+#menu {
+    margin:auto;
+}
+
 .content {
     width: calc(100% - 8rem);
     margin: auto;
-    align-items: left;
+    align-items: center;
     font-size: 15px;
 }
 
@@ -167,8 +227,8 @@ img {
     width: 10%;
 }
 #picture {
-    float: left;
-    width: 80%;
+    float: right;
+    width: 85%;
 }
 ul {
     display: flex;
@@ -188,20 +248,11 @@ li {
     background-color: rgba(224, 116, 114, 0.64);
 }
 
-#food {
+/* #food {
     font-size:15px;
     font-weight: bold;
     margin-left: 15px;
-}
-
-#section {
-    background-color:rgb(255, 237, 188);
-    margin-bottom: 20px;
-    border-radius: 10px;
-    list-style-type: none;
-    padding-bottom:10px;
-    padding-top:10px;
-}
+} */
 
 #special {
     background-color: pink; 
@@ -244,128 +295,15 @@ a {
     background-color:#90141C;
     color:white;
 }
-/* #line {
-    border: 3px dashed #90141C;
-}
-img {
-    height: 15rem;
-    max-width: 100%;
-}
-
-#menupic {
-    height: 5rem;
-}
-
-li {
-    flex-grow: 1;
-    flex-basis: 100px;
-    text-align: center;
-}
-
-#logo {
-    width: 100%;
-    overflow: hidden;
-}
-#pic {
-    margin-left:5%;
-    float: left;
-    width: 20%;
-}
-#briefIntro {
-    float: left;
-    width: 70%;
-    text-align: left;
-    font-size:20px;
-    color:black;
-}
-
-#section {
-    background-color:rgb(255, 237, 188);
-    margin-bottom: 20px;
-    border-radius: 10px;
-    list-style-type: none;
-}
-
-#food {
-    font-size:15px;
-    font-weight: bold;
-    margin-left: 15px;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-
-#container {
-    width: 100%;
-    overflow: hidden;
-}
-#navigationbar {
-    font-size:30px;
-    margin-left:5%;
-    float: left;
-    width: 15%;
-    text-align: left;
-}
-#menu {
-    float: left;
-    width: 80%;
-}
 
 #compare {
-    text-align: left;
-    margin-left:10%;
-    font-size:20px;
-}
-#compareli {
-    list-style-type: none;
-    font-family: "Times New Roman", Times, serif;
-}
-button {
-    background-color: blanchedalmond;
-    font-size:15px;
-}
-
-.naviBar li {
-    list-style-type: none;
-    padding: 0;
-    text-decoration: none;
-    text-align:left;
-}
-
-#navigationbar {
-    font-size: 20px;
-    margin-left: 5%;
-    float: left;
-    width: 10%;
-}
-
-a {
-    text-decoration: none;
-}
-
-.naviBar p{
-    color:black;
-}
-
-.naviBar p:hover {
-    background-color:#90141C;
-    color:white;
-}
-
-#current p{
-    font-weight: bold;
-    background-color: rgba(224, 116, 114, 0.64);
-}
-
-.content {
-    width: calc(100% - 8rem);
+    /* text-align: center;
+    font-size:20px; */
+    width: calc(100% - 15rem);
     margin: auto;
     align-items: left;
     font-size: 15px;
-} */
+}
 
 
 </style>

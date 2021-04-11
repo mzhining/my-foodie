@@ -3,7 +3,8 @@
         <div class="restaurant_info">
 
             <div class="main-bar">
-                <h1> {{this.$route.params.id}} </h1>
+                <!-- <h1> {{this.$route.params.id}} </h1> -->
+                <h1> {{this.name}} </h1>
                 <img v-bind:src="this.datapacket.image" class = "icon"/>  
             </div>
             
@@ -25,7 +26,7 @@
                     <li><router-link to="/ordertoPickup" exact><p>Pick up</p></router-link></li>
                 </ul>
             </div>
-            <div class = "content" align = "center">
+            <div class = "con1">
 
                 <h1> Make a reservation for {{this.$route.params.name}} at {{this.data.postal}} </h1>
                 <label> Number of pax: </label>
@@ -33,24 +34,24 @@
                 <input type="number" min="1" max="8" v-model.lazy="reservation.pax" required/>
                 <br>
                 <br>
-                <div id = "dateDiv">
-                    <label> Date: </label>
-                    <br>
-                    <div id="dateInput">
-                        <input id="datefield" type="date" v-model.lazy="reservation.date" required/>
+                    <div id = "dateDiv">
+                        <label> Date: </label>
+                        <br>
+                        <div id="dateInput">
+                            <input id="datefield" type="date" v-model.lazy="reservation.date" required/>
+                        </div>
+                        <br>
                     </div>
-                    <br>
-                </div>
                 <br>
-                <button class="special" v-on:click="selectDate" id="showSlots"> Show available timeslots </button>
+                <button v-on:click="selectDate" id="showSlots"> Show available timeslots </button>
                 <br>
                 <br>
-                <div id="timeslots">
-                    <label v-if="show==true"> Time: </label>
-                    <ul>
-                        <li v-for="slot in available" v-bind:key="slot.time">
+                <div id="timeslots"> 
+                    <label v-if="show==true"> Time: </label> 
+                    <ul id = "book-slots">
+                        <li v-for="slot in available" v-bind:key="slot.time" id="one-book">
                             <p> {{slot.time}} </p>
-                            <button id="special" v-on:click="book($event)" v-bind:time="slot.time"> Book </button>
+                            <button class="special" v-on:click="book($event)" v-bind:time="slot.time"> Book </button>
                         </li>
                     </ul>
                 </div>
@@ -76,6 +77,11 @@ export default {
             mindate: "",
             doc_id: ""
         }
+    },
+    props : {
+      name : {
+          type : String
+      }
     },
     methods: {
         addFav:function(){
@@ -197,6 +203,24 @@ export default {
 </script>
 
 <style>
+#one-book {
+    align-items:center;
+    background-color: blanchedalmond;
+    border : none;
+    border-radius: 10px;
+    margin: 5px 5px 5px 5px;   
+}
+
+#book-slots {
+    width: 80%;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    align-items: center;
+
+}
+
 img {
     height: 10rem;
 }
@@ -205,11 +229,25 @@ img {
     height: 5rem;
 }
 
-.content {
+.con1 {
+    width: calc(100% - 8rem);
+    /* margin: auto; */
+    /* margin-left:15%; */
+    /* display: block; */
+    /* align-items: center; */
+    font-size: 15px;
+}
+
+#timeslots ul {
     width: calc(100% - 8rem);
     margin: auto;
+    margin-left:20%;
     align-items: center;
     font-size: 15px;
+}
+
+#timeslots label{
+    margin-left:10%;
 }
 
 #basket {
@@ -292,8 +330,8 @@ li {
     padding-top:10px;
 }
 
-#special {
-    background-color: pink; 
+.special {
+    background-color: #EBA4A4; 
     border: 10px;
     color: black;
     border-radius: 10px;
@@ -305,6 +343,14 @@ li {
 #addToFav {
     background-color: blanchedalmond;
     font-size:15px;
+    border:none;
+    border-radius: 5px;
+    padding: 8px;
+}
+#addToFav:hover {
+    background-color:#EBA4A4;
+    font-size:15px;
+    color:white;
 }
 .naviBar li {
     list-style-type: none;
@@ -314,7 +360,6 @@ li {
 }
 
 #navigationbar {
-    /* text-align: left; */
     font-size: 20px;
     margin-left: 5%;
     float: left;
@@ -334,62 +379,8 @@ a {
     color:white;
 }
 
-#timeslots {
-    margin-left: 12%;
-}
-
 #showSlots {
-    margin-left: 12%;
-}
-
-#datefield {
-    margin-left: 12%;
-}
-/* img {
-    height: 10rem;
-}
-
-.main-bar, .side-bar {
-    position: relative;
-    margin: 0;
-    padding: 0;
-    outline: 0;
-    display: inline-block;
-    border: none;
-}
-.main-bar {
-    width: 30%;
-}
-.side-bar {
-    width: 70%;
-    bottom: 20px;
-}
-#line {
-    border: 3px dashed #90141C;
-}
-
-#navigationbar {
-    font-size:20px;
-    margin-left:2%;
-    float: left;
-    width: 10%;
-}
-
-ul {
-    display: flex;
-    flex-wrap: wrap;
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    flex-grow: 1;
-    flex-basis: 100px;
-    text-align: center;
-}
-
-#special {
-    background-color: pink; 
+    background-color:#EBA4A4;
     border: 10px;
     color: black;
     border-radius: 10px;
@@ -399,18 +390,9 @@ li {
     padding:8px;
 }
 
-#timeslots {
-    margin-left: 12%;
+#showSlots:hover {
+    background-color:#90141C;
+    color:white;
 }
 
-#showSlots {
-    margin-left: 12%;
-}
-#datefield {
-    margin-left: 12%;
-}
-#addToFav {
-    background-color: blanchedalmond;
-    font-size:15px;
-} */
 </style>

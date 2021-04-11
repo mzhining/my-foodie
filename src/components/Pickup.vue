@@ -30,20 +30,22 @@
                 <div class="content" align = "left">
                     <div class = "menu">
                         <h1> Choose your order </h1>
-                        <br>
-                        
-                        <li v-for="item in items" v-bind:key="item.name" id="section">
-                        
-                        <p id="food">Name: {{item.name}}    
-                            <br> Price: ${{item.price}}
-                            </p> 
-                            <img v-bind:src="item.image" id = "menupic"/>  
-                            <QuantityCounter v-bind:item="item" v-on:counter="onCounter"> </QuantityCounter> 
-                        <br> 
-                        </li>
+                        <div class = "product-container">
+                            <ul id = "itemsList">
+                                <li v-for="item in items" v-bind:key="item.name" id="section">
+                                <p id="food">{{item.name}}    
+                                    <br> ${{item.price}}
+                                    </p> 
+                                    <img v-bind:src="item.image" id = "menupic"/> <br>
+                                    <QuantityCounter v-bind:item="item" v-on:counter="onCounter"> </QuantityCounter> 
+                                </li>
+                            </ul>
+                        </div>
                     </div>
+                </div>
 
-                    <div id="basket">
+            <div class="content2" align = "left">
+                <div id="basket">
                     <p><b>Basket:</b></p>
                         <ul id="display">
                             <li v-for="item in itemsSelected" v-bind:key="item.id">
@@ -51,16 +53,18 @@
                             </li>
                         </ul>
                         <br>
-                        <br>
                         <p> <b>Total: ${{total}}</b></p>
-                        <br><br>
-                    </div>
-                    <div class = "time" align = "center"> 
-                        <p> When will you be picking up? </p>
+                        <br>
+                </div>
+
+                <div class = "time" align = "center"> 
+                        <h1> When will you be picking up? </h1>
                         <label> Date: </label>
                         <br>
                         <input id="datef" type="date" v-model.lazy="selectedDate" required/>
                         <br>
+                        <br>
+                        <label> Time: </label>
                         <br>
                         <select v-model="selectedTime">
                                 <option disabled value="">Please select one</option>
@@ -78,19 +82,18 @@
                                 </select>
                                 <br>
                                 <br>
-                    </div>
                 </div>
                 
+                
                 <div class = "bottom" align = "center">
-                    <br>
                     <button id = "special" v-on:click="checkForm(), sendOrder()" > Order! </button>
                     <br>
                     <br>
                 </div>
+            </div>
+                
             </aside>
-        </div>
-        
-        
+        </div> 
     </div>
 </template>
 
@@ -145,18 +148,18 @@ export default {
             e.preventDefault();
         },
 
-        fetchItemsfromCustomer:function(){
-            database.collection('customers')
-            .get()
-            .then((querySnapShot) => {
-                querySnapShot.forEach(doc => {
-                    if (doc.data().email == this.$userId){
-                        this.pastOrder = doc.data().cart;
-                        this.docId = doc.id;
-                    }
-                })
-            })
-        }, 
+        // fetchItemsfromCustomer:function(){
+        //     database.collection('customers')
+        //     .get()
+        //     .then((querySnapShot) => {
+        //         querySnapShot.forEach(doc => {
+        //             if (doc.data().email == this.$userId){
+        //                 this.pastOrder = doc.data().cart;
+        //                 this.docId = doc.id;
+        //             }
+        //         })
+        //     })
+        // }, 
 
         fetchItems:function(){
             database.collection('pickup')
@@ -201,7 +204,7 @@ export default {
         }, 
         sendOrder : function() {
             this.getOrder();
-            this.sendToUser();
+            // this.sendToUser();
 
             database.collection('pickup')
             .doc(this.docIdRes)
@@ -209,11 +212,11 @@ export default {
             .then(()=>{this.$router.push({ name: 'pickup-payment', params : {total : this.total, rname : this.rname, time : this.selectedTime, docIdRes : this.docIdRes}})});
         },
 
-        sendToUser : function() {
-            database.collection('customers')
-            .doc(this.docId)
-            .update({cart : this.pastOrder});
-        },
+        // sendToUser : function() {
+        //     database.collection('customers')
+        //     .doc(this.docId)
+        //     .update({cart : this.pastOrder});
+        // },
 
         getOrder : function() {
             for (let i = 0; i < this.itemsSelected.length; i++) {
@@ -313,7 +316,7 @@ export default {
 
                     // insert functions here
                     this.fetchItems();
-                    this.fetchItemsfromCustomer();
+                    //this.fetchItemsfromCustomer();
                 })
             } else {
                 // console.log('not logged in');
@@ -332,15 +335,60 @@ img {
     height: 10rem;
 }
 
+#itemsList {
+    width: 100%;
+    max-width: 100%;
+    margin: 0px;
+    padding: 0 5px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding: 0;
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+#section {
+    /* width: 50px; */
+    float: left;
+    background-color:white;
+    border-radius: 10px;
+    border : 2px solid;
+    border-color:#90141C;
+    /* background-color:#FFEBCD; */
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+    list-style-type: none;
+    padding:10px 10px 10px 10px;
+    display: grid; 
+    grid-template-rows: 1fr 1fr;
+    text-align:center;
+}
 #menupic {
     height: 5rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto
 }
 
 .content {
     width: calc(100% - 8rem);
-    margin: auto;
+    margin: 0px;
     /* display: flex; */
-    align-items: left;
+    /* align-items: right; */
+    font-size: 15px;
+}
+
+.content2 {
+    /* width: calc(100% - 16rem); */
+    margin-left: 12%;
+    margin-right: 10%;
+    /* display: flex; */
+    /* align-items: right; */
     font-size: 15px;
 }
 
@@ -370,8 +418,12 @@ img {
 }
 
 .time {
-    border: 1px solid black;
+    background-color:blanchedalmond;
+    margin-bottom: 20px;
     border-radius: 10px;
+    border:none;
+    padding-top:10px;
+    padding-bottom:10px;
 }
 
 #container {
@@ -401,8 +453,6 @@ li {
     text-align: center;
 }
 
-
-
 #current p{
     font-weight: bold;
     background-color: rgba(224, 116, 114, 0.64);
@@ -412,16 +462,10 @@ li {
     font-size:15px;
     font-weight: bold;
     margin-left: 15px;
+    
 }
 
-#section {
-    background-color:rgb(255, 237, 188);
-    margin-bottom: 20px;
-    border-radius: 10px;
-    list-style-type: none;
-    padding-bottom:10px;
-    padding-top:10px;
-}
+
 
 #special {
     background-color: pink; 
@@ -436,7 +480,23 @@ li {
 #addToFav {
     background-color: blanchedalmond;
     font-size:15px;
+    border:none;
+    border-radius: 5px;
+    padding: 8px;
 }
+
+#addToFav:hover {
+    background-color:#EBA4A4;
+    font-size:15px;
+    color:white;
+}
+
+#special:hover {
+    background-color:#90141C;
+    font-size:15px;
+    color:white;
+}
+
 .naviBar li {
     list-style-type: none;
     padding: 0;
@@ -464,5 +524,10 @@ a {
     background-color:#90141C;
     color:white;
 }
+
+/* .product-container {
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr;
+} */
 
 </style>
