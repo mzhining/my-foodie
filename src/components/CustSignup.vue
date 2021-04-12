@@ -120,10 +120,14 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+h1, h2, h3 {
+    font-family: 'Nunito', 'sans-serif';
+}
 
 #signup-cust, button {
-    font-family: Nunito;
-    font-weight: bold;
+    font-family: Inter;
     /* text-align: left; */
     /* padding-left: 300px; */
 }

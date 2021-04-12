@@ -39,6 +39,7 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
 body {
     font-family: Inter, sans-serif;
@@ -52,9 +53,14 @@ body {
     font-weight: bold;
 }
 
+p {
+    font-family: Inter;
+}
+
 button {
     cursor:pointer;
     padding:10px;
+    /* font-weight: bold; */
 }
 
 .newacc {
@@ -70,7 +76,7 @@ button {
     margin-left:10px;
     width: 150px;
     font-size:15px;
-    
+    font-family: Inter;
 }
 
 .newacc:hover {
@@ -90,6 +96,7 @@ button {
     border-radius: 10px;
     /* border: none; */
     font-size:15px;
+    font-family: Inter;
 }
 
 .existacc:hover {

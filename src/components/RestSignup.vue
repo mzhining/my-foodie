@@ -173,9 +173,16 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+
+h1, h2, h3 {
+    font-family: 'Nunito', sans-serif;
+    font-style: normal;
+}
 
 #signup-rest, button {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-style: normal;
     /* text-align: left; */
     /* padding-left: 300px; */
@@ -183,10 +190,15 @@ export default {
 
 button {
     cursor: pointer;
-    background: #FCDDEC;
+    background: #FFEBCD;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
     padding: 5px 15px;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
+}
+
+button:hover {
+    background-color: #EBA4A4;
+    color: white;
 }
 </style>
