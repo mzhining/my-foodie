@@ -435,6 +435,7 @@ button {
     padding: 5px 15px;
     border-radius: 20px;
     border: none;
+    font-family: Inter;
 }
 
 a:hover {
@@ -467,6 +468,7 @@ ul {
 .save:hover {
     background:#90141C;
     color:white;
+    cursor: pointer;
 }
 
 table {

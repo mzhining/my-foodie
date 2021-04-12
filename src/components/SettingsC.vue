@@ -214,6 +214,7 @@ ul {
 .save:hover {
     background:#90141C;
     color:white;
+    cursor: pointer;
 }
 
 button {
@@ -234,6 +235,7 @@ button {
 }
 button:hover {
     background-color: #FFEBCD;
+    cursor: pointer;
 }
 
 </style>

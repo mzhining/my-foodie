@@ -71,7 +71,7 @@ const myRouter = new VueRouter({
     { name:'reservationComplete', path: '/reservationComplete', component: ReservationComplete, props:true, meta: {requiresAuth: true}},
     { name:'pickup', path: '/pickup', component: Pickup, props:true, meta: {requiresAuth: true}},
     { path: '/ordertoDelivery', component: OrdertoDelivery, name : 'order-to-delivery', meta: {requiresAuth: true}},
-    { path: '/ordertoPickup', component: OrdertoPickup},
+    { path: '/ordertoPickup', component: OrdertoPickup, meta: {requiresAuth: true}},
     { path: '/ordertoReservation', component: OrdertoReservation, meta: {requiresAuth: true}},
     { path: '/settings', component: Settings, meta: {requiresAuth: true}}
 
@@ -86,38 +86,7 @@ new Vue({
 
 // firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-// Navigation Guards (draft)
-// myRouter.beforeEach((to, from, next) => {
-//   // this route requires auth, check if logged in
-//   if (to.matched.some(record => record.meta.requiresAuth)) {
-//     // check if not logged in
-//     if (!firebase.auth().currentUser) {
-//       // redirect to login page if not logged in
-//       next({
-//         path: '/register',
-//         query: {
-//           redirect: to.fullPath
-//         }
-//       });
-//     } else {
-//       next(); // proceed to route
-//     }
-//   } else if (to.matched.some(record => record.meta.requiresGuest)) {
-//     if (firebase.auth().currentUser) {
-//       // redirect to dashboard
-//       next({
-//         path: '/account',
-//         query: {
-//           redirect: to.fullPath
-//         }
-//       });
-//     }
-//    } else {
-//       next();
-//    }
-// });
-
-// Navigation Guards (working)
+// Navigation Guards
 myRouter.beforeEach((to, from, next) => {
   const currentUser = firebase.auth().currentUser;
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
