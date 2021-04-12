@@ -74,7 +74,7 @@ export default {
                 type: "",
                 away: "0km away",
                 open_until: "Open until 22.00",
-                //for delivery
+                // for delivery collection
                 pricearray:[{
                     name:"Grab",
                     price:6,
@@ -84,6 +84,12 @@ export default {
                     price:5,
                     web:"https://www.foodpanda.sg/city/singapore",
                 }],
+                // for ratings collection
+                rating: {
+                    avg: 0,
+                    total: 0,
+                    ratedBy: 0,
+                }
             },
         }
     },
@@ -144,6 +150,14 @@ export default {
                                 // add to 'delivery' collection
                                 restaurant_name: this.restaurant.restaurant_name,
                                 price: this.restaurant.pricearray,
+                            })
+                        }).then(() => {
+                            database.collection('ratings').doc(this.$root.signup_user_id).set({
+                                // add to 'ratings' collection
+                                restaurant_name: this.restaurant.restaurant_name,
+                                avg: this.restaurant.rating.avg,
+                                total: this.restaurant.rating.total,
+                                ratedBy: this.restaurant.rating.ratedBy
                             })
                         }).then(()=>location.replace('/signup-success'));
                     }
