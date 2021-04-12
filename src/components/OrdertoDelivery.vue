@@ -287,7 +287,15 @@ li {
     text-decoration: none;
     text-align:left;
 }
-
+button {
+    background-color: rgba(224, 116, 114, 0.64);
+}
+label {
+    margin-right:10px;
+}
+input {
+    margin-right:10px;
+}
 /* #itemsList {
     width: 100%;
     max-width: 100%;
