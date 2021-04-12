@@ -156,7 +156,7 @@ export default {
         }
     },
     methods:{
-        book: function(event) {
+        rate: function(event) {
             let restaurant = event.target.getAttribute("restaurant");
             let current = event.target.getAttribute("current");
             let docid = "";
@@ -173,6 +173,7 @@ export default {
             if (current == 0) {
                 this.changeRating.ratedBy + 1;
             }
+            this.changeRating.avg = this.changeRating.total/this.changeRating.ratedBy;
             database.collection("ratings").doc(docid).update(this.changeRating).then(() => { location.reload() });
         },
         route:function(){
