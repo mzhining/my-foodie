@@ -139,10 +139,10 @@ export default {
             for (let i = 0; i < this.data.slots.length; i++) {
                 if (this.data.slots[i]["date"] == this.reservation.date && this.data.slots[i]["time"] == this.reservation.time) {
                     this.data.slots[i]["orders"].push({});
+                    this.slotNumber = i;
                     this.orderNumber = this.data.slots[i]["orders"].length - 1;
                     this.data.slots[i]["pax"].push(this.reservation.pax);
                     this.data.slots[i]["reservedBy"].push(this.$userId);
-                    //this.data.slots[i]["reservedBy"].push("customerID");
                     this.data.slots[i]["avail"]--;
                 }
             }
@@ -155,7 +155,6 @@ export default {
             let availSlots = [];
             for (let i = 0; i < this.data.slots.length; i++) {
                 if (this.data.slots[i]["date"] == selectedDate && this.data.slots[i]["avail"] > 0) {
-                    this.slotNumber = i;
                     availSlots.push(this.data.slots[i]);
                 }
             }

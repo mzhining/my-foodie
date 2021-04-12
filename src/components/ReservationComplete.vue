@@ -28,7 +28,7 @@
                 <div class="content" align = "left">
                     <p> Your reservation and order for {{this.$route.params.name}} at {{this.$route.params.postal}} is complete. </p>
                     <br>
-                    <p> Your food will be ready at {{this.$route.params.time}} on {{this.$route.params.date}} </p>
+                    <p> Your food will be ready at {{this.$route.params.time}} on {{this.$route.params.date}}. </p>
                     <br>
                     <p> Thank you for making a reservation for {{this.$route.params.name}} with MyFoodie! </p>
                     <br>
@@ -42,10 +42,12 @@
 </template>
 
 <script>
+import database from '../firebase.js'
 
 export default {
     data() {
         return {
+            datapacket: []
         }
     },
     props: {
@@ -56,7 +58,22 @@ export default {
     methods: {
         route:function() {
             this.$router.push({name: 'account'})
+        },
+        fetchItems: function() {
+            database.collection('restaurants')
+            .get()
+            .then(querySnapshot => {
+                querySnapshot.docs.forEach(doc => {
+                    if (doc.data().restaurant_name == this.$route.params.name) {
+                        var datap = doc.data();
+                        this.datapacket = datap;
+                    }
+                });
+            });
         }
+    },
+    created() {
+        this.fetchItems();
     }
 }
 

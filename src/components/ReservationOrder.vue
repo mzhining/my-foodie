@@ -167,7 +167,6 @@
                 //add order to database
                 database.collection('restaurants').doc(this.rdoc_id).update(this.datapacket);
                 database.collection('reservations').doc(this.doc_id).update(this.data).then(this.$router.push({ name: 'reservationPayment', params: {name: this.$route.params.name, id: this.$route.params.id, pax: this.$route.params.pax, date: this.$route.params.date, time: this.$route.params.time, postal: this.$route.params.postal, data: this.data, slotNumber: this.$route.params.slotNumber, orderNumber: this.$route.params.orderNumber, total: this.total, itemsSelected: this.itemsSelected}}));
-                console.log("Order sent!");
             },
             fetchItems: function() {
                 database.collection('restaurants')
