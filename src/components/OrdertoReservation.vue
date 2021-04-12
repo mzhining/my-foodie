@@ -11,6 +11,10 @@
                 <p id="slogan">One Stop Place for Your Stomach! </p>
             </div>
         </div>
+        <label>Search: </label>
+        <input type="text" v-model="context" />
+        <button id="submit" v-on:click="search">submit</button>
+        <br>
         <hr id="line">
         <div id="container">
             <div id="navigationbar">
@@ -47,6 +51,28 @@ export default {
         }
     },
     methods:{
+        search:function(){
+            if (this.context==""){
+                this.restaurants=[];
+                database.collection("restaurants").get().then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        this.restaurants.push(doc.data());
+                        this.image.push(doc.data()["image"]);
+                    });
+                });
+            }
+            if (this.context!=""){
+                this.restaurants=[];
+                database.collection("restaurants").get().then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        if(doc.data()["restaurant_name"].indexOf(this.context) !== -1){
+                            this.restaurants.push(doc.data());
+                            this.image.push(doc.data()["image"]);
+                        }
+                    });
+                });
+            }
+        },
         route:function(event){
             let restaurant_name = event.target.getAttribute("id");
             let postal_code=event.target.getAttribute("postal");
@@ -261,6 +287,15 @@ li {
     padding: 0;
     text-decoration: none;
     text-align:left;
+}
+button {
+    background-color: rgba(224, 116, 114, 0.64);
+}
+label {
+    margin-right:10px;
+}
+input {
+    margin-right:10px;
 }
 /* #itemsList {
     width: 100%;
