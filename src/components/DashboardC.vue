@@ -97,6 +97,28 @@
                 </ul>-->
             </div>
         </div>
+        <h2> Ratings </h2>
+        <div class="section"> 
+            <table style="width:100%" >
+                <tr>
+                    <th> Restaurant </th>
+                    <th> Your Rating </th>
+                    <th> Change Rating </th>
+                </tr>
+                <tbody>
+                    <tr v-for="(value, key) in ratings" v-bind:key="key">
+                        <td> {{key}} </td>
+                        <td> {{value}} </td>
+                        <td> <input type="number" v-bind:id="key" min=1 max=5 placeholder=5 /><br><button v-on:click="rate($event)" v-bind:restaurant="key" v-bind:current="value"> Change Rating </button> </td>
+                    </tr>
+                    <tr v-for="restaurant in notRated" v-bind:key="restaurant.id">
+                        <td> {{restaurant}} </td>
+                        <td> Not Rated </td>
+                        <td> <input type="number" v-bind:id="restaurant" min=1 max=5 placeholder=5 /><br><button v-on:click="rate($event)" v-bind:restaurant="restaurant" v-bind:current=0> Rate </button> </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <!--I try to use a dummy div and set the height to 700px, 
         to leave a 700px blank, but still cannot make the footer to the bottom -->
         <div id="blank">
@@ -127,10 +149,33 @@ export default {
             reservation_order:{},
             reservation_orders:[],//store muptiple order information for reservations
             userEmail:"",
-            pickups:[]
+            pickups:[],
+            ratings: {},
+            notRated: [],
+            changeRating: {}
         }
     },
     methods:{
+        rate: function(event) {
+            let restaurant = event.target.getAttribute("restaurant");
+            let current = event.target.getAttribute("current");
+            let docid = "";
+            database.collection("ratings").get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    if (doc.data()["restaurant_name"] == restaurant) {
+                        this.changeRating = doc.data();
+                        docid = doc.id;
+                    }
+                }); 
+            });
+            let newRating = document.getElementById(restaurant).value;
+            this.changeRating.total - current + newRating;
+            if (current == 0) {
+                this.changeRating.ratedBy + 1;
+            }
+            this.changeRating.avg = this.changeRating.total/this.changeRating.ratedBy;
+            database.collection("ratings").doc(docid).update(this.changeRating).then(() => { location.reload() });
+        },
         route:function(){
             this.$router.push({name:'order-to-delivery'});
         },
@@ -183,6 +228,20 @@ export default {
                     //here I use janedoe customer as example, but actually it should be a global variable!
                     //if (doc.data()["email"] == "janedoe@email.com"){
                     if (doc.data()["email"] == this.$userId){
+                        this.ratings = doc.data()['ratings'];
+                        database.collection("restaurants").get().then((querySnapshot) => {
+                            querySnapshot.forEach((doc) => {
+                                this.notRated.push(doc.data()["restaurant_name"]);
+                            }); 
+                        });
+                        for (var key in this.ratings) {
+                            for (let i=0; i<this.notRated.length; i++) {
+                                if (key == this.notRated[i]) {
+                                    this.notRated.remove(i);
+                                    break;
+                                }
+                            }
+                        }
                         this.customer=doc.data();
                         this.fav=doc.data()['favourites'];
                         //this.orders=doc.data()['cart'];//store multiple pickup
