@@ -71,7 +71,8 @@ export default {
                 cart: [],
                 favourites: [],
                 profile: 'customer',
-                reservation: []
+                reservation: [],
+                ratings: {}
             }
         }
     },
