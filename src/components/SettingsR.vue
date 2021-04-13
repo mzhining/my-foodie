@@ -217,35 +217,49 @@ export default {
             let updateData = {};
             let updatePickupData = {};
             let updateReserveData = {};
+            let updatePromotion = {};
+            let updateRatings = {};
+            let updateDelivery = {};
 
             for (let field of updateFields) {
                 updateData[field] = this.datapacket[field][2];
-                if (field == 'address' || field == 'image' || field == 'restaurant_name' || field == 'postal_code' || field == 'type') {
-                    updatePickupData[field] = this.datapacket[field][2];
-                }
                 if (field == 'restaurant_name') {
+                    updatePickupData[field] = this.datapacket[field][2];
                     updateReserveData[field] = this.datapacket[field][2];
+                    updateDelivery[field] = this.datapacket[field][2];
+                    updatePromotion[field] = this.datapacket[field][2];
+                    updateRatings[field] = this.datapacket[field][2];
                 } else if (field == 'postal_code') {
+                    updatePickupData[field] = this.datapacket[field][2];
                     updateReserveData['postal'] = this.datapacket[field][2];
+                    updatePromotion[field] = this.datapacket[field][2];
+                } else if (field == 'address') {
+                    updatePickupData[field] = this.datapacket[field][2];
+                    updatePromotion[field] = this.datapacket[field][2];
+                    updateReserveData[field] = this.datapacket[field][2];
+                } else if (field == 'image') {
+                    updatePickupData[field] = this.datapacket[field][2];
+                    updatePromotion[field] = this.datapacket[field][2];
+                } else if (field == 'type') {
+                    updatePickupData[field] = this.datapacket[field][2];
                 }
             }
 
             database.collection('restaurants').doc(this.$userUid).update(updateData).then(() => {
                 database.collection('pickup').doc(this.$userUid).update(updatePickupData).then(() => {
                     database.collection('reservations').doc(this.$userUid).update(updateReserveData).then(() => {
-                        alert("Information updated successfully!");
-                        location.reload();
+                        database.collection('promotion').doc(this.$userUid).update(updatePromotion).then(() => {
+                            database.collection('ratings').doc(this.$userUid).update(updateRatings).then(() => {
+                                database.collection('delivery').doc(this.$userUid).update(updateDelivery).then(() => {
+                                    alert("Information updated successfully!");
+                                    location.reload();
+                                }, err => {alert(err.message)})
+                            }, err => {alert(err.message)})
+                        }, err => {alert(err.message)})
                     }, err => {alert(err.message)})
                 }, err => {alert(err.message)})
             }, err => {alert(err.message)})
 
-            // database.collection('restaurants').doc(this.$userUid).update(updateData).then(() => {
-            //     alert("Information updated successfully!");
-            //     location.reload();
-            // },
-            // err => {
-            //     alert(err.message);
-            // });
         },
         fetchMenu: function() {
             database.collection('restaurants').doc(this.$userUid).get().then((doc) => {
@@ -435,6 +449,7 @@ button {
     padding: 5px 15px;
     border-radius: 20px;
     border: none;
+    font-family: Inter;
 }
 
 a:hover {
@@ -467,6 +482,7 @@ ul {
 .save:hover {
     background:#90141C;
     color:white;
+    cursor: pointer;
 }
 
 table {

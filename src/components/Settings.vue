@@ -107,21 +107,22 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
 #settings, button {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-style: normal;
     /* text-align: left; */
     /* padding-left: 300px; */
 }
 
-/* button {
+button {
     cursor: pointer;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    /* box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
     padding: 5px 15px;
     border-radius: 20px;
-    border: none;
-} */
+    border: none; */
+}
 
 .save-ref, .done {
     /* font-family: 'Poppins', sans-serif;

@@ -16,7 +16,7 @@
             <li><router-link to="/account" exact>My Account</router-link></li>
             <li><router-link to="/login" exact>Login</router-link></li>
             <li><router-link to="/register" exact>Register</router-link></li>
-            <li><button v-on:click.prevent="logout()">Logout</button></li>
+            <li><button v-on:click.prevent="logout()" v-show="isLoggedIn">Logout</button></li>
         </ul>
     </header>
     </div>
@@ -42,7 +42,7 @@ export default {
   data(){
     return{
         msg: 'My Foodie',
-        // isLoggedIn: false,
+        isLoggedIn: false,
         // currentUser: false
     }
   },
@@ -59,12 +59,22 @@ export default {
               alert('ERROR: Not logged in!');
           }
       }
+  },
+  created() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.isLoggedIn = true;
+      } else {
+        this.isLoggedIn = false;
+      }
+    })
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 header{
     display: flex;
     justify-content: center;

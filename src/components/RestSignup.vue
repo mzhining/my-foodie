@@ -74,7 +74,7 @@ export default {
                 type: "",
                 away: "0km away",
                 open_until: "Open until 22.00",
-                //for delivery
+                // for delivery collection
                 pricearray:[{
                     name:"Grab",
                     price:6,
@@ -84,6 +84,12 @@ export default {
                     price:5,
                     web:"https://www.foodpanda.sg/city/singapore",
                 }],
+                // for ratings collection
+                rating: {
+                    avg: 0,
+                    total: 0,
+                    ratedBy: 0,
+                }
             },
         }
     },
@@ -145,7 +151,24 @@ export default {
                                 restaurant_name: this.restaurant.restaurant_name,
                                 price: this.restaurant.pricearray,
                             })
-                        }).then(()=>location.replace('/signup-success'));
+                        }).then(() => {
+                            database.collection('ratings').doc(this.$root.signup_user_id).set({
+                                // add to 'ratings' collection
+                                restaurant_name: this.restaurant.restaurant_name,
+                                avg: this.restaurant.rating.avg,
+                                total: this.restaurant.rating.total,
+                                ratedBy: this.restaurant.rating.ratedBy
+                            })
+                        }).then(() => {
+                            database.collection('promotion').doc(this.$root.signup_user_id).set({
+                                restaurant_name: this.restaurant.restaurant_name,
+                                address: this.restaurant.address,
+                                postal_code: this.restaurant_name.postal_code,
+                                posts: [],
+                                image: this.restaurant.image
+                            })
+                        })
+                        .then(()=>location.replace('/signup-success'));
                     }
                 })
             } else {
@@ -159,9 +182,16 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+
+h1, h2, h3 {
+    font-family: 'Nunito', sans-serif;
+    font-style: normal;
+}
 
 #signup-rest, button {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-style: normal;
     /* text-align: left; */
     /* padding-left: 300px; */
@@ -169,10 +199,15 @@ export default {
 
 button {
     cursor: pointer;
-    background: #FCDDEC;
+    background: #FFEBCD;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
     padding: 5px 15px;
-    border-radius: 20px;
+    border-radius: 10px;
     border: none;
+}
+
+button:hover {
+    background-color: #EBA4A4;
+    color: white;
 }
 </style>

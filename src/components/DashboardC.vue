@@ -97,6 +97,28 @@
                 </ul>-->
             </div>
         </div>
+        <h2> Ratings </h2>
+        <div class="section"> 
+            <table style="width:100%" >
+                <tr>
+                    <th> Restaurant </th>
+                    <th> Your Rating </th>
+                    <th> Change Rating </th>
+                </tr>
+                <tbody>
+                    <tr v-for="(value, key) in ratings" v-bind:key="key">
+                        <td> {{key}} </td>
+                        <td> {{value}} </td>
+                        <td> <input type="number" v-bind:id="key" min=1 max=5 /><br><button v-on:click="rate($event)" v-bind:restaurant="key" v-bind:current="value"> Change Rating </button> </td>
+                    </tr>
+                    <tr v-for="restaurant in notRated" v-bind:key="restaurant">
+                        <td> {{restaurant}} </td>
+                        <td> Not Rated </td>
+                        <td> <input type="number" v-bind:id="restaurant" min=1 max=5 /><br><button v-on:click="rate($event)" v-bind:restaurant="restaurant" v-bind:current=0> Rate </button> </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <!--I try to use a dummy div and set the height to 700px, 
         to leave a 700px blank, but still cannot make the footer to the bottom -->
         <div id="blank">
@@ -127,10 +149,41 @@ export default {
             reservation_order:{},
             reservation_orders:[],//store muptiple order information for reservations
             userEmail:"",
-            pickups:[]
+            pickups:[],
+            ratings: {},
+            notRated: [],
+            custId: ""
         }
     },
     methods:{
+        rate: function(event) {
+            var restaurant = "";
+            restaurant = event.target.getAttribute("restaurant");
+            let current = Number(event.target.getAttribute("current"));
+            let docid = "";
+            let newRating = Number(document.getElementById(restaurant).value);
+            let changeRating = {};
+            if (newRating >= 1 && newRating <= 5) {
+                database.collection('ratings').get().then((querySnapshot) => {
+                    querySnapshot.forEach(doc => {
+                        if (doc.data().restaurant_name == restaurant) {
+                            changeRating = doc.data();
+                            docid = doc.id;
+                            changeRating["total"] = changeRating["total"] - current + newRating;
+                            if (current == 0) {
+                                changeRating["ratedBy"] = changeRating["ratedBy"] + 1;
+                            }
+                            changeRating["avg"] = Number((changeRating["total"]/changeRating["ratedBy"]).toFixed(2));
+                            this.customer.ratings[restaurant] = newRating;
+                            database.collection('customers').doc(this.custId).update(this.customer);
+                            database.collection('ratings').doc(docid).update(changeRating).then(() => { location.reload() });
+                        }
+                    }); 
+                });
+            } else {
+                console.log("Rating should be between 1 and 5!")
+            }
+        },
         route:function(){
             this.$router.push({name:'order-to-delivery'});
         },
@@ -183,6 +236,15 @@ export default {
                     //here I use janedoe customer as example, but actually it should be a global variable!
                     //if (doc.data()["email"] == "janedoe@email.com"){
                     if (doc.data()["email"] == this.$userId){
+                        this.custId = doc.id;
+                        this.ratings = doc.data()['ratings'];
+                        database.collection("restaurants").get().then((querySnapshot) => {
+                            querySnapshot.forEach((doc) => {
+                                if (!Object.keys(this.ratings).includes(doc.data()["restaurant_name"])) {
+                                    this.notRated.push(doc.data()["restaurant_name"]);
+                                }
+                            }); 
+                        });
                         this.customer=doc.data();
                         this.fav=doc.data()['favourites'];
                         //this.orders=doc.data()['cart'];//store multiple pickup

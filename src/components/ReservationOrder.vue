@@ -8,6 +8,7 @@
             </div>
             
             <div class="side-bar" align="left">
+                <p> ⭐️ {{this.rating}} </p>
                 <p> {{this.datapacket.type}} </p>
                 <p> {{this.datapacket.open_until}} </p>
                 <p> {{this.datapacket.away}} </p>
@@ -104,7 +105,8 @@
                 total: 0,
                 show: false,
                 datapacket: [],
-                rdoc_id: ""
+                rdoc_id: "",
+                rating: ""
             }
         },
         components: {
@@ -177,6 +179,14 @@
                             var datap = doc.data();
                             this.datapacket = datap;
                             this.rdoc_id = doc.id;
+                        }
+                    });
+                });
+                database.collection('ratings').get().then((querySnapShot)=>{
+                    querySnapShot.forEach(doc=>{
+                        if (doc.data().restaurant_name == this.$route.params.name) {
+                            var rating = doc.data()["avg"];
+                            this.rating = rating;
                         }
                     });
                 });
