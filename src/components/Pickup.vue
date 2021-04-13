@@ -9,6 +9,7 @@
             
             <div class="side-bar" align="left">
                 <br>
+                <p> ⭐️ {{this.rating}} </p>
                 <p> {{this.datapacket.type}} </p>
                 <p> {{this.datapacket.open_until}} </p>
                 <p> {{this.datapacket.away}} </p>
@@ -117,7 +118,8 @@ export default {
             docIdRes : '',
             mindate: "",
             items: [],
-            total: 0
+            total: 0,
+            rating: ""
         }
     },
     props : {
@@ -174,6 +176,14 @@ export default {
                         this.docIdRes = doc.id;
                     }
                 })
+            });
+            database.collection('ratings').get().then((querySnapShot)=>{
+                querySnapShot.forEach(doc=>{
+                    if (doc.data().restaurant_name == this.rname) {
+                        var rating = doc.data()["avg"];
+                        this.rating = rating;
+                    }
+                });
             });
             
             database.collection('restaurants').get().then(querySnapshot => {
