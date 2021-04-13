@@ -200,7 +200,7 @@ export default {
                     updatedS["pax"]=[];
                     updatedS["reservedBy"]=[];
                     updatedS["time"]=slot_array[i]["time"];
-                    for (let j = 0; j <slot_array[i].length; j++) {
+                    for (let j = 0; j <slot_array[i]["orders"].length; j++) {
                         if(j!=parseInt(order_index)){
                             updatedS["orders"].push(slot_array[i]["orders"][j]);
                             updatedS["pax"].push(slot_array[i]["pax"][j]);
@@ -208,7 +208,6 @@ export default {
                         }
                     }
                     updatedslots.push(updatedS);
-                    alert(updatedS["pax"].length);
                 }
             }
             database.collection('reservations').doc(thisReser).update({
