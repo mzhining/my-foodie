@@ -173,9 +173,8 @@ export default {
                             if (current == 0) {
                                 changeRating["ratedBy"] = changeRating["ratedBy"] + 1;
                             }
-                            changeRating["avg"] = changeRating["total"]/changeRating["ratedBy"];
+                            changeRating["avg"] = Number((changeRating["total"]/changeRating["ratedBy"]).toFixed(2));
                             this.customer.ratings[restaurant] = newRating;
-                            console.log(changeRating);
                             database.collection('customers').doc(this.custId).update(this.customer);
                             database.collection('ratings').doc(docid).update(changeRating).then(() => { location.reload() });
                         }

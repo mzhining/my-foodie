@@ -20,8 +20,8 @@
 
              <ul id = "itemsList">
                 <li v-for="item in items" v-bind:key="item.name" v-on:click="route()" id="section">
-                    <img v-bind:src="item.imageURL" class="pic"/>   
-                    <p id = "itemName">{{item.name}} <br> ⭐️ {{item.rating}}</p>
+                    <img v-bind:src="item.image" class="pic"/>   
+                    <p id = "itemName">{{item.restaurant_name}} <br> ⭐️ {{item.avg}}</p>
                 </li>
             </ul>
         </div>
@@ -51,15 +51,18 @@ export default {
     },
 
     fetchItems:function(){
-      database.collection('toprated').get().then((querySnapShot)=>{
-        let item={}
-        querySnapShot.forEach(doc=>{
-            item=doc.data()
-            item.show=false
-            item.id=doc.id
-            this.items.push(item) 
-         })      
-       })    
+        database.collection('ratings').get().then((querySnapShot)=>{
+            let item={};
+            querySnapShot.forEach(doc=>{
+                item=doc.data();
+                item.show=false;
+                item.id=doc.id;
+                let rating = item["avg"];
+                if (rating > 4) {
+                    this.items.push(item);
+                }
+            });      
+        });    
     }
   }
 }
