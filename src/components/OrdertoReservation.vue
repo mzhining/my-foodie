@@ -65,7 +65,7 @@ export default {
                 this.restaurants=[];
                 database.collection("restaurants").get().then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
-                        if(doc.data()["restaurant_name"].indexOf(this.context) !== -1){
+                        if(doc.data()["restaurant_name"].toLowerCase().indexOf(this.context.toLowerCase()) !== -1){
                             this.restaurants.push(doc.data());
                             this.image.push(doc.data()["image"]);
                         }
