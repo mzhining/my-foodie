@@ -8,6 +8,7 @@
             </div>
             
             <div class="side-bar" align="left">
+                <p> ⭐️ {{this.rating}} </p>
                 <p> {{this.datapacket.type}} </p>
                 <p> {{this.datapacket.open_until}} </p>
                 <p> {{this.datapacket.away}} </p>
@@ -74,7 +75,8 @@ export default {
     data(){
         return{
           datapacket:[],
-          items: []
+          items: [],
+          rating: ""
         }
     },
     props : {
@@ -98,6 +100,14 @@ export default {
                     if (doc.data().restaurant_name == this.$route.params.name) {
                         var datap = doc.data();
                         this.datapacket = datap;
+                    }
+                });
+            });
+            database.collection('ratings').get().then((querySnapShot)=>{
+                querySnapShot.forEach(doc=>{
+                    if (doc.data().restaurant_name == this.$route.params.name) {
+                        var rating = doc.data()["avg"];
+                        this.rating = rating;
                     }
                 });
             });

@@ -8,6 +8,7 @@
             </div>
 
             <div class="side-bar" align="left">
+                <p> ⭐️ {{this.rating}} </p>
                 <p>Restaurant Name:  {{restaurant_name}}</p>
                 <p>Adress:  {{restaurant_whole.address}}</p>
                 <p>Contact Email:  {{restaurant_whole.contact_email}}</p>
@@ -69,7 +70,8 @@ export default {
           //to store the whole document
           restaurant_whole:{},
           image_link:"",
-          price:[]
+          price:[],
+          rating: ""
         }
     },
     created:function(){
@@ -97,6 +99,14 @@ export default {
                     for (var key of Object.keys(doc.data()["menu"])) {
                         this.menu.push(doc.data()["menu"][key]);
                     }
+                }
+            });
+        });
+        database.collection('ratings').get().then((querySnapShot)=>{
+            querySnapShot.forEach(doc=>{
+                if (doc.data().restaurant_name == this.restaurant_name) {
+                    var rating = doc.data()["avg"];
+                    this.rating = rating;
                 }
             });
         });
