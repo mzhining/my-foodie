@@ -102,53 +102,17 @@
                     </tr>
                     </tbody>
                 </table>
-            <!--
-            <li v-for="item in reorder" v-bind:key="item.id" id="itemlist">
-                <span>{{item.name}}    {{item.pax}}    {{item.time}}    {{item.order}}</span>
-                <br>
-            </li>
-            -->
-            <!--
-            <div id="container">
-                <div id="name">
-                    <p id="heading">Name</p>
-                    <li v-for="item in name" v-bind:key="item.id" id="itemlist">
-                        <span>{{item}}</span>
-                        <br><br>
-                    </li>
-                </div>
-                <div id="NoPax">
-                    <p id="heading">No.of Pax</p>
-                    <li v-for="item in pax" v-bind:key="item.id" id="itemlist">
-                        <span>{{item}}</span>
-                        <br><br>
-                    </li>
-                </div>
-                How to display time nicely???
-                <div id="Time">
-                    <p id="heading">Time</p>
-                    <li v-for="item in time" v-bind:key="item.id" id="itemlist">
-                        <span>{{item}}</span>
-                        <br><br>
-                    </li>
-                </div>
-                <div id="order">
-                    <p id="heading">Order</p>
-                    <li v-for="item in reservationorder" v-bind:key="item.id" id="itemlist">
-                        <span>{{item}}</span>
-                        <br><br>
-                    </li>        
-                </div>
-            </div>
-            -->
         </div>
+        <br>
+        <compBar></compBar>
         <br>
     </div>
 </template>
 
 <script>
 import database from "../firebase.js"
-//use Jollibee as an example!
+import BarChart from './Barchart1.vue'
+
 export default {
     data() {
         return {
@@ -171,6 +135,9 @@ export default {
             pickupComb:[],
             reservationComb:[]
         }
+    },
+    components:{
+        'compBar':BarChart
     },
     methods:{
         deleteItemPickUp:function(event, orderIndex, orders){

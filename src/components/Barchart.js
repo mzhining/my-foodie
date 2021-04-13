@@ -37,7 +37,7 @@ export default {
       database.collection('restaurants').doc(this.$userUid).get().then(doc => {
         var orders=doc.data()["order_counts"];
         for(var key in orders){
-            this.datacollection.datasets[0].label.push(key);
+            this.datacollection.labels.push(key);
             this.datacollection.datasets[0].data.push(orders[key]);
             this.datacollection.datasets[0].backgroundColor.push("#3e95cd");
         }
