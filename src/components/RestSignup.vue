@@ -159,7 +159,14 @@ export default {
                                 total: this.restaurant.rating.total,
                                 ratedBy: this.restaurant.rating.ratedBy
                             })
-                        }).then(()=>location.replace('/signup-success'));
+                        }).then(() => {
+                            database.collection('promotion').doc(this.$root.signup_user_id).set({
+                                restaurant_name: this.restaurant.restaurant_name,
+                                address: this.restaurant.address,
+                                posts: []
+                            })
+                        })
+                        .then(()=>location.replace('/signup-success'));
                     }
                 })
             } else {
