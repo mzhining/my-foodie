@@ -102,53 +102,18 @@
                     </tr>
                     </tbody>
                 </table>
-            <!--
-            <li v-for="item in reorder" v-bind:key="item.id" id="itemlist">
-                <span>{{item.name}}    {{item.pax}}    {{item.time}}    {{item.order}}</span>
-                <br>
-            </li>
-            -->
-            <!--
-            <div id="container">
-                <div id="name">
-                    <p id="heading">Name</p>
-                    <li v-for="item in name" v-bind:key="item.id" id="itemlist">
-                        <span>{{item}}</span>
-                        <br><br>
-                    </li>
-                </div>
-                <div id="NoPax">
-                    <p id="heading">No.of Pax</p>
-                    <li v-for="item in pax" v-bind:key="item.id" id="itemlist">
-                        <span>{{item}}</span>
-                        <br><br>
-                    </li>
-                </div>
-                How to display time nicely???
-                <div id="Time">
-                    <p id="heading">Time</p>
-                    <li v-for="item in time" v-bind:key="item.id" id="itemlist">
-                        <span>{{item}}</span>
-                        <br><br>
-                    </li>
-                </div>
-                <div id="order">
-                    <p id="heading">Order</p>
-                    <li v-for="item in reservationorder" v-bind:key="item.id" id="itemlist">
-                        <span>{{item}}</span>
-                        <br><br>
-                    </li>        
-                </div>
-            </div>
-            -->
+                <compBar></compBar>
         </div>
+        <br>
+        
         <br>
     </div>
 </template>
 
 <script>
 import database from "../firebase.js"
-//use Jollibee as an example!
+import BarChart from './Barchart1.vue'
+
 export default {
     data() {
         return {
@@ -171,6 +136,9 @@ export default {
             pickupComb:[],
             reservationComb:[]
         }
+    },
+    components:{
+        'compBar':BarChart
     },
     methods:{
         deleteItemPickUp:function(event, orderIndex, orders){
@@ -200,7 +168,7 @@ export default {
                     updatedS["pax"]=[];
                     updatedS["reservedBy"]=[];
                     updatedS["time"]=slot_array[i]["time"];
-                    for (let j = 0; j <slot_array[i].length; j++) {
+                    for (let j = 0; j <slot_array[i]["orders"].length; j++) {
                         if(j!=parseInt(order_index)){
                             updatedS["orders"].push(slot_array[i]["orders"][j]);
                             updatedS["pax"].push(slot_array[i]["pax"][j]);
@@ -208,7 +176,6 @@ export default {
                         }
                     }
                     updatedslots.push(updatedS);
-                    alert(updatedS["pax"].length);
                 }
             }
             database.collection('reservations').doc(thisReser).update({
