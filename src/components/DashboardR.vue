@@ -102,9 +102,10 @@
                     </tr>
                     </tbody>
                 </table>
+                <compBar></compBar>
         </div>
         <br>
-        <compBar></compBar>
+        
         <br>
     </div>
 </template>
