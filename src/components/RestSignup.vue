@@ -163,7 +163,9 @@ export default {
                             database.collection('promotion').doc(this.$root.signup_user_id).set({
                                 restaurant_name: this.restaurant.restaurant_name,
                                 address: this.restaurant.address,
-                                posts: []
+                                postal_code: this.restaurant_name.postal_code,
+                                posts: [],
+                                image: this.restaurant.image
                             })
                         })
                         .then(()=>location.replace('/signup-success'));
