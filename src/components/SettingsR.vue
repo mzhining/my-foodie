@@ -120,7 +120,58 @@
                         <p><button type="submit" class="add">Add slot</button></p>
                     </form>
                 </div>
+            </div>
 
+            <!-- update PROMOTION-->
+            <h2 v-on:click="updatePro=!updatePro" v-show="!updatePro"><a>&#9654; Promotion Settings</a></h2>
+            <h2 v-on:click="updatePro=!updatePro" v-show="updatePro"><a>&#9660; Promotion Settings</a></h2>
+            <div class="update-data" v-show="updatePro">
+                <p>Choose an action below:<br>
+                <button class="view" v-on:click="updateAction='viewPro'">View</button> or 
+                <button class="add" v-on:click="updateAction='addPro'">Add</button></p>
+
+                <div v-show="updateAction=='viewPro'" id = "forPromo">
+                    <!-- <h3>All your promotion</h3>
+                    <p>Date: {{slotInfo.date}}<br>
+                    Number of slots: {{numSlots}}</p> -->
+                    <!-- <ul v-for="slot in slots" v-bind:key="slot.index">
+                        <li>{{slot.time}}</li>
+                    </ul> -->
+                    <p>View all your promotion:</p><br>
+
+                    <ul id = "itemsList">
+                        <li v-for="promo in this.allPromo" v-bind:key="promo.index" id = "allPromo">
+                            <!--first direct them to delivery page -->
+                            <img v-bind:src="promo.picture" class = "icon"/>
+                            <br> 
+                            {{promo.caption}} <br>
+                            Time posted: {{promo.time}}
+                        </li>
+                    </ul>
+                </div>
+
+                <div v-show="updateAction=='addPro'" id = "forPromo">
+                    <p>Add a promotion:</p><br>
+                    <!-- <ul id = "itemsList">
+                        <li v-for="promo in this.allPromo" v-bind:key="promo.index" id = "allPromo">
+                            <img v-bind:src="promo.picture" class = "icon"/>
+                            <br> 
+                            {{promo.caption}} <br>
+                            Time posted: {{promo.time}}
+                        </li>
+                    </ul> -->
+                    <form id="add-item" v-on:submit.prevent="addPromo()">
+                        <h3>Add or Modify Promotion</h3>
+                        <p><label>Caption: </label>
+                        <input type="text" v-model="promoToAdd.name" required /></p>
+                        <p><label>Image (paste URL): </label>
+                        <input type="url" v-model.lazy="promoToAdd.image" required /><br>
+                        <span v-if="promoToAdd.image != ''">Image preview:<br><img v-bind:src="promoToAdd.image" alt="Not found" /></span>
+                        </p>
+
+                        <p><button type="submit" class="add">Add/Modify item</button></p>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -137,6 +188,7 @@ export default {
             updateInfo: false,
             updateMenu: false,
             updateReserv: false,
+            updatePro: false,
             updateAction: "",
             // [field name, current value, new value]
             datapacket: {
@@ -157,6 +209,11 @@ export default {
                 price: '',
                 image: ''
             },
+            promoToAdd: {
+                caption: '',
+                time:'',
+                image:''
+            },
             itemToRemove: '',
             profile: '',
             numItems: 0,
@@ -169,6 +226,7 @@ export default {
                 reservedBy: [],
             },
             numSlots: 0,
+            allPromo : []
         }
     },
     methods: {
@@ -203,6 +261,13 @@ export default {
                 }
             }, err=>{alert(err.message)})
             // console.log('fetchInfo: ', this.userId, this.userProfile, this.userData);
+        },
+        fetchPromo: function() {
+            database.collection('promotion').doc(this.$userUid).get().then((doc) => {
+                let storedData = doc.data().posts;
+                this.allPromo = storedData;});
+                
+                // }).then(() => console.log(this.allPromo));
         },
         modifyData: function() {
             // update data in firebase
@@ -318,6 +383,28 @@ export default {
             //     alert(err.message)
             // })
         },
+        addPromo: function() {
+            // let exists = false;
+            // let itemIndex;
+            // let itemNames = [];
+            // for (let item of this.allPromo) {
+            //     itemNames.push(item.name);
+            //     if (item.name == this.itemToAdd.name) {
+            //         exists = true;
+            //         itemIndex = itemNames.indexOf(item.name);
+            //     }
+            // }
+            let addPromo = {
+                name: this.promoToAdd.caption,
+                picture: this.promoToAdd.picture,
+                time: this.promoToAdd.time
+            }
+            this.allPromo.push(addPromo);
+            database.collection('promotion').doc(this.$userUid).update({posts: this.allPromo}, {merge: true}).then(() => {
+                alert("Item added/modified successfully!");
+                location.reload();
+            }, err => {alert(err.message)})
+        },
         removeItem: function() {
             let exists = false;
             let itemIndex;
@@ -406,6 +493,7 @@ export default {
                     // insert functions here
                     this.fetchInfo();
                     this.fetchMenu();
+                    this.fetchPromo();
                     this.profile = this.$userProfile;
                 })
             } else {
@@ -498,6 +586,19 @@ tr:nth-child(odd) {
 
 th {
     background-color:papayawhip;
+}
+
+#allPromo {
+    font-size:12px;
+    text-align: center;
+}
+
+#icon {
+    height: 17rem;
+}
+
+#forPromo {
+    text-align: center;
 }
 
 </style>

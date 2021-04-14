@@ -20,20 +20,29 @@
 
             <div id="content">
                 <div class="card" v-on:click="route()">
-                    <div>
+                    <ul id = "itemsList">
+                        <li v-for="item in this.items" v-bind:key="item.index" id="picture_display">
+                            <img v-bind:src="item.picture" class = "icon"/>  
+                            <br> 
+                            <p> {{item.caption}} </p>
+                        </li>
+                    </ul>
+
+                    <!-- <div>
                     <img src="@/assets/jollibee.jpeg" alt="Jollibee" height=15rem>
                     </div>
-                    <p>Check out Chicken and Fries set! Now on sale, limited time only! 🔥</p>
+                    <p>Check out Chicken and Fries set! Now on sale, limited time only! 🔥</p> -->
+
                 </div>
 
                 <br>
 
-                <div class="card" v-on:click="route()">
+                <!-- <div class="card" v-on:click="route()">
                     <div>
                     <img src="@/assets/starbucks.jpeg" alt="Starbucks" height=15rem>
                     </div>
                     <p>Fancy a good quality coffee to get ready for your day? Order now!</p>
-                </div>
+                </div> -->
             </div>
         </div>
     </section>
@@ -45,11 +54,13 @@ export default {
   name: 'TopRated',
   data () {
     return {
-      items : []
+      items : [],
+      favourite_rest:[]
     }
   },
   created(){
-    this.fetchItems()    
+    this.fetchItems();   
+    this.fetchItems2(); 
   },
   components : {
 
@@ -60,15 +71,31 @@ export default {
         this.$router.push({name:'order-to-delivery'});
     },
     fetchItems:function(){
-      database.collection('toprated').get().then((querySnapShot)=>{
-        let item={}
-        querySnapShot.forEach(doc=>{
-            item=doc.data()
-            item.show=false
-            item.id=doc.id
-            this.items.push(item) 
-         })      
-       })    
+        database.collection('customers')
+        .doc(this.$userUid)
+        .get()
+        .then((doc) => {
+            let storedData = doc.data().favourites;
+            this.favourite_rest = storedData;
+        }).then(() => console.log(this.favourite_rest));
+    },
+    fetchItems2:function(){
+        database.collection('promotion')
+            .get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    var i;
+                    for (i = 0; i < this.favourite_rest.length; i++) {
+                        // console.log(this.favourite_rest[i]);
+                        // console.log(doc.data().restaurant_name);
+                        if (doc.data()["restaurant_name"] == this.favourite_rest[i] && doc.data().posts != '') {
+                            this.items.push(doc.data().posts[0])
+                            // console.log(doc.data().posts);
+                            break;
+                        }
+                    }
+                })
+            }).then(() => console.log(this.items));  
     }
   }
 }
