@@ -157,7 +157,8 @@ export default {
                                 restaurant_name: this.restaurant.restaurant_name,
                                 avg: this.restaurant.rating.avg,
                                 total: this.restaurant.rating.total,
-                                ratedBy: this.restaurant.rating.ratedBy
+                                ratedBy: this.restaurant.rating.ratedBy,
+                                image: this.restaurant.image
                             })
                         }).then(() => {
                             database.collection('promotion').doc(this.$root.signup_user_id).set({
