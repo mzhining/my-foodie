@@ -154,6 +154,7 @@ export default {
                     this.data.slots[i]["pax"].push(this.reservation.pax);
                     this.data.slots[i]["reservedBy"].push(this.$userId);
                     this.data.slots[i]["avail"]--;
+                    this.data.slots[i]["contact"].push(this.$userData.contact);
                 }
             }
             database.collection('reservations').doc(this.doc_id).update(this.data).then(
