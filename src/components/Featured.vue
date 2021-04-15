@@ -22,27 +22,16 @@
                 <div class="card" v-on:click="route()">
                     <ul id = "itemsList">
                         <li v-for="item in this.items" v-bind:key="item.index" id="picture_display">
-                            <img v-bind:src="item.picture" class = "icon"/>  
+                            <img v-bind:src="item[2]" id = "small"/> 
+                            <p> Promotion from <b>{{item[0]}}</b> </p>
+                            <br>
+                            <img v-bind:src="item[1].picture" class = "icon"/>  
                             <br> 
-                            <p> {{item.caption}} </p>
+                            <p> {{item[1].caption}} </p>
                         </li>
                     </ul>
-
-                    <!-- <div>
-                    <img src="@/assets/jollibee.jpeg" alt="Jollibee" height=15rem>
-                    </div>
-                    <p>Check out Chicken and Fries set! Now on sale, limited time only! 🔥</p> -->
-
                 </div>
-
                 <br>
-
-                <!-- <div class="card" v-on:click="route()">
-                    <div>
-                    <img src="@/assets/starbucks.jpeg" alt="Starbucks" height=15rem>
-                    </div>
-                    <p>Fancy a good quality coffee to get ready for your day? Order now!</p>
-                </div> -->
             </div>
         </div>
     </section>
@@ -55,7 +44,7 @@ export default {
   data () {
     return {
       items : [],
-      favourite_rest:[]
+      favourite_rest:[],
     }
   },
   created(){
@@ -77,7 +66,8 @@ export default {
         .then((doc) => {
             let storedData = doc.data().favourites;
             this.favourite_rest = storedData;
-        }).then(() => console.log(this.favourite_rest));
+        })
+        .then(() => console.log(this.favourite_rest));
     },
     fetchItems2:function(){
         database.collection('promotion')
@@ -86,16 +76,16 @@ export default {
                 querySnapshot.forEach((doc) => {
                     var i;
                     for (i = 0; i < this.favourite_rest.length; i++) {
-                        // console.log(this.favourite_rest[i]);
-                        // console.log(doc.data().restaurant_name);
                         if (doc.data()["restaurant_name"] == this.favourite_rest[i] && doc.data().posts != '') {
-                            this.items.push(doc.data().posts[0])
-                            // console.log(doc.data().posts);
-                            break;
+                            let promotion = doc.data().posts[0]
+                            let rest_name = doc.data()["restaurant_name"]
+                            let img = doc.data()["image"]
+                            this.items.push([rest_name, promotion, img]);
+                            console.log(this.items)
                         }
                     }
                 })
-            }).then(() => console.log(this.items));  
+            }); 
     }
   }
 }
@@ -108,10 +98,24 @@ export default {
 
 #itemsList {
     width: 100%;
-    max-width: 100%;
     margin: 0px;
     padding: 0 5px;
     box-sizing: border-box;
+}
+
+#small {
+    width:5rem;
+    height:auto;
+}
+
+#picture_display {
+    margin: 20px;
+    border : 2px solid;
+    border-style: solid;
+    border-color:#90141C;
+    border-radius:10px;
+    width:30rem;
+    padding:10px;
 }
   
 ul {
