@@ -137,33 +137,24 @@
                     <!-- <ul v-for="slot in slots" v-bind:key="slot.index">
                         <li>{{slot.time}}</li>
                     </ul> -->
-                    <p>View all your promotion:</p><br>
+                    <h3>View All Your Promotions</h3>
 
-                    <ul id = "itemsList">
-                        <li v-for="promo in this.allPromo" v-bind:key="promo.index" id = "allPromo">
+                    <ul id="itemList">
+                        <li v-for="promo in this.allPromo" v-bind:key="promo.index" id = "onePromo">
                             <!--first direct them to delivery page -->
                             <img v-bind:src="promo.picture" class = "icon"/>
                             <br> 
                             {{promo.caption}} <br>
-                            Time posted: {{promo.time}}
+                            Posted at: {{promo.time}}
                         </li>
                     </ul>
                 </div>
 
                 <div v-show="updateAction=='addPro'" id = "forPromo">
-                    <p>Add a promotion:</p><br>
-                    <!-- <ul id = "itemsList">
-                        <li v-for="promo in this.allPromo" v-bind:key="promo.index" id = "allPromo">
-                            <img v-bind:src="promo.picture" class = "icon"/>
-                            <br> 
-                            {{promo.caption}} <br>
-                            Time posted: {{promo.time}}
-                        </li>
-                    </ul> -->
+                    <h3>Add or Modify Promotion</h3>
                     <form id="add-item" v-on:submit.prevent="addPromo()">
-                        <h3>Add or Modify Promotion</h3>
                         <p><label>Caption: </label>
-                        <input type="text" v-model="promoToAdd.name" required /></p>
+                        <input type="text" v-model="promoToAdd.caption" required /></p>
                         <p><label>Image (paste URL): </label>
                         <input type="url" v-model.lazy="promoToAdd.image" required /><br>
                         <span v-if="promoToAdd.image != ''">Image preview:<br><img v-bind:src="promoToAdd.image" alt="Not found" /></span>
@@ -383,27 +374,36 @@ export default {
             //     alert(err.message)
             // })
         },
+        // addPromo: function() {
+        //     this.promoInfo.time = document.getElementById("time").value
+        //     this.allPromo.push(this.promoInfo);
+        //     // console.log(this.slots);
+        //     database.collection('promotion').doc(this.$userUid).update({posts: this.allPromo}, {merge:true}).then(() => {
+        //         alert('Promotion added successfully!');
+        //         location.reload();
+        //     }, err=>{alert(err.message)})
+
+        // },
         addPromo: function() {
-            // let exists = false;
-            // let itemIndex;
-            // let itemNames = [];
-            // for (let item of this.allPromo) {
-            //     itemNames.push(item.name);
-            //     if (item.name == this.itemToAdd.name) {
-            //         exists = true;
-            //         itemIndex = itemNames.indexOf(item.name);
-            //     }
-            // }
-            let addPromo = {
-                name: this.promoToAdd.caption,
-                picture: this.promoToAdd.picture,
+            this.getNow();
+            let newPromo = {
+                caption: this.promoToAdd.caption,
+                picture: this.promoToAdd.image,
                 time: this.promoToAdd.time
             }
-            this.allPromo.push(addPromo);
+            console.log(newPromo);
+            this.allPromo.push(newPromo);
             database.collection('promotion').doc(this.$userUid).update({posts: this.allPromo}, {merge: true}).then(() => {
-                alert("Item added/modified successfully!");
+                alert("Promotion added successfully!");
                 location.reload();
             }, err => {alert(err.message)})
+        },
+        getNow: function() {
+            const today = new Date();
+            const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+            const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            const dateTime = date +' '+ time;
+            this.promoToAdd.time = dateTime;
         },
         removeItem: function() {
             let exists = false;
@@ -475,6 +475,7 @@ export default {
             }, err=>{alert(err.message)})
 
         },
+        
         viewSlots: function() {
             //
         }
@@ -588,9 +589,13 @@ th {
     background-color:papayawhip;
 }
 
-#allPromo {
+#onePromo {
     font-size:12px;
-    text-align: center;
+    margin-left:10px;
+    margin-right:10px;
+    margin-top:10px;
+    margin-bottom:10px;
+    /* text-align: center; */
 }
 
 #icon {
@@ -599,6 +604,13 @@ th {
 
 #forPromo {
     text-align: center;
+}
+
+#itemList {
+    margin: auto;
+    padding: 10px;
+    align-content: center;
+    width: 70%;
 }
 
 </style>
