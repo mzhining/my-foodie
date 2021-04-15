@@ -9,11 +9,13 @@
             </div>
             
             <div class="side-bar" align="left">
-                <p> ⭐️ {{this.rating}} </p>
-                <p> {{this.datapacket.type}} </p>
-                <p> {{this.datapacket.open_until}} </p>
-                <p> {{this.datapacket.away}} </p>
-                <p> {{this.datapacket.address}} </p>
+                <br>
+                <p><b>Restaurant Name:</b> {{this.datapacket.restaurant_name}}</p>
+                <p><b>Rating: </b>⭐️ {{this.rating}} </p>
+                <p><b>Address: </b> {{this.datapacket.address}}</p>
+                <p><b>Contact Email:</b>  {{this.datapacket.contact_email}}</p>
+                <p><b>Contact Number:</b>  {{this.datapacket.contact_num}}</p>
+                <p><b>Postal Code:</b>  {{this.datapacket.postal_code}}</p>
                 <button v-on:click="addFav()" id="addToFav">Add to favourite</button>
             </div>
     
@@ -77,7 +79,9 @@ export default {
             datapacket: [],
             mindate: "",
             doc_id: "",
-            rating: ""
+            rating: "",
+            contact_num: "",
+            contact_email :""
         }
     },
     props : {

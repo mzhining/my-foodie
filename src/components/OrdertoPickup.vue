@@ -11,9 +11,9 @@
                 <p id="slogan">One Stop Place for Your Stomach! </p>
             </div>
         </div>
-        <label>Search: </label>
+        <!-- <label>Search: </label>
         <input type="text" v-model="context" />
-        <button id="submit" v-on:click="search">submit</button>
+        <button id="submit" v-on:click="search">submit</button> -->
         <br>
         <hr id="line">
         <div id="container">
@@ -26,6 +26,11 @@
             </div>
             <aside id="picture">
                 <div class="content">
+                    <div id ="searchbar">
+                        <label>Search: </label>
+                        <input type="text" v-model="context" />
+                        <button id="submit" v-on:click="search">submit</button>
+                    </div>
                     <ul id = "itemsList">
                         <li v-for="item in restaurants" v-bind:key="item.restaurant_name" id="picture_display">
                             <!--first direct them to delivery page -->
@@ -290,6 +295,21 @@ label {
 }
 input {
     margin-right:10px;
+}
+#searchbar {
+    text-align:left;
+    margin-bottom:10px;
+    font-size:15px;
+}
+#submit {
+    background-color: rgba(224, 116, 114, 0.64);
+    border:none;
+    border-radius:5px;
+    font-size:13px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 </style>
 

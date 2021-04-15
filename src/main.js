@@ -27,6 +27,7 @@ import ContactUs from './components/ContactUs.vue'
 import Pickup from './components/Pickup.vue'
 import PickupConfirmation from './components/PickupConfirmation.vue'
 import PickupPayment from './components/PickupPayment.vue'
+import AboutUs from './components/AboutUs.vue'
 // end of import from routes.js
 
 import Dashboard from './components/Dashboard.vue';
@@ -53,6 +54,7 @@ const myRouter = new VueRouter({
     { path: '/toprated', component: TopRated },
     { path: '/featured', component: Featured },
     { path: '/contactus', component: ContactUs },
+    { path: '/aboutus', component: AboutUs },
     { path: '/pickup-payment', component: PickupPayment, name : 'pickup-payment', props : true },
     { path: '/reservation', component: Reservation, meta: {requiresAuth: true}},
     { path: '/signup-cust', component: CustSignup, meta: {requiresGuest: true}},
