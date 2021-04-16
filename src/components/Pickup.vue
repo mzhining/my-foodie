@@ -219,16 +219,31 @@ export default {
             document.getElementById('datef').setAttribute('min', this.mindate);
         }, 
         sendOrder : function() {
-            this.getOrder();
+            if (this.$userProfile == 'restaurant') {
+                alert("Please log in using a customer account to order!")
+            } else {
+                this.getOrder();
+    
+                database.collection('pickup')
+                .doc(this.docIdRes)
+                .update({orders : this.orderList})
+                .then(()=>{this.$router.push({ name: 'pickup-payment', 
+                                                params : {total : this.total, 
+                                                            rname : this.rname, 
+                                                            time : this.selectedTime, 
+                                                            docIdRes : this.docIdRes}})});
+            }
+            
+            // this.getOrder();
 
-            database.collection('pickup')
-            .doc(this.docIdRes)
-            .update({orders : this.orderList})
-            .then(()=>{this.$router.push({ name: 'pickup-payment', 
-                                            params : {total : this.total, 
-                                                        rname : this.rname, 
-                                                        time : this.selectedTime, 
-                                                        docIdRes : this.docIdRes}})});
+            // database.collection('pickup')
+            // .doc(this.docIdRes)
+            // .update({orders : this.orderList})
+            // .then(()=>{this.$router.push({ name: 'pickup-payment', 
+            //                                 params : {total : this.total, 
+            //                                             rname : this.rname, 
+            //                                             time : this.selectedTime, 
+            //                                             docIdRes : this.docIdRes}})});
         },
 
         getOrder : function() {

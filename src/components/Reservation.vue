@@ -147,22 +147,42 @@ export default {
             document.getElementById('datefield').setAttribute('min', this.mindate);
         },
         book: function(event) {
-            let time = event.target.getAttribute("time");
-            this.reservation.time = time;
-            this.reservation.pax = Number(this.reservation.pax);
-            for (let i = 0; i < this.data.slots.length; i++) {
-                if (this.data.slots[i]["date"] == this.reservation.date && this.data.slots[i]["time"] == this.reservation.time) {
-                    this.data.slots[i]["orders"].push({});
-                    this.slotNumber = i;
-                    this.orderNumber = this.data.slots[i]["orders"].length - 1;
-                    this.data.slots[i]["pax"].push(this.reservation.pax);
-                    this.data.slots[i]["reservedBy"].push(this.$userId);
-                    this.data.slots[i]["avail"]--;
-                    this.data.slots[i]["contact"].push(this.$userData.contact);
+            if (this.$userProfile == 'restaurant') {
+                alert('Please log in using a customer account to book!');
+            } else {
+                let time = event.target.getAttribute("time");
+                this.reservation.time = time;
+                this.reservation.pax = Number(this.reservation.pax);
+                for (let i = 0; i < this.data.slots.length; i++) {
+                    if (this.data.slots[i]["date"] == this.reservation.date && this.data.slots[i]["time"] == this.reservation.time) {
+                        this.data.slots[i]["orders"].push({});
+                        this.slotNumber = i;
+                        this.orderNumber = this.data.slots[i]["orders"].length - 1;
+                        this.data.slots[i]["pax"].push(this.reservation.pax);
+                        this.data.slots[i]["reservedBy"].push(this.$userId);
+                        this.data.slots[i]["avail"]--;
+                        this.data.slots[i]["contact"].push(this.$userData.contact);
+                    }
                 }
+                database.collection('reservations').doc(this.doc_id).update(this.data).then(
+                    this.$router.push({ name: 'reservationConfirmed', params: {name: this.$route.params.name, id: this.doc_id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.data.postal, data: this.data, slotNumber: this.slotNumber, orderNumber: this.orderNumber}}));
             }
-            database.collection('reservations').doc(this.doc_id).update(this.data).then(
-                this.$router.push({ name: 'reservationConfirmed', params: {name: this.$route.params.name, id: this.doc_id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.data.postal, data: this.data, slotNumber: this.slotNumber, orderNumber: this.orderNumber}}));
+            // let time = event.target.getAttribute("time");
+            // this.reservation.time = time;
+            // this.reservation.pax = Number(this.reservation.pax);
+            // for (let i = 0; i < this.data.slots.length; i++) {
+            //     if (this.data.slots[i]["date"] == this.reservation.date && this.data.slots[i]["time"] == this.reservation.time) {
+            //         this.data.slots[i]["orders"].push({});
+            //         this.slotNumber = i;
+            //         this.orderNumber = this.data.slots[i]["orders"].length - 1;
+            //         this.data.slots[i]["pax"].push(this.reservation.pax);
+            //         this.data.slots[i]["reservedBy"].push(this.$userId);
+            //         this.data.slots[i]["avail"]--;
+            //         this.data.slots[i]["contact"].push(this.$userData.contact);
+            //     }
+            // }
+            // database.collection('reservations').doc(this.doc_id).update(this.data).then(
+            //     this.$router.push({ name: 'reservationConfirmed', params: {name: this.$route.params.name, id: this.doc_id, pax: this.reservation.pax, date: this.reservation.date, time: this.reservation.time, postal: this.data.postal, data: this.data, slotNumber: this.slotNumber, orderNumber: this.orderNumber}}));
         },
         selectDate: function() {
             this.reservation.date = this.reservation.date.toString();
