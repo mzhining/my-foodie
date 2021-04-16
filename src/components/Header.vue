@@ -14,9 +14,9 @@
                 </div>
             </li>
             <li><router-link to="/account" exact>My Account</router-link></li>
-            <li><router-link to="/login" exact>Login</router-link></li>
-            <li><router-link to="/register" exact>Register</router-link></li>
-            <li><button v-on:click.prevent="logout()" v-show="isLoggedIn">Logout</button></li>
+            <li v-if="!isLoggedIn"><router-link to="/login" exact>Login</router-link></li>
+            <li v-if="!isLoggedIn"><router-link to="/register" exact>Register</router-link></li>
+            <li><button v-on:click.prevent="logout()" v-if="isLoggedIn">Logout</button></li>
         </ul>
     </header>
     </div>
@@ -123,7 +123,7 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  width: 65%;
+  width: 75%;
   align-content: center;
 }
 

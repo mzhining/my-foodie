@@ -151,7 +151,7 @@
                 </div>
 
                 <div v-show="updateAction=='addPro'" id = "forPromo">
-                    <h3>Add or Modify Promotion</h3>
+                    <h3>Add a New Promotion</h3>
                     <form id="add-item" v-on:submit.prevent="addPromo()">
                         <p><label>Caption: </label>
                         <input type="text" v-model="promoToAdd.caption" required /></p>
@@ -160,7 +160,7 @@
                         <span v-if="promoToAdd.image != ''">Image preview:<br><img v-bind:src="promoToAdd.image" alt="Not found" /></span>
                         </p>
 
-                        <p><button type="submit" class="add">Add/Modify item</button></p>
+                        <p><button type="submit" class="add">Add promotion</button></p>
                     </form>
                 </div>
             </div>
@@ -215,6 +215,7 @@ export default {
                 orders: [],
                 pax: [],
                 reservedBy: [],
+                contact: []
             },
             numSlots: 0,
             allPromo : []

@@ -83,6 +83,10 @@ export default {
                     name:"Foodpanda",
                     price:5,
                     web:"https://www.foodpanda.sg/city/singapore",
+                },{
+                    name:"Deliveroo",
+                    price:4,
+                    web:"https://deliveroo.com.sg/"
                 }],
                 // for ratings collection
                 rating: {
