@@ -39,48 +39,8 @@
                 </tr>
                 </tbody>
             </table>
-            <!--
-            <pre id="pickupheader">Name     Time       Order </pre>
-            <ul v-for="oneOrder in pickupComb" v-bind:key="oneOrder.email">
-                <span>{{oneOrder.email}}   {{oneOrder.}}
-
-                </span>
-                    <br>
-            </ul>
-            -->
-            <!--
-            <div id="container">
-                <div id="nameP">
-                    <p id="heading">Name</p>
-                    <li v-for="item in nameP" v-bind:key="item.id" id="itemlist">
-                        <span>{{item}}</span>
-                        <br><br>
-                    </li>
-                </div>
-                 How to display time nicely???
-                <div id="TimeP">
-                    <p id="heading">Time</p>
-                    <li v-for="item in timeP" v-bind:key="item.id" id="itemlist">
-                        <span>{{item}}</span>
-                        <br><br>
-                    </li>
-                </div>
-                <div id="orderP">
-                    <p id="heading">Order</p>
-                    <li v-for="oneOrder in itemsP" v-bind:key="oneOrder.id" id="itemlist">
-                        <ul v-for="item in oneOrder" v-bind:key="item.name">
-                            <span>{{item.count}}x {{item.name}}</span>
-                        </ul>
-                        <span>{{item}}</span>
-                        <br>
-                    </li>        
-                </div>
-            </div>
-            -->
-            
         </div>
         <h2>Today's Reservation</h2>
-        <!-- Assume reservations is one document one resaturant? -->
         <div class="section">
                 <table style="width:100%" >
                     <tr id="headingReser">
@@ -94,7 +54,7 @@
                     <tbody>
                     <tr v-for="oneReser in reservationComb" v-bind:key="oneReser.id">
                         <td>{{oneReser.reservedBy}}</td>
-                        <td>{{oneReser.contact}}</td>
+                        <td>{{oneReser.time}}</td>
                         <td>{{oneReser.time}}</td>
                         <td>{{oneReser.pax}}</td>
                         <td>
@@ -121,19 +81,14 @@ import BarChart from './Barchart1.vue'
 export default {
     data() {
         return {
-            //for reservations in this restaurant
             thisRestaurant:this.$userData,
             restaurantR :{},
-            //for pickup in this restaurant
             restaurantP :{},
             pickup: [],
-
             reservationorder:[],
             name:[],
             pax:[],
             time:[],
-            reorder:[],//now is useless
-
             nameP:[],
             itemsP:[],
             timeP:[],
@@ -224,15 +179,8 @@ export default {
                                 var name=pickupOrders[i].one_order[j].name;
                                 var count=pickupOrders[i].one_order[j].count;
                                 oneorderobject[name]=count;
-                                //alert(name);
-                                //alert(count);
-                                //alert(oneorderobject);
                             }
-                            //alert(oneorderobject);
                             this.itemsP.push(oneorderobject);
-                            //this.itemsP.push(pickupOrders[i].one_order);
-                            //alert(pickupOrders[i].one_order);
-                            //this.timeP.push(pickupOrders[i].time);
                             var onepickup = {};
                             onepickup["name"]=pickupOrders[i].email;
                             onepickup["contact"]=pickupOrders[i]["phone_num"];
@@ -241,7 +189,6 @@ export default {
                             onepickup["date"]=pickupOrders[i]["date"];
                             onepickup["doc_id"]=doc.id;
                             onepickup["order_index"]=i;
-                            //onepickup["restaurant_name"]=thisRestaurant.restaurant_name;
                             onepickup["total"]=pickupOrders[i]["total"];
                             onepickup["total_orders"]=doc.data()["orders"];
                             this.pickupComb.push(onepickup);
