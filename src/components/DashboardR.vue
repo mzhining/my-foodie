@@ -18,6 +18,7 @@
             <table style="width:100%" >
                 <tr id="headingPickup">
                     <th>Name<br></th>
+                    <th>Contact<br></th>
                     <th>Time<br></th>
                     <th>Order<br></th>
                     <th>Total<br></th>
@@ -26,6 +27,7 @@
                 <tbody>
                 <tr v-for="oneOrder in pickupComb" v-bind:key="oneOrder.email">
                     <td>{{oneOrder.name}}</td>
+                    <td>{{oneOrder.contact}}</td>
                     <td>{{oneOrder.date}} {{oneOrder.time}}</td>
                     <td>
                         <ul v-for="item in oneOrder.orderinfo" v-bind:key="item.name">
@@ -83,6 +85,7 @@
                 <table style="width:100%" >
                     <tr id="headingReser">
                         <th>customer ID<br></th>
+                        <th>Contact<br></th>
                         <th>Time<br></th>
                         <th>Pax<br></th>
                         <th>Order<br></th>
@@ -91,6 +94,7 @@
                     <tbody>
                     <tr v-for="oneReser in reservationComb" v-bind:key="oneReser.id">
                         <td>{{oneReser.reservedBy}}</td>
+                        <td>{{oneReser.contact}}</td>
                         <td>{{oneReser.time}}</td>
                         <td>{{oneReser.pax}}</td>
                         <td>
@@ -195,47 +199,14 @@ export default {
                                 oneReser["orders"]=oneSlot.orders[j];
                                 oneReser["pax"]=oneSlot.pax[j];
                                 oneReser["reservedBy"]=oneSlot.reservedBy[j];
-                                oneReser["pax"]=oneSlot.pax[j];
                                 oneReser["doc_id"]=doc.id;
                                 oneReser["slots_array"]=doc.data()["slots"];
                                 oneReser["slot_index"]=i;
                                 oneReser["order_index"]=j;
+                                oneReser["contact"]=oneSlot.contact[j];
                                 this.reservationComb.push(oneReser);
-                                //this.time.push(dt);
-                                //this.reservationorder.push(oneSlot.orders[j]);
-                                //this.pax.push(oneSlot.pax[j]);
-                                //this.name.push(oneSlot.reservedBy[j]);
                             }
                         }
-                        //for (var key of Object.keys(doc.data())) {
-                        //    if (key!="restaurant_name"){
-                        //        var oneSlot=doc.data()[key];
-                        //        //this.reservationorder.concat(oneSlot.orders);
-                        //        //this.pax.concat(oneSlot.pax);
-                        //        //this.name.concat(oneSlot.reservedBy);
-                        //        //alert("here");
-                        //        for (var i = 0; i < oneSlot.reservedBy.length; i++) {
-                        //            var dt=oneSlot.dateAndTime;
-                        //            this.time.push(dt);
-                        //            this.reservationorder.push(oneSlot.orders[i]);
-                        //            this.pax.push(oneSlot.pax[i]);
-                        //            this.name.push(oneSlot.reservedBy[i]);
-                        //        }
-                        //    }
-                        //}
-                        //alert(this.name);
-                        //alert("here4");
-                        //reorder to group the information for each reservation together
-                        //for (let i = 0; i < this.name.length; i++) {
-                        //    alert("here5");
-                        //    var oneOrder={};
-                        //    oneOrder.name=this.name[i];
-                        //    oneOrder.pax=this.pax[i];
-                        //    oneOrder.order=this.reservationorder[i];
-                        //    oneOrder.time=this.time[i];
-                        //    this.reorder.push(oneOrder);
-                        //    alert(this.reorder);
-                        //}
                     }
 
                 }); 
@@ -264,6 +235,7 @@ export default {
                             //this.timeP.push(pickupOrders[i].time);
                             var onepickup = {};
                             onepickup["name"]=pickupOrders[i].email;
+                            onepickup["contact"]=pickupOrders[i]["phone_num"];
                             onepickup["orderinfo"]=pickupOrders[i].one_order;
                             onepickup["time"]=pickupOrders[i]["time"];
                             onepickup["date"]=pickupOrders[i]["date"];
