@@ -20,20 +20,18 @@
 
             <div id="content">
                 <div class="card" v-on:click="route()">
-                    <div>
-                    <img src="@/assets/jollibee.jpeg" alt="Jollibee" height=15rem>
-                    </div>
-                    <p>Check out Chicken and Fries set! Now on sale, limited time only! 🔥</p>
+                    <ul id = "itemsList">
+                        <li v-for="item in this.items" v-bind:key="item.index" id="picture_display">
+                            <img v-bind:src="item[2]" id = "small"/> 
+                            <p> Promotion from <b>{{item[0]}}</b> </p>
+                            <br>
+                            <img v-bind:src="item[1].picture" class = "icon"/>  
+                            <br> 
+                            <p> {{item[1].caption}} </p>
+                        </li>
+                    </ul>
                 </div>
-
                 <br>
-
-                <div class="card" v-on:click="route()">
-                    <div>
-                    <img src="@/assets/starbucks.jpeg" alt="Starbucks" height=15rem>
-                    </div>
-                    <p>Fancy a good quality coffee to get ready for your day? Order now!</p>
-                </div>
             </div>
         </div>
     </section>
@@ -45,11 +43,13 @@ export default {
   name: 'TopRated',
   data () {
     return {
-      items : []
+      items : [],
+      favourite_rest:[],
     }
   },
   created(){
-    this.fetchItems()    
+    this.fetchItems();   
+    this.fetchItems2(); 
   },
   components : {
 
@@ -60,15 +60,32 @@ export default {
         this.$router.push({name:'order-to-delivery'});
     },
     fetchItems:function(){
-      database.collection('toprated').get().then((querySnapShot)=>{
-        let item={}
-        querySnapShot.forEach(doc=>{
-            item=doc.data()
-            item.show=false
-            item.id=doc.id
-            this.items.push(item) 
-         })      
-       })    
+        database.collection('customers')
+        .doc(this.$userUid)
+        .get()
+        .then((doc) => {
+            let storedData = doc.data().favourites;
+            this.favourite_rest = storedData;
+        })
+        .then(() => console.log(this.favourite_rest));
+    },
+    fetchItems2:function(){
+        database.collection('promotion')
+            .get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    var i;
+                    for (i = 0; i < this.favourite_rest.length; i++) {
+                        if (doc.data()["restaurant_name"] == this.favourite_rest[i] && doc.data().posts != '') {
+                            let promotion = doc.data().posts[0]
+                            let rest_name = doc.data()["restaurant_name"]
+                            let img = doc.data()["image"]
+                            this.items.push([rest_name, promotion, img]);
+                            console.log(this.items)
+                        }
+                    }
+                })
+            }); 
     }
   }
 }
@@ -81,10 +98,24 @@ export default {
 
 #itemsList {
     width: 100%;
-    max-width: 100%;
     margin: 0px;
     padding: 0 5px;
     box-sizing: border-box;
+}
+
+#small {
+    width:5rem;
+    height:auto;
+}
+
+#picture_display {
+    margin: 20px;
+    border : 2px solid;
+    border-style: solid;
+    border-color:#90141C;
+    border-radius:10px;
+    width:30rem;
+    padding:10px;
 }
   
 ul {

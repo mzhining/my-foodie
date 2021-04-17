@@ -9,11 +9,13 @@
             
             <div class="side-bar" align="left">
                 <br>
-                <p> ⭐️ {{this.rating}} </p>
-                <p> {{this.datapacket.type}} </p>
-                <p> {{this.datapacket.open_until}} </p>
-                <p> {{this.datapacket.away}} </p>
-                <p> {{this.datapacket.address}} </p>
+                <p><b>Restaurant Name:</b> {{this.datapacket.restaurant_name}}</p>
+                <p><b>Rating: </b>⭐️ {{this.rating}} </p>
+                <p><b>Address: </b> {{this.datapacket.address}}</p>
+                <p><b>Contact Email:</b>  {{this.contact_email}}</p>
+                <p><b>Contact Number:</b>  {{this.contact_num}}</p>
+                <p><b>Postal Code:</b>  {{this.datapacket.postal_code}}</p>
+
                 <button v-on:click="addFav()" id="addToFav">Add to favourite</button>
             </div>
         
@@ -119,7 +121,9 @@ export default {
             mindate: "",
             items: [],
             total: 0,
-            rating: ""
+            rating: "",
+            contact_num: "",
+            contact_email :""
         }
     },
     props : {
@@ -193,6 +197,8 @@ export default {
                         item=doc.data();
                         item.show=false;
                         this.items = item["menu"];
+                        this.contact_num = item["contact_num"];
+                        this.contact_email = item["contact_email"];
                     }
                 });
             });
@@ -213,20 +219,32 @@ export default {
             document.getElementById('datef').setAttribute('min', this.mindate);
         }, 
         sendOrder : function() {
-            this.getOrder();
-            // this.sendToUser();
+            if (this.$userProfile == 'restaurant') {
+                alert("Please log in using a customer account to order!")
+            } else {
+                this.getOrder();
+    
+                database.collection('pickup')
+                .doc(this.docIdRes)
+                .update({orders : this.orderList})
+                .then(()=>{this.$router.push({ name: 'pickup-payment', 
+                                                params : {total : this.total, 
+                                                            rname : this.rname, 
+                                                            time : this.selectedTime, 
+                                                            docIdRes : this.docIdRes}})});
+            }
+            
+            // this.getOrder();
 
-            database.collection('pickup')
-            .doc(this.docIdRes)
-            .update({orders : this.orderList})
-            .then(()=>{this.$router.push({ name: 'pickup-payment', params : {total : this.total, rname : this.rname, time : this.selectedTime, docIdRes : this.docIdRes}})});
+            // database.collection('pickup')
+            // .doc(this.docIdRes)
+            // .update({orders : this.orderList})
+            // .then(()=>{this.$router.push({ name: 'pickup-payment', 
+            //                                 params : {total : this.total, 
+            //                                             rname : this.rname, 
+            //                                             time : this.selectedTime, 
+            //                                             docIdRes : this.docIdRes}})});
         },
-
-        // sendToUser : function() {
-        //     database.collection('customers')
-        //     .doc(this.docId)
-        //     .update({cart : this.pastOrder});
-        // },
 
         getOrder : function() {
             for (let i = 0; i < this.itemsSelected.length; i++) {
@@ -236,27 +254,30 @@ export default {
                     price : this.itemsSelected[i][2]
                 })
             }
-            
-            this.updatePastOrder();
+            console.log(this.$userData);
+            // console.log(this.oneOrder);
+            // this.updatePastOrder();
             this.orderList.push({
                 email : this.$userId, 
                 one_order : this.oneOrder, 
                 total : this.total,
                 time : this.selectedTime,
-                date: this.selectedDate
-            })
+                date: this.selectedDate,
+                phone_num: this.$userData.contact
+            });
         },
 
-        updatePastOrder : function() {
-            this.pastOrder.push({
-                time : this.selectedTime,
-                date: this.selectedDate,
-                one_order : this.oneOrder,
-                restaurant : this.rname,
-                total : this.total,
-                type : 'pickup'
-            })
-        },
+        // updatePastOrder : function() {
+        //     this.pastOrder.push({
+        //         time : this.selectedTime,
+        //         date: this.selectedDate,
+        //         one_order : this.oneOrder,
+        //         restaurant : this.rname,
+        //         total : this.total,
+        //         type : 'pickup',
+        //         // phone_num: this.$userData.contact
+        //     })
+        // },
         onCounter: function (item, count) {
             var doneAction = false; 
             if (this.itemsSelected.length === 0 && count > 0) {

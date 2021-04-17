@@ -120,7 +120,49 @@
                         <p><button type="submit" class="add">Add slot</button></p>
                     </form>
                 </div>
+            </div>
 
+            <!-- update PROMOTION-->
+            <h2 v-on:click="updatePro=!updatePro" v-show="!updatePro"><a>&#9654; Promotion Settings</a></h2>
+            <h2 v-on:click="updatePro=!updatePro" v-show="updatePro"><a>&#9660; Promotion Settings</a></h2>
+            <div class="update-data" v-show="updatePro">
+                <p>Choose an action below:<br>
+                <button class="view" v-on:click="updateAction='viewPro'">View</button> or 
+                <button class="add" v-on:click="updateAction='addPro'">Add</button></p>
+
+                <div v-show="updateAction=='viewPro'" id = "forPromo">
+                    <!-- <h3>All your promotion</h3>
+                    <p>Date: {{slotInfo.date}}<br>
+                    Number of slots: {{numSlots}}</p> -->
+                    <!-- <ul v-for="slot in slots" v-bind:key="slot.index">
+                        <li>{{slot.time}}</li>
+                    </ul> -->
+                    <h3>View All Your Promotions</h3>
+
+                    <ul id="itemList">
+                        <li v-for="promo in this.allPromo" v-bind:key="promo.index" id = "onePromo">
+                            <!--first direct them to delivery page -->
+                            <img v-bind:src="promo.picture" class = "icon"/>
+                            <br> 
+                            {{promo.caption}} <br>
+                            Posted at: {{promo.time}}
+                        </li>
+                    </ul>
+                </div>
+
+                <div v-show="updateAction=='addPro'" id = "forPromo">
+                    <h3>Add a New Promotion</h3>
+                    <form id="add-item" v-on:submit.prevent="addPromo()">
+                        <p><label>Caption: </label>
+                        <input type="text" v-model="promoToAdd.caption" required /></p>
+                        <p><label>Image (paste URL): </label>
+                        <input type="url" v-model.lazy="promoToAdd.image" required /><br>
+                        <span v-if="promoToAdd.image != ''">Image preview:<br><img v-bind:src="promoToAdd.image" alt="Not found" /></span>
+                        </p>
+
+                        <p><button type="submit" class="add">Add promotion</button></p>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -137,6 +179,7 @@ export default {
             updateInfo: false,
             updateMenu: false,
             updateReserv: false,
+            updatePro: false,
             updateAction: "",
             // [field name, current value, new value]
             datapacket: {
@@ -157,6 +200,11 @@ export default {
                 price: '',
                 image: ''
             },
+            promoToAdd: {
+                caption: '',
+                time:'',
+                image:''
+            },
             itemToRemove: '',
             profile: '',
             numItems: 0,
@@ -167,8 +215,10 @@ export default {
                 orders: [],
                 pax: [],
                 reservedBy: [],
+                contact: []
             },
             numSlots: 0,
+            allPromo : []
         }
     },
     methods: {
@@ -203,6 +253,13 @@ export default {
                 }
             }, err=>{alert(err.message)})
             // console.log('fetchInfo: ', this.userId, this.userProfile, this.userData);
+        },
+        fetchPromo: function() {
+            database.collection('promotion').doc(this.$userUid).get().then((doc) => {
+                let storedData = doc.data().posts;
+                this.allPromo = storedData;});
+                
+                // }).then(() => console.log(this.allPromo));
         },
         modifyData: function() {
             // update data in firebase
@@ -318,6 +375,37 @@ export default {
             //     alert(err.message)
             // })
         },
+        // addPromo: function() {
+        //     this.promoInfo.time = document.getElementById("time").value
+        //     this.allPromo.push(this.promoInfo);
+        //     // console.log(this.slots);
+        //     database.collection('promotion').doc(this.$userUid).update({posts: this.allPromo}, {merge:true}).then(() => {
+        //         alert('Promotion added successfully!');
+        //         location.reload();
+        //     }, err=>{alert(err.message)})
+
+        // },
+        addPromo: function() {
+            this.getNow();
+            let newPromo = {
+                caption: this.promoToAdd.caption,
+                picture: this.promoToAdd.image,
+                time: this.promoToAdd.time
+            }
+            console.log(newPromo);
+            this.allPromo.push(newPromo);
+            database.collection('promotion').doc(this.$userUid).update({posts: this.allPromo}, {merge: true}).then(() => {
+                alert("Promotion added successfully!");
+                location.reload();
+            }, err => {alert(err.message)})
+        },
+        getNow: function() {
+            const today = new Date();
+            const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+            const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            const dateTime = date +' '+ time;
+            this.promoToAdd.time = dateTime;
+        },
         removeItem: function() {
             let exists = false;
             let itemIndex;
@@ -388,6 +476,7 @@ export default {
             }, err=>{alert(err.message)})
 
         },
+        
         viewSlots: function() {
             //
         }
@@ -406,6 +495,7 @@ export default {
                     // insert functions here
                     this.fetchInfo();
                     this.fetchMenu();
+                    this.fetchPromo();
                     this.profile = this.$userProfile;
                 })
             } else {
@@ -498,6 +588,30 @@ tr:nth-child(odd) {
 
 th {
     background-color:papayawhip;
+}
+
+#onePromo {
+    font-size:12px;
+    margin-left:10px;
+    margin-right:10px;
+    margin-top:10px;
+    margin-bottom:10px;
+    /* text-align: center; */
+}
+
+#icon {
+    height: 17rem;
+}
+
+#forPromo {
+    text-align: center;
+}
+
+#itemList {
+    margin: auto;
+    padding: 10px;
+    align-content: center;
+    width: 70%;
 }
 
 </style>

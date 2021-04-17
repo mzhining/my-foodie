@@ -8,12 +8,13 @@
             </div>
 
             <div class="side-bar" align="left">
-                <p> ⭐️ {{this.rating}} </p>
-                <p>Restaurant Name:  {{restaurant_name}}</p>
-                <p>Adress:  {{restaurant_whole.address}}</p>
-                <p>Contact Email:  {{restaurant_whole.contact_email}}</p>
-                <p>Contact Number:  {{restaurant_whole.contact_num}}</p>
-                <p>Postal Code:  {{restaurant_whole.postal_code}}</p>
+                <br>
+                <p><b>Restaurant Name:</b> {{restaurant_name}}</p>
+                <p><b>Rating: </b>⭐️ {{this.rating}} </p>
+                <p><b>Address: </b> {{restaurant_whole.address}}</p>
+                <p><b>Contact Email:</b>  {{restaurant_whole.contact_email}}</p>
+                <p><b>Contact Number:</b>  {{restaurant_whole.contact_num}}</p>
+                <p><b>Postal Code:</b>  {{restaurant_whole.postal_code}}</p>
                 <button v-on:click="addFav()" id="addToFav">Add to favourite</button>
             </div>
         </div>
@@ -277,6 +278,11 @@ li {
 #addToFav {
     background-color: blanchedalmond;
     font-size:15px;
+}
+#addToFav:hover {
+    background-color:#EBA4A4;
+    font-size:15px;
+    color:white;
 }
 .naviBar li {
     list-style-type: none;

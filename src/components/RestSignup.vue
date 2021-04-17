@@ -83,6 +83,10 @@ export default {
                     name:"Foodpanda",
                     price:5,
                     web:"https://www.foodpanda.sg/city/singapore",
+                },{
+                    name:"Deliveroo",
+                    price:4,
+                    web:"https://deliveroo.com.sg/"
                 }],
                 // for ratings collection
                 rating: {
@@ -157,7 +161,8 @@ export default {
                                 restaurant_name: this.restaurant.restaurant_name,
                                 avg: this.restaurant.rating.avg,
                                 total: this.restaurant.rating.total,
-                                ratedBy: this.restaurant.rating.ratedBy
+                                ratedBy: this.restaurant.rating.ratedBy,
+                                image: this.restaurant.image
                             })
                         }).then(() => {
                             database.collection('promotion').doc(this.$root.signup_user_id).set({
