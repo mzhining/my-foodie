@@ -68,7 +68,6 @@ export default {
           restaurant_name:"",
           menu:[],
           updateObj:{},
-          //to store the whole document
           restaurant_whole:{},
           image_link:"",
           price:[],
@@ -77,7 +76,6 @@ export default {
     },
     created:function(){
         this.restaurant_name=this.$route.params.restaurantN;
-        //alert(this.restaurant_name);
         this.fetchItems();
     },
     methods:{

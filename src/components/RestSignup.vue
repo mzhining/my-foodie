@@ -79,14 +79,32 @@ export default {
                     name:"Grab",
                     price:6,
                     web:"https://www.grab.com/sg/",
+                    avg_time: "36.2",
                 },{
                     name:"Foodpanda",
                     price:5,
                     web:"https://www.foodpanda.sg/city/singapore",
+                    avg_time: "37.1",
                 },{
                     name:"Deliveroo",
                     price:4,
-                    web:"https://deliveroo.com.sg/"
+                    web:"https://deliveroo.com.sg/",
+                    avg_time: "38.5",
+                },{
+                    name:"WhyQ",
+                    price:3,
+                    web:"https://www.whyq.sg/",
+                    avg_time: "33.6",
+                },{
+                    name:"Oddle Eats",
+                    price:5,
+                    web:"https://eats.oddle.me/",
+                    avg_time: "36.8",
+                },{
+                    name:"Grain",
+                    price:4.5,
+                    web:"https://grain.com.sg/",
+                    avg_time: "37.2",
                 }],
                 // for ratings collection
                 rating: {

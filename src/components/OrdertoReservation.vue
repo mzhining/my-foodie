@@ -11,9 +11,6 @@
                 <p id="slogan">One Stop Place for Your Stomach! </p>
             </div>
         </div>
-        <!-- <label>Search: </label>
-        <input type="text" v-model="context" />
-        <button id="submit" v-on:click="search">submit</button> -->
         <br>
         <hr id="line">
         <div id="container">
@@ -33,7 +30,6 @@
                     </div>
                     <ul id = "itemsList">
                         <li v-for="item in restaurants" v-bind:key="item.restaurant_name" id="picture_display">
-                            <!--first direct them to delivery page -->
                             <img v-bind:src="item.image" class = "icon"/>  
                             <br> 
                             <p v-bind:id="item.restaurant_name" v-bind:postal="item.postal_code" v-on:click="route($event)">{{item.restaurant_name}} </p>
@@ -51,7 +47,7 @@ import database from "../firebase.js"
 export default {
     data() {
         return {
-            restaurants:[],//to store the whole object
+            restaurants:[],
             image:[]
         }
     },
@@ -82,7 +78,6 @@ export default {
             let restaurant_name = event.target.getAttribute("id");
             let postal_code=event.target.getAttribute("postal");
             this.$router.push({name:'reservation', params:{name:restaurant_name, postal: postal_code}});
-            //I set this name as pickup!!
         },
         fetchItems: function() {
             database.collection("restaurants").get().then((querySnapshot) => {

@@ -68,10 +68,8 @@ export default {
                     name: "",
                     number: ""
                 },
-                cart: [],
                 favourites: [],
                 profile: 'customer',
-                reservation: [],
                 ratings: {}
             }
         }

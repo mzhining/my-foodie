@@ -50,15 +50,6 @@
                     </tr>
                     </tbody>
                 </table>
-                <!--
-                <ul id="pickups" v-for="onePickup in orders" v-bind:key="onePickup.id">
-                    <p id="header">{{onePickup.restaurant}} -- {{onePickup.type}}</p>
-                    <li v-for="item in onePickup.one_order" v-bind:key="item.id" id="itemlist">
-                        <span>{{item.qty}}x {{item.item}}</span>
-                        <br>
-                    </li>`
-                    <br>
-                </ul>-->
             </div>
             <br>
         </div>
@@ -87,14 +78,6 @@
                     </tr>
                     </tbody>
                 </table>
-                <!--
-                <ul id="reservations" v-for="oneReser in reservation_orders" v-bind:key="oneReser.id">
-                    <p id="header">{{oneReser.restaurant_name}} -- reservation</p>
-                    <div id="block" v-for="(key, value) in oneReser.orders" v-bind:key="key">
-                        <span>{{key}}x {{value}}</span>  <br>
-                    </div>
-                    <br><br>
-                </ul>-->
             </div>
         </div>
         <h2> Ratings </h2>
@@ -119,12 +102,9 @@
                 </tbody>
             </table>
         </div>
-        <!--I try to use a dummy div and set the height to 700px, 
-        to leave a 700px blank, but still cannot make the footer to the bottom -->
         <div id="blank">
             <p> </p>
         </div>
-        <!--<router-link to="/accountR" exact>Go to DashboardR </router-link>-->
     </div>
 </template>
 
@@ -134,20 +114,11 @@ import database from "../firebase.js"
 export default {
     data() {
         return {
-            orders: [],//to store multiple pickup
             fav:[],
             fav_img:[],
             fav_html:[],
             customer:{},
-            reservations:[],//to store muptiple reservations
-            reservation:{},
-            ///////////////////////////////////////////////////
-            //use the document janedoe as sample display!!!!
-            //assume one people can only have one reservation, since the reservation in customer document is a map rather than an array
-            //and other document in customers does not have reservation feild.
-            //For pickup, it is stored in cart attribute in the document
-            reservation_order:{},
-            reservation_orders:[],//store muptiple order information for reservations
+            reservations:[],
             userEmail:"",
             pickups:[],
             ratings: {},
@@ -231,10 +202,6 @@ export default {
         fetchItems: function() {
             database.collection("customers").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
-                    ///////////////////////////////////////////////////////////////////////
-                    //doc.data()["email"] == this.$userId :
-                    //here I use janedoe customer as example, but actually it should be a global variable!
-                    //if (doc.data()["email"] == "janedoe@email.com"){
                     if (doc.data()["email"] == this.$userId){
                         this.custId = doc.id;
                         this.ratings = doc.data()['ratings'];
@@ -247,8 +214,7 @@ export default {
                         });
                         this.customer=doc.data();
                         this.fav=doc.data()['favourites'];
-                        //this.orders=doc.data()['cart'];//store multiple pickup
-                        this.reservations=doc.data()['reservation'];//store multiple reservations
+                        this.reservations=doc.data()['reservation'];
                         for (let i = 0; i < this.fav.length; i++) {
                             database.collection("restaurants").get().then((querySnapshot) => {
                                 querySnapshot.forEach((doc) => {
@@ -273,7 +239,6 @@ export default {
                                             onePU["time"]=thisPU["time"];
                                             onePU["total"]=thisPU["total"];
                                             onePU["total_orders"]=doc.data()["orders"];
-                                            //oneReser["time"]=thisSlot["date"]+" "+thisSlot["time"];
                                             onePU["one_order"]=thisPU["one_order"];
                                             this.pickups.push(onePU);
                                         }
@@ -297,7 +262,6 @@ export default {
                                                 oneReser["pax"]=thisSlot["pax"][z];
                                                 oneReser["date"]=thisSlot["date"];
                                                 oneReser["time"]=thisSlot["time"];
-                                                //oneReser["time"]=thisSlot["date"]+" "+thisSlot["time"];
                                                 oneReser["orders"]=thisSlot["orders"][z];
                                                 this.reservations.push(oneReser);
                                             }
@@ -305,35 +269,6 @@ export default {
                                     }
                                 }); 
                             });
-                        ///////////////////////////////////////////////
-                        //to get the reservations of this customer
-                        //for (let i = 0; i < this.reservations.length; i++) {
-                        //    database.collection("reservations").get().then((querySnapshot) => {
-                        //        querySnapshot.forEach((doc) => {
-                        //            if (doc.data()["restaurant_name"] == this.reservations[i].restaurant_name){
-                        //                //alert("here1");
-                        //                for (let j = 0; j <doc.data()["slots"].length; j++) {
-                        //                    var thisSlot=doc.data()["slots"][j];
-                        //                    if ((this.reservations[i].date==thisSlot.date) && (this.reservations[i].time==thisSlot.time)){
-                        //                        for (let z=0;z<thisSlot["reservedBy"].length;z++){
-                        //                            if (this.reservations[i].customerID==thisSlot["reservedBy"][z]){
-                        //                                this.reservation_order={};
-                        //                                this.reservation_order["orders"]=thisSlot.orders[z];
-                        //                                this.reservation_order["restaurant_name"]=this.reservations[i].restaurant_name;
-                        //                                this.reservation_order["datetime"]=this.reservations[i].date+this.reservations[i].time;
-                        //                                this.reservation_orders.push(this.reservation_order);
-                        //                            }
-                        //                        }
-                        //                    }
-                        //                }
-                                        //var idindex=parseInt(this.reservation.id);
-                                        /////////////////////////////////////////////////////////////////////////////
-                                        //assume that it only retrieve from slots[0], so we need 2 index to decide which reservation the customer has
-                                        //this.reservation_order=doc.data().slots[0].orders[idindex];
-                        //            }
-                        //        }); 
-                        //    });
-                        //}
                     }
                 });
             });
