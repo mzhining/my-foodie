@@ -99,6 +99,9 @@ export default {
             // update data in firebase
             let updateFields = [];
             for (let data in this.datapacket) {
+                if (data == 'card') {
+                    continue;
+                }
                 // console.log(this.datapacket[data][2]);
                 if (this.datapacket[data][2] != '') {
                     updateFields.push(data);
@@ -108,6 +111,8 @@ export default {
             for (let field of updateFields) {
                 updateData[field] = this.datapacket[field][2];
             }
+
+            // console.log(updateData);
             
             database.collection('customers').doc(this.$userUid).update(updateData).then(() => {
                 alert("Information updated successfully!");

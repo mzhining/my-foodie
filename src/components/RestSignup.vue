@@ -72,7 +72,7 @@ export default {
                 order_counts: {},
                 // for pickup collection
                 type: "",
-                away: "0km away",
+                away: "0.3km away",
                 open_until: "Open until 22.00",
                 // for delivery collection
                 pricearray:[{
