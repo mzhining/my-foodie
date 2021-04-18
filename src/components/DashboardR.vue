@@ -13,7 +13,7 @@
         </div>
         <hr id="line">
         <h1>Restaurant Overview</h1>
-        <h2>My Current Order</h2>
+        <h2>Current Order</h2>
         <div class="section">
             <table style="width:100%" >
                 <tr id="headingPickup">
@@ -40,7 +40,7 @@
                 </tbody>
             </table>
         </div>
-        <h2>Today's Reservation</h2>
+        <h2>Reservation</h2>
         <div class="section">
                 <table style="width:100%" >
                     <tr id="headingReser">
