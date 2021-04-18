@@ -73,7 +73,7 @@ export default {
                     } else {
                         // console.log('not restaurant, search customer db');
                         database.collection('customers').doc(this.$userUid).get().then((doc) => {
-                            console.log(doc.data());
+                            // console.log(doc.data());
                             if (doc.exists) {
                                 this.$userData = doc.data();
                                 this.$userId = this.$userData.email;
