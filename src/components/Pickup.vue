@@ -143,7 +143,7 @@ export default {
             }
             database.collection('customers').doc(this.$userUid).update({
                 favourites: fav
-            }).then(() => {location.reload()});
+            });
                 
         },
         checkForm:function(e) {
