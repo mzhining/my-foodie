@@ -163,7 +163,11 @@
                 let newOrder = {};
                 this.itemsSelected.forEach((item) => {
                     newOrder[item[0]] = item[1];
-                    this.datapacket["order_counts"][item[0]] += item[1];
+                    if (this.datapacket["order_counts"][item[0]]) {
+                        this.datapacket["order_counts"][item[0]] += item[1];
+                    } else {
+                        this.datapacket["order_counts"][item[0]] = item[1];
+                    }
                 });
                 this.data.slots[this.slotNumber]["orders"][this.$route.params.orderNumber] = newOrder;
                 //add order to database
