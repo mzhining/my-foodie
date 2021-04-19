@@ -148,10 +148,10 @@ export default {
                             this.customer.ratings[restaurant] = newRating;
                             database.collection('customers').doc(this.custId).update(this.customer);
                             database.collection('ratings').doc(docid).update(changeRating);
-                            this.fetchItems();
                         }
                     }); 
                 });
+                this.fetchItems();
             } else {
                 console.log("Rating should be between 1 and 5!")
             }
