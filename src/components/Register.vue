@@ -81,8 +81,10 @@ button {
 
 .newacc:hover {
     background-color: #FFEBCD;
-    color: black;
+    color: black; 
 }
+
+
 
 .existacc {
     /* font-family: 'Poppins', sans-serif;
