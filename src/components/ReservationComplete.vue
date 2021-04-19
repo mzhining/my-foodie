@@ -98,7 +98,6 @@ img {
 .content {
     width: calc(100% - 8rem);
     margin: auto;
-    display: flex;
     align-items: left;
     font-size: 15px;
 }
