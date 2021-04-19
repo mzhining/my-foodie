@@ -144,6 +144,8 @@ export default {
             this.fetchItems();
         },
         fetchItems: function() {
+            this.reservationComb=[];
+            this.pickupComb=[];
             database.collection("reservations").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     if (doc.data()["restaurant_name"] == this.thisRestaurant["restaurant_name"]){
