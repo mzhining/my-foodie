@@ -110,7 +110,8 @@ export default {
             }
             database.collection('pickup').doc(Rest_id).update({
                 orders: updatedPU
-            }).then(() => {location.reload()});
+            });
+            this.fetchItems();
         },
         deleteItemRes:function(event, slot_index, order_index, slot_array){
             let thisReser = event.target.getAttribute("id");
@@ -139,9 +140,12 @@ export default {
             }
             database.collection('reservations').doc(thisReser).update({
                 slots: updatedslots
-            }).then(() => {location.reload()});
+            });
+            this.fetchItems();
         },
         fetchItems: function() {
+            this.reservationComb=[];
+            this.pickupComb=[];
             database.collection("reservations").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     if (doc.data()["restaurant_name"] == this.thisRestaurant["restaurant_name"]){
