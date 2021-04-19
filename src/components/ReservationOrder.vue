@@ -58,7 +58,6 @@
                             <button class="special" v-on:click="sendOrder"> Send Order </button>
                     </div>
                 </div>
-                
             </aside>
 
             <!-- <aside id = "picture"> -->
