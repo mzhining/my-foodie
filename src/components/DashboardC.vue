@@ -168,7 +168,8 @@ export default {
             }
             database.collection('pickup').doc(Rest_id).update({
                 orders: updatedPU
-            }).then(() => {location.reload()});
+            });
+            this.fetchItems();
         },
         deleteItemRes:function(event, slot_index, order_index, slot_array){
             let thisReser = event.target.getAttribute("id");
@@ -197,7 +198,8 @@ export default {
             }
             database.collection('reservations').doc(thisReser).update({
                 slots: updatedslots
-            }).then(() => {location.reload()});
+            });
+            this.fetchItems();
         },
         fetchItems: function() {
             database.collection("customers").get().then((querySnapshot) => {
