@@ -148,7 +148,7 @@ export default {
                             this.customer.ratings[restaurant] = newRating;
                             database.collection('customers').doc(this.custId).update(this.customer);
                             database.collection('ratings').doc(docid).update(changeRating);
-                            console.log("Rating changed!");
+                            this.fetchItems();
                         }
                     }); 
                 });
