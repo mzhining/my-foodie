@@ -146,8 +146,7 @@ export default {
                             }
                             changeRating["avg"] = Number((changeRating["total"]/changeRating["ratedBy"]).toFixed(2));
                             this.customer.ratings[restaurant] = newRating;
-                            database.collection('customers').doc(this.custId).update(this.customer);
-                            database.collection('ratings').doc(docid).update(changeRating).then(this.fetchItems());
+                            database.collection('customers').doc(this.custId).update(this.customer).then(database.collection('ratings').doc(docid).update(changeRating).then(this.fetchItems()));
                         }
                     }); 
                 });
