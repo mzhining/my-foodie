@@ -199,6 +199,16 @@ export default {
             }).then(this.fetchItems());
         },
         fetchItems: function() {
+            this.fav=[];
+            this.fav_img=[];
+            this.fav_html=[];
+            this.customer={};
+            this.reservations=[];
+            this.userEmail="";
+            this.pickups=[];
+            this.ratings={};
+            this.notRated=[];
+            this.custId="";
             database.collection("customers").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     if (doc.data()["email"] == this.$userId){

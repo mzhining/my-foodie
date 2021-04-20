@@ -54,7 +54,7 @@
                     <tbody>
                     <tr v-for="oneReser in reservationComb" v-bind:key="oneReser.id">
                         <td>{{oneReser.reservedBy}}</td>
-                        <td>{{oneReser.time}}</td>
+                        <td>{{oneReser.contact}}</td>
                         <td>{{oneReser.time}}</td>
                         <td>{{oneReser.pax}}</td>
                         <td>
