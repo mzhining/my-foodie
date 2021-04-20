@@ -147,7 +147,7 @@ export default {
                             changeRating["avg"] = Number((changeRating["total"]/changeRating["ratedBy"]).toFixed(2));
                             this.customer.ratings[restaurant] = newRating;
                             database.collection('customers').doc(this.custId).update(this.customer);
-                            database.collection('ratings').doc(docid).update(changeRating).then(() => { location.reload() });
+                            database.collection('ratings').doc(docid).update(changeRating).then(this.fetchItems());
                         }
                     }); 
                 });
@@ -168,8 +168,7 @@ export default {
             }
             database.collection('pickup').doc(Rest_id).update({
                 orders: updatedPU
-            });
-            this.fetchItems();
+            }).then(this.fetchItems());
         },
         deleteItemRes:function(event, slot_index, order_index, slot_array){
             let thisReser = event.target.getAttribute("id");
@@ -198,8 +197,7 @@ export default {
             }
             database.collection('reservations').doc(thisReser).update({
                 slots: updatedslots
-            });
-            this.fetchItems();
+            }).then(this.fetchItems());
         },
         fetchItems: function() {
             database.collection("customers").get().then((querySnapshot) => {

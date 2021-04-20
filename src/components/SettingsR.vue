@@ -101,22 +101,40 @@
                 <button class="add" v-on:click="updateAction='addReserv'">Add</button></p>
 
                 <div v-show="updateAction=='viewReserv'">
-                    <h3>Current reservation slots for today</h3>
-                    <p>Date: {{slotInfo.date}}<br>
-                    Number of slots: {{numSlots}}</p>
+                    <h3>Current reservation slots</h3>
+                    <p>Number of distinct timeslots: {{numTimeslots}}<br>
+                    Total number of slots added: {{numSlots}}</p>
                     <!-- <ul v-for="slot in slots" v-bind:key="slot.index">
                         <li>{{slot.time}}</li>
                     </ul> -->
-                    Timeslots:<br>
-                    <span v-for="slot in slots" v-bind:key="slot.index">{{slot.time}}<br></span>
+                    <table id="rtable">
+                        <thead>
+                        <tr>
+                            <th style="text-align:center;">Date &#9660;</th>
+                            <th style="text-align:center;">Time &#9660;</th>
+                            <th style="text-align:center;">Slots &#9660;</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="slot in slots" v-bind:key="slot.index">
+                            <td style="width:130px;" align="center">{{slot.date}}</td>
+                            <td style="width:90px;" align="center">{{slot.time}}</td>
+                            <td style="width:80px;" align="center">{{slot.avail}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div v-show="updateAction=='addReserv'">
-                    <h3>Add reservation slots for today</h3>
-                    Date: {{slotInfo.date}}<br>
+                    <h3>Add reservation slots</h3>
+                    <!-- Date: {{slotInfo.date}}<br> -->
                     <form v-on:submit.prevent="addSlot()">
+                        <label>Date: </label>
+                        <input id="datefield" type="date" v-model="slotInfo.date" required/><br>
                         <label>Time: </label>
-                        <input type="time" id="time" required/>
+                        <input type="time" id="time" required/><br>
+                        <label>Number of slots: </label>
+                        <input type="number" v-model="slotInfo.avail" min="1" style="width:60px" required/><br>
                         <p><button type="submit" class="add">Add slot</button></p>
                     </form>
                 </div>
@@ -215,9 +233,11 @@ export default {
                 orders: [],
                 pax: [],
                 reservedBy: [],
-                contact: []
+                contact: [],
+                avail: 0,
             },
             numSlots: 0,
+            numTimeslots: 0,
             allPromo : []
         }
     },
@@ -248,8 +268,9 @@ export default {
                 this.slots = storedResv.slots
 
                 for (let slot1 in storedResv.slots) {
-                    slot1;
-                    this.numSlots++;
+                    // console.log(storedResv.slots[slot1].avail);
+                    this.numSlots += storedResv.slots[slot1].avail;
+                    this.numTimeslots++;
                 }
             }, err=>{alert(err.message)})
             // console.log('fetchInfo: ', this.userId, this.userProfile, this.userData);
@@ -392,7 +413,7 @@ export default {
                 picture: this.promoToAdd.image,
                 time: this.promoToAdd.time
             }
-            console.log(newPromo);
+            // console.log(newPromo);
             this.allPromo.push(newPromo);
             database.collection('promotion').doc(this.$userUid).update({posts: this.allPromo}, {merge: true}).then(() => {
                 alert("Promotion added successfully!");
@@ -467,7 +488,8 @@ export default {
             } */
         },
         addSlot: function() {
-            this.slotInfo.time = document.getElementById("time").value
+            this.slotInfo.time = document.getElementById("time").value;
+            this.slotInfo.avail = parseInt(this.slotInfo.avail);
             this.slots.push(this.slotInfo);
             // console.log(this.slots);
             database.collection('reservations').doc(this.$userUid).update({slots: this.slots}, {merge:true}).then(() => {
@@ -477,9 +499,32 @@ export default {
 
         },
         
-        viewSlots: function() {
-            //
-        }
+        restrictDate: function() {
+            // only allow selection of reservation slots from present day onwards
+            let tomorrow = new Date()
+            tomorrow.setDate(tomorrow.getDate()+1);
+            tomorrow = tomorrow.toISOString().substr(0, 10);
+            document.getElementById('datefield').setAttribute('min', tomorrow);
+        },
+
+        /* // not working
+        sortTable: function() {
+            // sort reservations table by date
+            let tbody = document.querySelector("#rtable tbody");
+            let rows = [].slice.call(tbody.querySelectorAll("tr"));
+
+            rows.sort(function(a, b) {
+                console.log(a.cells[0].innerHTML, b.cells[0].innerHTML)
+                return (a.cells[0].innerHTML > b.cells[0].innerHTML);
+            });
+            console.log('rows sorted')
+            
+            rows.forEach(function(v) {
+                console.log('v '+v)
+                tbody.appendChild(v);
+            })
+            console.log('rowsforeach')
+        } */
     },
     created() {
         firebase.auth().onAuthStateChanged((user) => {
@@ -496,6 +541,7 @@ export default {
                     this.fetchInfo();
                     this.fetchMenu();
                     this.fetchPromo();
+                    this.restrictDate();
                     this.profile = this.$userProfile;
                 })
             } else {
@@ -506,7 +552,7 @@ export default {
                 this.$userProfile = '';
             }
         })
-        this.slotInfo.date = new Date().toISOString().substr(0, 10);
+        // this.slotInfo.date = new Date().toISOString().substr(0, 10);
 
     }
 }
@@ -552,12 +598,28 @@ a:hover {
     background: rgb(221, 255, 221);
 }
 
+.add:hover {
+    /* background-color: rgb(5, 139, 83); */
+    background-color:seagreen;
+    color: white;
+}
+
 .view {
     background: rgb(215, 232, 255);
 }
 
+.view:hover {
+    background-color:royalblue;
+    color: white;
+}
+
 .remove {
     background: rgb(255, 227, 227);
+}
+
+.remove:hover {
+    background-color:indianred;
+    color:white;
 }
 
 ul {
